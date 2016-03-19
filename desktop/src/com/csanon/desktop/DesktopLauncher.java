@@ -7,9 +7,11 @@ import com.csanon.App;
 public class DesktopLauncher {
 	public static void main (String[] arg) {
 		LwjglApplicationConfiguration config = new LwjglApplicationConfiguration();
-		new LwjglApplication(new App(), config);
-		
-		
-		
+		config.width = 1280;
+        config.height = 720;
+        config.useGL30 = true;
+        config.useHDPI = true;
+        config.vSyncEnabled = false;
+        new LwjglApplication(new App(), config);
 	}
 }
