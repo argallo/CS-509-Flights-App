@@ -3,7 +3,7 @@ package com.csanon;
 import java.time.OffsetDateTime;
 
 public class Flight {
-	private Airport DepatureAirport;
+	private Airport DepartureAirport;
 	private OffsetDateTime DepatureTime;
 	private Airport ArrivalAirport;
 	private OffsetDateTime ArrivalTime;
@@ -16,7 +16,7 @@ public class Flight {
 						Airport anArrivalAirport, OffsetDateTime anArrivalTime,
 						Price aPriceFirstClass, int aSeatsFirstClass,
 						Price aPriceEconomy, int aSeatsEconomy) {
-		DepatureAirport = aDepatureAirport;
+		DepartureAirport = aDepatureAirport;
 		DepatureTime 	= aDepartureTime;
 		ArrivalAirport 	= anArrivalAirport;
 		ArrivalTime 	= anArrivalTime;

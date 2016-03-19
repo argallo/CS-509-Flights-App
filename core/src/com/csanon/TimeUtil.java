@@ -34,6 +34,11 @@ public class TimeUtil {
 		return DateTime;
 	}
 	
+	public static OffsetDateTime OffsetDateTime2GMTOffsetDateTime(OffsetDateTime aDateTime) {
+		aDateTime = aDateTime.withOffsetSameInstant(ZoneOffset.ofHours(0));
+		return aDateTime;
+	}
+	
 	public static int getOffsetByLatLong(double Lat, double Long) throws ParserConfigurationException, IOException, SAXException {
 		String result = null;
 		try {
