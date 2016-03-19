@@ -1,4 +1,4 @@
-package com.csanon;
+package com.csanon.server;
 
 public class ServerConfig {
 
