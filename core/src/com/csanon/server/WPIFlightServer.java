@@ -1,6 +1,5 @@
 package com.csanon.server;
 
-import com.mashape.unirest.*;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -35,13 +34,12 @@ public class WPIFlightServer implements FlightServer {
 		return getFlights(airportCode, date, "departing");
 	}
 
-
 	@Override
 	public String getFlightsArrivingAt(String airportCode, String date) {
 		return getFlights(airportCode, date, "arriving");
 	}
-	
-	private String getFlights(String airportCode, String date, String direction){
+
+	private String getFlights(String airportCode, String date, String direction) {
 		String result = null;
 		try {
 			HttpRequest request = Unirest.get(config.getURL()).queryString("team", config.getTeamNum())
@@ -57,7 +55,7 @@ public class WPIFlightServer implements FlightServer {
 
 		return result;
 	}
-	
+
 	@Override
 	public String getPlanes() {
 		String result = null;
@@ -74,8 +72,5 @@ public class WPIFlightServer implements FlightServer {
 
 		return result;
 	}
-
-	
-	
 
 }
