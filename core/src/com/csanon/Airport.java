@@ -58,8 +58,8 @@ public class Airport {
 	public Airport(String name, String code, String la, String lo){
 		aname=name;
 		acode=code;
-		alatitude=Integer.parseInt(la);
-		alongitude=Integer.parseInt(lo);
+		alatitude=Double.parseDouble(la);
+		alongitude=Double.parseDouble(lo);
 	}
 	
 	public void name(String name){

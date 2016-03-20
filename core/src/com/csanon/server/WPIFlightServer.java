@@ -1,5 +1,9 @@
 package com.csanon.server;
 
+import java.util.List;
+
+import com.csanon.Airport;
+import com.csanon.factrories.AirportFactory;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -21,6 +25,11 @@ public class WPIFlightServer implements FlightServer {
 			System.out.println(request.getUrl());
 			HttpResponse<String> response = request.asString();
 			result = response.getBody();
+			
+			List<Airport> airports = AirportFactory.getInstance().parseAirportsFromXML(result);
+			
+			System.out.println(airports.get(0).name());
+			
 		} catch (UnirestException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

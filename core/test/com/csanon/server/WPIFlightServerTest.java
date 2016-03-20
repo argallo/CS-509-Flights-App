@@ -21,8 +21,7 @@ public class WPIFlightServerTest {
 	public void testGetDepartingFlights() {
 		WPIFlightServer server = new WPIFlightServer(new ServerConfig());
 		String result = server.getFlightsDeparting("BOS", "2016_05_10");
-		System.out.println(result);
-		assertNotNull(result);
+		assertTrue(result.length() > 0);
 	}
 
 	@Test
