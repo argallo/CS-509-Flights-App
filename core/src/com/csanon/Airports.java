@@ -17,10 +17,6 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 
-
-
-
-
 public class Airports extends ArrayList<Airport> {
 	/**
 	 * 
@@ -98,10 +94,10 @@ public class Airports extends ArrayList<Airport> {
 		longitude = Double.parseDouble(getCharacterDataFromElement(elementLatLng));
 
 		
-		airport.name(name);
-		airport.code(code);
-		airport.latitude(latitude);
-		airport.longitude(longitude);
+		airport.setName(name);
+		airport.setCode(code);
+		airport.setLatitude(latitude);
+		airport.setLongitude(longitude);
 		
 		return airport;
 	}

@@ -62,62 +62,48 @@ public class Airport {
 		alongitude=Double.parseDouble(lo);
 	}
 	
-	public void name(String name){
+	public void setName(String name){
 		aname=name;
 	}
-	
-	public String name(){
+	public String getName(){
 		return aname;
 	}
 	
-	public void code(String code){
+	public void setCode(String code){
 		acode=code;
 	}
-	
-	public String code(){
+	public String getCode(){
 		return acode;
 	}
 	
-	public void latitude(Double la){
-		alatitude=la;
-	}
 	
-	public Double latitude(){
+	public void setLatitude(Double Latitude){
+		alatitude=Latitude;
+	}
+	public Double getLatitude(){
 		return alatitude;
 	}
 	
-	public void longitude(Double lo){
+	
+	public void setLongitude(Double lo){
 		alongitude=lo;
 	}
-	
-	public Double longitude(){
+	public Double getLongitude(){
 		return alongitude;
 	}
 	
 	@Override
-	public boolean equals (Object obj) {
-		// object equals to itself
-		if (obj == this)
-			return true;
-		
-		// null is not equal to the object
-		if (obj == null)
-			return false;
-		
-		// if this object is not an airport, not equal
-		if (!(obj instanceof Airport)) 
-			return false;
-		
-		// if all the attributes are the same, the teo airports are equal.
-		Airport rhs = (Airport) obj;
-		if ((rhs.aname.equals(aname)) &&
-				(rhs.acode.equals(acode)) &&
-				(rhs.alatitude == alatitude) &&
-				(rhs.alongitude == alongitude)) {
-			return true;
-		}
-		
-		return false;	
+	public boolean equals(Object obj){
+		if(obj==null) return false;
+		if(obj==this) return true;
+		if(!(obj instanceof Airport)) return false;
+		Airport airport=(Airport)obj;
+		if(airport.aname.equals(this.aname)
+				&& airport.acode.equals(this.acode)
+				&& airport.alatitude==this.alatitude
+				&& airport.alongitude==this.alongitude) return true;
+		return false;
+			
 	}
 	
 	
