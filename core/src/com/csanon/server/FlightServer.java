@@ -14,5 +14,5 @@ public interface FlightServer {
 
 	public List<Flight> getFlightsArrivingAt(String airportCode, String date);
 
-	public List<Airplane> getPlanes();
+	public List<Airplane> getAirplanes();
 }

@@ -72,7 +72,7 @@ public class WPIFlightServer implements FlightServer {
 	}
 
 	@Override
-	public List<Airplane> getPlanes() {
+	public List<Airplane> getAirplanes() {
 		List<Airplane> airplanes = null;
 		try {
 			HttpRequest request = Unirest.get(config.getURL()).queryString("team", config.getTeamNum())

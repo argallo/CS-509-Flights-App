@@ -37,7 +37,7 @@ public class WPIFlightServerTest {
 	@Test
 	public void testGetPlanes() {
 		FlightServer server = ServerFactory.getServer();
-		List<Airplane> result = server.getPlanes();
+		List<Airplane> result = server.getAirplanes();
 		assertTrue(result.size() > 0);
 	}
 
