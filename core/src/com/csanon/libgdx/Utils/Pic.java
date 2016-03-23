@@ -6,5 +6,6 @@ package com.csanon.libgdx.Utils;
 public class Pic {
 
         public static final String Splash = "Splash/splash.png";
+        public static final String Pixel = "Splash/pixel.png";
 
 }

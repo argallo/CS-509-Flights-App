@@ -25,4 +25,10 @@ public class EmptyView extends BaseView {
 
     }
 
+	@Override
+	public void init() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

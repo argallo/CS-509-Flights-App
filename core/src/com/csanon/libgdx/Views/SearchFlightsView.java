@@ -12,9 +12,9 @@ public class SearchFlightsView extends BaseView {
 	private TextLabel airportLabel, dateLabel;
 	private DropDown airportDropdown;
 
-	public SearchFlightsView() {
-		
-		
+	@Override
+	public void init() {
+		airportDropdown = new DropDown();
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class SearchFlightsView extends BaseView {
 
 	@Override
 	public void addActors() {
-		// TODO Auto-generated method stub
+		addActor(airportDropdown);
 
 	}
 

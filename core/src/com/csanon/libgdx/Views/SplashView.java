@@ -17,15 +17,15 @@ public class SplashView extends BaseView {
     private boolean counting = true;
     private float counter = 0;
 
-    /**
-     * Construct the splash view and add the logo background to the stage
-     */
-    public SplashView(){
+    
+	@Override
+	public void init() {
     	splashLogo = new Image(Assets.getInstance().getSplash());
         //for now just load texture atlas but as it becomes bigger we may need to modify the act method to load in increments
         Assets.getInstance().loadCommonAssets();
         
-    }
+		
+	}
 
     @Override
     public void setSizes() {
@@ -41,7 +41,7 @@ public class SplashView extends BaseView {
     }
 
     public void addActors(){
-        addActor(splashLogo);
+    	addActor(splashLogo);
     }
 
     @Override

@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 /**
  * Created by Gallo on 3/19/2016.
@@ -82,7 +84,7 @@ public class Assets extends AssetManager {
      */
     public void loadCommonAssets() {
         //load("Appimages/textureatlas.atlas", TextureAtlas.class);
-
+    	load(Pic.Pixel, Texture.class, textureParam);
         finishLoading();
     }
 
@@ -99,6 +101,10 @@ public class Assets extends AssetManager {
         } else {
             return get("Appimages/textureatlas.atlas", TextureAtlas.class).findRegion(textureID);
         }
+    }
+    
+    public Drawable getDrawable(String textureID){
+    	return new TextureRegionDrawable(getTextureRegion(textureID));
     }
 
     public BitmapFont getXSmallFont() {
