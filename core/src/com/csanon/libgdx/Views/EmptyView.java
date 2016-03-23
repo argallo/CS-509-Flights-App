@@ -6,11 +6,6 @@ package com.csanon.libgdx.Views;
 public class EmptyView extends BaseView {
 
     @Override
-    public void init() {
-
-    }
-
-    @Override
     public void setSizes() {
 
     }

@@ -17,13 +17,11 @@ public abstract class BaseView extends Group implements Cullable {
         Tint.resetTints();
         rectangle = new Rectangle(0,0, Constants.VIRTUAL_WIDTH, Constants.VIRTUAL_HEIGHT);
         setSize(Constants.VIRTUAL_WIDTH, Constants.VIRTUAL_HEIGHT);
-        init();
         setSizes();
         setPositions();
         addActors();
     }
 
-    public abstract void init();
     public abstract void setSizes();
     public abstract void setPositions();
     public abstract void addActors();
