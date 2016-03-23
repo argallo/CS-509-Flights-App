@@ -84,17 +84,52 @@ public class Airport {
 	}
 	
 	@Override
-	public boolean equals(Object obj){
-		if(obj==null) return false;
-		if(obj==this) return true;
-		if(!(obj instanceof Airport)) return false;
-		Airport airport=(Airport)obj;
-		if(airport.aname.equals(this.aname)
-				&& airport.acode.equals(this.acode)
-				&& airport.alatitude==this.alatitude
-				&& airport.alongitude==this.alongitude) return true;
-		return false;
-			
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((acode == null) ? 0 : acode.hashCode());
+		long temp;
+		temp = Double.doubleToLongBits(alatitude);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		temp = Double.doubleToLongBits(alongitude);
+		result = prime * result + (int) (temp ^ (temp >>> 32));
+		result = prime * result + ((aname == null) ? 0 : aname.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Airport other = (Airport) obj;
+		if (acode == null) {
+			if (other.acode != null) {
+				return false;
+			}
+		} else if (!acode.equals(other.acode)) {
+			return false;
+		}
+		if (Double.doubleToLongBits(alatitude) != Double.doubleToLongBits(other.alatitude)) {
+			return false;
+		}
+		if (Double.doubleToLongBits(alongitude) != Double.doubleToLongBits(other.alongitude)) {
+			return false;
+		}
+		if (aname == null) {
+			if (other.aname != null) {
+				return false;
+			}
+		} else if (!aname.equals(other.aname)) {
+			return false;
+		}
+		return true;
 	}
 	
 	
