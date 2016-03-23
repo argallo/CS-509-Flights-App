@@ -15,10 +15,10 @@ public class Airport {
 	 * Attributes for the airport.
 	 */
 	
-	private String aname;
-	private String acode;
-	private double alongitude;
-	private double alatitude;
+	private final String aname;
+	private final String acode;
+	private final double alongitude;
+	private final double alatitude;
 	
 	/*
 	 * Construct the default constructor without params.
@@ -62,32 +62,23 @@ public class Airport {
 		alongitude=Double.parseDouble(lo);
 	}
 	
-	public void setName(String name){
-		aname=name;
-	}
+	
 	public String getName(){
 		return aname;
 	}
 	
-	public void setCode(String code){
-		acode=code;
-	}
 	public String getCode(){
 		return acode;
 	}
 	
 	
-	public void setLatitude(Double Latitude){
-		alatitude=Latitude;
-	}
+	
 	public Double getLatitude(){
 		return alatitude;
 	}
 	
 	
-	public void setLongitude(Double lo){
-		alongitude=lo;
-	}
+	
 	public Double getLongitude(){
 		return alongitude;
 	}
