@@ -23,4 +23,19 @@ public class Trip {
 		legs.add(flight);
 		return legs;
 	}
+	
+	@Override
+	public boolean equals(Object aOther) {
+		if (aOther == null) {
+			return false;
+		} else if (!(aOther instanceof Trip)) {
+			return false;
+		} else if (aOther == this) {
+			return true;
+		} else {
+			Trip other = (Trip)aOther;
+			return flight.equals(other.flight);
+		}
+	}
+	
 }
