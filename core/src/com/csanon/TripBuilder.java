@@ -11,6 +11,7 @@ import com.csanon.server.ServerFactory;
 public class TripBuilder {
 	private static final TripBuilder instance = new TripBuilder();
 	private static final DateTimeFormatter dprintformat = DateTimeFormatter.ofPattern("yyyy_MMM_dd");
+	private static final FlightServer aserver = ServerFactory.getServer();
 	
 	private TripBuilder() {}
 
@@ -19,7 +20,6 @@ public class TripBuilder {
 	}
 
 	public List<Trip> getTrips(Airport aDeparture, Airport aDestination, OffsetDateTime aDepartTime) {
-		FlightServer aserver = ServerFactory.getServer();
 		List<Flight> flights = aserver.getFlightsDeparting(aDeparture.getCode(), dprintformat.format(aDepartTime));
 		List<Trip> validtrips = new LinkedList<Trip>();
 		

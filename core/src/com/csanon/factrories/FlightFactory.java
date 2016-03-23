@@ -7,7 +7,9 @@ import java.util.List;
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.csanon.Airplane;
+import com.csanon.Airplanes;
 import com.csanon.Airport;
+import com.csanon.Airports;
 import com.csanon.Flight;
 import com.csanon.Price;
 import com.csanon.TimeUtil;
@@ -68,11 +70,9 @@ public class FlightFactory {
 			int seatsEconomy = Integer.parseInt(coachNode.getText());
 			Price priceEconomy = new Price(coachNode.get("Price"));
 
-			// TODO: Pull airports from cached list
-			Airport departureAirport = null;
-			Airport arrivalAirport = null;
-			// TODO: Pull airplane from cached list
-			Airplane airplane = null;
+			Airport departureAirport = Airports.getAirport(departureCode);
+			Airport arrivalAirport = Airports.getAirport(arrivalCode);
+			Airplane airplane = Airplanes.getAirplane(airplaneName);
 
 			Flight flight = makeFlight(airplane, duration, flightNumber, departureAirport, departureTime, arrivalAirport, arrivalTime, priceFirstClass, seatsFirstClass, priceEconomy, seatsEconomy);
 
