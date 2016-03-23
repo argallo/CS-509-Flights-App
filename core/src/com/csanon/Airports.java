@@ -14,12 +14,17 @@ public class Airports {
 
 	private final static HashMap<String, Airport> airports = new HashMap<String, Airport>();
 	private final static FlightServer server = ServerFactory.getServer();
+	private static boolean initialized = false;
 
 	public static void initialize() {
+		if (initialized) {
+			// TODO: throw exception
+		}
 		List<Airport> airportList = server.getAirports();
 		Map<String, Airport> airportMap = airportList.stream()
 				.collect(Collectors.toMap(Airport::getCode, Function.identity()));
 		airports.putAll(airportMap);
+		initialized = true;
 	}
 
 	public static List<Airport> getAirports() {
