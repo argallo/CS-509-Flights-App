@@ -11,7 +11,7 @@ import com.csanon.libgdx.ScreenManaging.ViewManager;
  * Created by Gallo on 3/19/2016.
  */
 public class SplashView extends BaseView {
-    public static final int SPLASH_TIME = 3; //approx seconds
+    public static final int SPLASH_TIME = 2; //approx seconds
 
     private Image splashLogo;
     private boolean counting = true;
@@ -24,7 +24,6 @@ public class SplashView extends BaseView {
     	splashLogo = new Image(Assets.getInstance().getSplash());
         //for now just load texture atlas but as it becomes bigger we may need to modify the act method to load in increments
         Assets.getInstance().loadCommonAssets();
-        
         
     }
 
