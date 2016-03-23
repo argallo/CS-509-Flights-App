@@ -1,5 +1,6 @@
 package com.csanon;
 
 public class Trip {
-	//TODO: Create Trip
+	private Flight aflight;
+	// TODO: Create Trip
 }
