@@ -1,5 +1,6 @@
 package com.csanon.libgdx.Views;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.csanon.libgdx.Utils.Assets;
 import com.csanon.libgdx.ScreenManaging.TransitionType;
@@ -20,14 +21,11 @@ public class SplashView extends BaseView {
      * Construct the splash view and add the logo background to the stage
      */
     public SplashView(){
-
-    }
-
-    @Override
-    public void init() {
-        splashLogo = new Image(Assets.getInstance().getSplash());
+    	splashLogo = new Image(Assets.getInstance().getSplash());
         //for now just load texture atlas but as it becomes bigger we may need to modify the act method to load in increments
         Assets.getInstance().loadCommonAssets();
+        
+        
     }
 
     @Override
@@ -72,7 +70,7 @@ public class SplashView extends BaseView {
      */
     public void completeSplashView(){
         counting = false;
-        ViewManager.getInstance().transitionViewTo(ViewID.MAIN_MENU, TransitionType.DEFAULT_TRANSITION);
+        ViewManager.getInstance().transitionViewTo(ViewID.SEARCH, TransitionType.DEFAULT_TRANSITION);
     }
 
 }
