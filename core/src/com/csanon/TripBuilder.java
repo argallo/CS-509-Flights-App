@@ -4,16 +4,13 @@ import java.time.OffsetDateTime;
 import java.util.List;
 
 public class TripBuilder {
-	private static TripBuilder instance = null;
+	private static final TripBuilder instance = new TripBuilder();
 
 	private TripBuilder() {
 
 	}
 
 	public TripBuilder getInstance() {
-		if (instance == null) {
-			instance = new TripBuilder();
-		}
 		return instance;
 	}
 
