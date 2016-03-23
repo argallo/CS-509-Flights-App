@@ -11,51 +11,51 @@ public class Flight {
 	private int SeatsFirstClass;
 	private Price PriceEconomy;
 	private int SeatsEconomy;
-	
-	public Flight(Airport aDepatureAirport, OffsetDateTime aDepartureTime, 
-						Airport anArrivalAirport, OffsetDateTime anArrivalTime,
-						Price aPriceFirstClass, int aSeatsFirstClass,
-						Price aPriceEconomy, int aSeatsEconomy) {
+
+	public Flight(Airport aDepatureAirport, OffsetDateTime aDepartureTime,
+			Airport anArrivalAirport, OffsetDateTime anArrivalTime,
+			Price aPriceFirstClass, int aSeatsFirstClass,
+			Price aPriceEconomy, int aSeatsEconomy) {
 		DepartureAirport = aDepatureAirport;
-		DepatureTime 	= aDepartureTime;
-		ArrivalAirport 	= anArrivalAirport;
-		ArrivalTime 	= anArrivalTime;
+		DepatureTime = aDepartureTime;
+		ArrivalAirport = anArrivalAirport;
+		ArrivalTime = anArrivalTime;
 		PriceFirstClass = aPriceFirstClass;
 		SeatsFirstClass = aSeatsFirstClass;
-		PriceEconomy 	= aPriceEconomy;
-		SeatsEconomy 	= aSeatsEconomy;
+		PriceEconomy = aPriceEconomy;
+		SeatsEconomy = aSeatsEconomy;
 	}
-	
+
 	public int getFirstClassSeats() {
 		return SeatsFirstClass;
 	}
-	
+
 	public int getCoachSeats() {
 		return SeatsEconomy;
 	}
-	
+
 	public Price getFirstClassPrice() {
 		return PriceFirstClass;
 	}
-	
+
 	public Price getEconomyPrice() {
 		return PriceEconomy;
 	}
-	
-	public OffsetDateTime getDepartureTime(){
+
+	public OffsetDateTime getDepartureTime() {
 		return DepatureTime;
 	}
-	
-	public OffsetDateTime getArrivalTime(){
+
+	public OffsetDateTime getArrivalTime() {
 		return ArrivalTime;
 	}
-	
-	public Airport getDepartureAirport(){
+
+	public Airport getDepartureAirport() {
 		return DepartureAirport;
 	}
-	
-	public Airport getArrivalAirport(){
+
+	public Airport getArrivalAirport() {
 		return ArrivalAirport;
 	}
-	
+
 }

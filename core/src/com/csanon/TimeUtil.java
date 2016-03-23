@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -21,24 +22,24 @@ import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
 
 public class TimeUtil {
-	private static DateTimeFormatter dtparseformat = DateTimeFormatter.ofPattern("yyyy L dd hh:mm Z");
-	
+	private static DateTimeFormatter dtparseformat = DateTimeFormatter.ofPattern("yyyy MMM dd HH:mm z");
+
 	public static OffsetDateTime string2OffsetDateTime(String aDateTime, double Lat, double Long) throws ParserConfigurationException, IOException, SAXException {
 		int offset = getOffsetByLatLong(Lat, Long);
-		return string2OffsetDateTime(aDateTime, offset);		
+		return string2OffsetDateTime(aDateTime, offset);
 	}
-	
+
 	public static OffsetDateTime string2OffsetDateTime(String aDateTime, int aOffset) {
-		OffsetDateTime DateTime = OffsetDateTime.parse(aDateTime, dtparseformat);
+		OffsetDateTime DateTime = ZonedDateTime.parse(aDateTime, dtparseformat).toOffsetDateTime();
 		DateTime = DateTime.withOffsetSameInstant(ZoneOffset.ofHoursMinutesSeconds(0, 0, aOffset));
 		return DateTime;
 	}
-	
+
 	public static OffsetDateTime OffsetDateTime2GMTOffsetDateTime(OffsetDateTime aDateTime) {
 		aDateTime = aDateTime.withOffsetSameInstant(ZoneOffset.ofHours(0));
 		return aDateTime;
 	}
-	
+
 	public static int getOffsetByLatLong(double Lat, double Long) throws ParserConfigurationException, IOException, SAXException {
 		String result = null;
 		try {
@@ -52,7 +53,7 @@ public class TimeUtil {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		/**
 		 * load the xml string into a DOM document check whether the result is valid and then return the offset
 		 */
@@ -61,31 +62,28 @@ public class TimeUtil {
 			DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
 			InputSource inputSource = new InputSource();
 			inputSource.setCharacterStream(new StringReader(result));
-			
-			Document docTimezone =  docBuilder.parse(inputSource);
-			
+
+			Document docTimezone = docBuilder.parse(inputSource);
+
 			Element topelement = docTimezone.getDocumentElement();
 			String status = topelement.getAttributeNode("status").getValue();
-			
+
 			if (!status.equals("OK")) {
-				//TODO : throw exception saying not a valid message
+				// TODO : throw exception saying not a valid message
 			}
-			
+
 			int offset = Integer.parseInt(topelement.getAttributeNode("gmtOffset").getValue());
-			
+
 			return offset;
-		}
-		catch (ParserConfigurationException e) {
+		} catch (ParserConfigurationException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw e;
+		} catch (SAXException e) {
 			e.printStackTrace();
 			throw e;
 		}
-		catch (IOException e) {
-			e.printStackTrace();
-			throw e;
-		}
-		catch (SAXException e) {
-			e.printStackTrace();
-			throw e;
-		}
-	}	
+	}
 }

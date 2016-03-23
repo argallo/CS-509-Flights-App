@@ -2,8 +2,12 @@ package com.csanon.server;
 
 import java.util.List;
 
+import com.csanon.Airplane;
 import com.csanon.Airport;
+import com.csanon.Flight;
+import com.csanon.factrories.AirplaneFactory;
 import com.csanon.factrories.AirportFactory;
+import com.csanon.factrories.FlightFactory;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
@@ -17,69 +21,72 @@ public class WPIFlightServer implements FlightServer {
 	}
 
 	@Override
-	public String getAirports() {
-		String result = null;
+	public List<Airport> getAirports() {
+		List<Airport> airports = null;
 		try {
 			HttpRequest request = Unirest.get(config.getURL()).queryString("team", config.getTeamNum())
 					.queryString("action", "list").queryString("list_type", "airports");
 			System.out.println(request.getUrl());
 			HttpResponse<String> response = request.asString();
-			result = response.getBody();
-			
-			List<Airport> airports = AirportFactory.getInstance().parseAirportsFromXML(result);
-			
-			System.out.println(airports.get(0).name());
-			
+			String result = response.getBody();
+
+			airports = AirportFactory.getInstance().parseAirportsFromXML(result);
+
+			System.out.println(airports.get(0).getName());
+
 		} catch (UnirestException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return result;
+		return airports;
 	}
 
 	@Override
-	public String getFlightsDeparting(String airportCode, String date) {
+	public List<Flight> getFlightsDeparting(String airportCode, String date) {
 		return getFlights(airportCode, date, "departing");
 	}
 
 	@Override
-	public String getFlightsArrivingAt(String airportCode, String date) {
+	public List<Flight> getFlightsArrivingAt(String airportCode, String date) {
 		return getFlights(airportCode, date, "arriving");
 	}
 
-	private String getFlights(String airportCode, String date, String direction) {
-		String result = null;
+	private List<Flight> getFlights(String airportCode, String date, String direction) {
+		List<Flight> flights = null;
 		try {
 			HttpRequest request = Unirest.get(config.getURL()).queryString("team", config.getTeamNum())
 					.queryString("action", "list").queryString("list_type", direction)
 					.queryString("airport", airportCode).queryString("day", date);
 			System.out.println(request.getUrl());
 			HttpResponse<String> response = request.asString();
-			result = response.getBody();
+			String result = response.getBody();
+			System.out.println(result);
+			flights = FlightFactory.getInstance().parseFlightsFromXML(result);
 		} catch (UnirestException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return result;
+		return flights;
 	}
 
 	@Override
-	public String getPlanes() {
-		String result = null;
+	public List<Airplane> getPlanes() {
+		List<Airplane> airplanes = null;
 		try {
 			HttpRequest request = Unirest.get(config.getURL()).queryString("team", config.getTeamNum())
 					.queryString("action", "list").queryString("list_type", "airplanes");
 			System.out.println(request.getUrl());
 			HttpResponse<String> response = request.asString();
-			result = response.getBody();
+			String result = response.getBody();
+			airplanes = AirplaneFactory.getInstance().parseAirplanesFromXML(result);
 		} catch (UnirestException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
-		return result;
+		return airplanes;
 	}
 
 }
