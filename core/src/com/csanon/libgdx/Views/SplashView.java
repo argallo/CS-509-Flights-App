@@ -25,7 +25,6 @@ public class SplashView extends BaseView {
         //for now just load texture atlas but as it becomes bigger we may need to modify the act method to load in increments
         Assets.getInstance().loadCommonAssets();
         
-        
     }
 
     @Override
