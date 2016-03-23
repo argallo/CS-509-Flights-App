@@ -204,7 +204,7 @@ public class Airport {
 	public boolean isValid() {
 		
 		// If the name isn't valid, the object isn't valid
-		if ((mName == null) || (mName == ""))
+		if ((mName == null) || (mName.equals("")))
 			return false;
 		
 		// If we don't have a 3 character code, object isn't valid
