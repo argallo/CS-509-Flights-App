@@ -14,7 +14,7 @@ public class WPIFlightServerTest {
 
 	@Test
 	public void testGetAirports() {
-		WPIFlightServer server = new WPIFlightServer(new ServerConfig());
+		FlightServer server = ServerFactory.getServer();
 		List<Airport> result = server.getAirports();
 		System.out.println(result);
 		assertTrue(result.size() > 0);
@@ -22,21 +22,21 @@ public class WPIFlightServerTest {
 
 	@Test
 	public void testGetDepartingFlights() {
-		WPIFlightServer server = new WPIFlightServer(new ServerConfig());
+		FlightServer server = ServerFactory.getServer();
 		List<Flight> result = server.getFlightsDeparting("BOS", "2016_05_10");
 		assertTrue(result.size() > 0);
 	}
 
 	@Test
 	public void testGetArrivingFlights() {
-		WPIFlightServer server = new WPIFlightServer(new ServerConfig());
+		FlightServer server = ServerFactory.getServer();
 		List<Flight> result = server.getFlightsArrivingAt("BOS", "2016_05_10");
 		assertTrue(result.size() > 0);
 	}
 
 	@Test
 	public void testGetPlanes() {
-		WPIFlightServer server = new WPIFlightServer(new ServerConfig());
+		FlightServer server = ServerFactory.getServer();
 		List<Airplane> result = server.getPlanes();
 		assertTrue(result.size() > 0);
 	}
