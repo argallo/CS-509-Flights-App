@@ -24,7 +24,8 @@ import com.mashape.unirest.request.HttpRequest;
 public class TimeUtil {
 	private static DateTimeFormatter dtparseformat = DateTimeFormatter.ofPattern("yyyy MMM dd HH:mm z");
 
-	public static OffsetDateTime string2OffsetDateTime(String aDateTime, double Lat, double Long) throws ParserConfigurationException, IOException, SAXException {
+	public static OffsetDateTime string2OffsetDateTime(String aDateTime, double Lat, double Long)
+			throws ParserConfigurationException, IOException, SAXException {
 		int offset = getOffsetByLatLong(Lat, Long);
 		return string2OffsetDateTime(aDateTime, offset);
 	}
@@ -40,13 +41,12 @@ public class TimeUtil {
 		return aDateTime;
 	}
 
-	public static int getOffsetByLatLong(double Lat, double Long) throws ParserConfigurationException, IOException, SAXException {
+	public static int getOffsetByLatLong(double Lat, double Long)
+			throws ParserConfigurationException, IOException, SAXException {
 		String result = null;
 		try {
-			HttpRequest request = Unirest.get("http://api.timezonedb.com")
-					.queryString("lat", new Double(Lat))
-					.queryString("lng", new Double(Long))
-					.queryString("key", "NWZDDPVDUNKW");
+			HttpRequest request = Unirest.get("http://api.timezonedb.com").queryString("lat", new Double(Lat))
+					.queryString("lng", new Double(Long)).queryString("key", "NWZDDPVDUNKW");
 			HttpResponse<String> response = request.asString();
 			result = response.getBody();
 		} catch (UnirestException e) {
@@ -55,7 +55,8 @@ public class TimeUtil {
 		}
 
 		/**
-		 * load the xml string into a DOM document check whether the result is valid and then return the offset
+		 * load the xml string into a DOM document check whether the result is
+		 * valid and then return the offset
 		 */
 		try {
 			DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();

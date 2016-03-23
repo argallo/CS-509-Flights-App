@@ -3,8 +3,10 @@ package com.csanon.libgdx.Views;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.csanon.libgdx.Utils.Assets;
+import com.csanon.Airports;
 import com.csanon.libgdx.ScreenManaging.TransitionType;
 import com.csanon.libgdx.Utils.ViewID;
+
 import com.csanon.libgdx.ScreenManaging.ViewManager;
 
 /**
@@ -24,8 +26,12 @@ public class SplashView extends BaseView {
         //for now just load texture atlas but as it becomes bigger we may need to modify the act method to load in increments
         Assets.getInstance().loadCommonAssets();
         
-		
-	}
+
+        //Initialize the list of planes and airports
+        Airports.initialize();
+        //Airplanes.initialize()
+    }
+
 
     @Override
     public void setSizes() {

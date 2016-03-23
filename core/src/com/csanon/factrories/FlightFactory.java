@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
+import com.csanon.Airplane;
 import com.csanon.Airport;
 import com.csanon.Flight;
 import com.csanon.Price;
@@ -24,9 +25,9 @@ public class FlightFactory {
 		return INSTANCE;
 	}
 
-	public Flight makeFlight(Airport departureAirport, OffsetDateTime departureTime, Airport arrivalAirport, OffsetDateTime arrivalTime, Price priceFirstClass, int seatsFirstClass,
+	public Flight makeFlight(Airplane airplane, String duration, String flightNumber, Airport departureAirport, OffsetDateTime departureTime, Airport arrivalAirport, OffsetDateTime arrivalTime, Price priceFirstClass, int seatsFirstClass,
 			Price priceEconomy, int seatsEconomy) {
-		return new Flight(departureAirport, departureTime, arrivalAirport, arrivalTime, priceFirstClass, seatsFirstClass, priceEconomy, seatsEconomy);
+		return new Flight(airplane, duration, flightNumber, departureAirport, departureTime, arrivalAirport, arrivalTime, priceFirstClass, seatsFirstClass, priceEconomy, seatsEconomy);
 	}
 
 	public List<Flight> parseFlightsFromXML(String xml) {
@@ -70,8 +71,10 @@ public class FlightFactory {
 			// TODO: Pull airports from cached list
 			Airport departureAirport = null;
 			Airport arrivalAirport = null;
+			// TODO: Pull airplane from cached list
+			Airplane airplane = null;
 
-			Flight flight = makeFlight(departureAirport, departureTime, arrivalAirport, arrivalTime, priceFirstClass, seatsFirstClass, priceEconomy, seatsEconomy);
+			Flight flight = makeFlight(airplane, duration, flightNumber, departureAirport, departureTime, arrivalAirport, arrivalTime, priceFirstClass, seatsFirstClass, priceEconomy, seatsEconomy);
 
 			flights.add(flight);
 		});
