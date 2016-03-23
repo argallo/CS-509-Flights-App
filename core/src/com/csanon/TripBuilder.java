@@ -20,7 +20,7 @@ public class TripBuilder {
 	}
 
 	public List<Trip> getTrips(Airport aDeparture, Airport aDestination, OffsetDateTime aDepartTime) {
-		List<Flight> flights = aserver.getFlightsDeparting(aDeparture.getCode(), dprintformat.format(aDepartTime));
+		List<Flight> flights = aserver.getFlightsDeparting(aDeparture, aDepartTime);
 		List<Trip> validtrips = new LinkedList<Trip>();
 		
 		flights.forEach(flight -> {

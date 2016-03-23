@@ -1,5 +1,7 @@
 package com.csanon.server;
 
+import java.time.OffsetDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import com.csanon.Airplane;
@@ -15,6 +17,7 @@ import com.mashape.unirest.request.HttpRequest;
 
 public class WPIFlightServer implements FlightServer {
 	private final ServerConfig config;
+	private final DateTimeFormatter serverDateFormat = DateTimeFormatter.ofPattern("yyy_MM_dd");
 
 	public WPIFlightServer(ServerConfig config) {
 		this.config = config;
@@ -43,21 +46,24 @@ public class WPIFlightServer implements FlightServer {
 	}
 
 	@Override
-	public List<Flight> getFlightsDeparting(String airportCode, String date) {
-		return getFlights(airportCode, date, "departing");
+	public List<Flight> getFlightsDeparting(Airport airport, OffsetDateTime date) {
+		return getFlights(airport, date, "departing");
 	}
 
 	@Override
-	public List<Flight> getFlightsArrivingAt(String airportCode, String date) {
-		return getFlights(airportCode, date, "arriving");
+	public List<Flight> getFlightsArrivingAt(Airport airport, OffsetDateTime date) {
+		return getFlights(airport, date, "arriving");
 	}
 
-	private List<Flight> getFlights(String airportCode, String date, String direction) {
+	private List<Flight> getFlights(Airport airport, OffsetDateTime date, String direction) {
 		List<Flight> flights = null;
+		String dateString = date.format(serverDateFormat);
+		String airportCode = airport.getCode();
+		
 		try {
 			HttpRequest request = Unirest.get(config.getURL()).queryString("team", config.getTeamNum())
 					.queryString("action", "list").queryString("list_type", direction)
-					.queryString("airport", airportCode).queryString("day", date);
+					.queryString("airport", airportCode).queryString("day", dateString);
 			System.out.println(request.getUrl());
 			HttpResponse<String> response = request.asString();
 			String result = response.getBody();
