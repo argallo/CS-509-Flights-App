@@ -25,10 +25,24 @@ public class SplashView extends BaseView {
     	splashLogo = new Image(Assets.getInstance().getSplash());
         //for now just load texture atlas but as it becomes bigger we may need to modify the act method to load in increments
         Assets.getInstance().loadCommonAssets();
-        
 
+        new Thread(new Runnable() {
+        	   @Override
+        	   public void run() {
+        	      // do something important here, asynchronously to the rendering thread
+        		   Airports.initialize();
+        	      // post a Runnable to the rendering thread that processes the result
+        	      Gdx.app.postRunnable(new Runnable() {
+        	         @Override
+        	         public void run() {
+        	            // process the result, e.g. add it to an Array<Result> field of the ApplicationListener.
+        	        	 completeSplashView();
+        	         }
+        	      });
+        	   }
+        	}).start();
         //Initialize the list of planes and airports
-        Airports.initialize();
+       
         //Airplanes.initialize()
     }
 
@@ -53,7 +67,7 @@ public class SplashView extends BaseView {
     @Override
     public void act(float delta) {
         super.act(delta);
-        updateSplash(delta);
+        //updateSplash(delta);
     }
 
     /**
