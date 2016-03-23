@@ -3,6 +3,7 @@ package com.csanon.libgdx.Views;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.csanon.libgdx.Utils.Assets;
+import com.csanon.Airplanes;
 import com.csanon.Airports;
 import com.csanon.libgdx.ScreenManaging.TransitionType;
 import com.csanon.libgdx.Utils.ViewID;
@@ -31,6 +32,7 @@ public class SplashView extends BaseView {
         	   public void run() {
         	      // do something important here, asynchronously to the rendering thread
         		   Airports.initialize();
+        		   Airplanes.initialize();
         	      // post a Runnable to the rendering thread that processes the result
         	      Gdx.app.postRunnable(new Runnable() {
         	         @Override

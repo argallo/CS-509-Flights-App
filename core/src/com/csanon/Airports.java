@@ -28,10 +28,16 @@ public class Airports {
 	}
 
 	public static List<Airport> getAirports() {
+		if(!initialized){
+			//TODO: throw exception
+		}
 		return new LinkedList<Airport>(airports.values());
 	}
 
 	public static Airport getAirport(String code) {
+		if(!initialized){
+			//TODO: throw exception
+		}
 		return airports.get(code);
 	}
 
