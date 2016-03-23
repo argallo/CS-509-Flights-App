@@ -22,6 +22,20 @@ public class Price {
 			e.printStackTrace();
 		}
 	}
+	
+	@Override
+	public boolean equals(Object aOther) {
+		if (aOther == null) {
+			return false;
+		} else if (!(aOther instanceof Price)) {
+			return false;
+		} else if (aOther == this) {
+			return true;
+		} else {
+			Price other = (Price)aOther;
+			return (priceVal.equals(other.priceVal));
+		}
+	}
 
 	public int CompareTo(Price aOther) {
 		return priceVal.compareTo(aOther.priceVal);

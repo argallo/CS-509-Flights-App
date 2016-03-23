@@ -48,4 +48,19 @@ public class Trip {
 	public List<Flight> getLegs() {
 		return legs;
 	}
+	
+	@Override
+	public boolean equals(Object aOther) {
+		if (aOther == null) {
+			return false;
+		} else if (!(aOther instanceof Trip)) {
+			return false;
+		} else if (aOther == this) {
+			return true;
+		} else {
+			Trip other = (Trip)aOther;
+			return flight.equals(other.flight);
+		}
+	}
+	
 }
