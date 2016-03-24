@@ -15,25 +15,38 @@ import com.csanon.server.FlightServer;
 import com.csanon.server.ServerFactory;
 
 public class TripBuilder {
-	private static final TripBuilder instance = new TripBuilder();
-	private static final FlightServer server = ServerFactory.getServer();
+	private static final FlightServer SERVERDEFUALT = ServerFactory.getServer();
 	private static final DateTimeFormatter adateformat = DateTimeFormatter.ofPattern("yyy_MM_dd");
-	private static final int maxhopcount = 1;
-	private static final int minlayover = 30 * 60;
-	private static final int maxlayover = 2 * 60 * 60;
+	
+	private static final int MAXHOPCOUNTDEFUALT = 3;
+	private static final int MINLAYOVERDEFAULT = 1 * 60 * 60;
+	private static final int MAXLAYOVERDEFAULT = 5 * 60 * 60;
+	
+	private final FlightServer server;
+	private final int maxhopcount;
+	private final int minlayover;
+	private final int maxlayover;
 
-	private TripBuilder() {
+	public TripBuilder() {
+		this(MAXHOPCOUNTDEFUALT, MINLAYOVERDEFAULT, MAXLAYOVERDEFAULT);
 	}
-
-	public static TripBuilder getInstance() {
-		return instance;
+	
+	public TripBuilder(int aMaxHopeCount, int aMinLayover, int aMaxLayover) {
+		this(SERVERDEFUALT, aMaxHopeCount, aMinLayover, aMaxLayover);
 	}
-
+	
+	public TripBuilder(FlightServer aServer, int aMaxHopeCount, int aMinLayover, int aMaxLayover) {
+		server = aServer;
+		maxhopcount = aMaxHopeCount;
+		minlayover = aMinLayover;
+		maxlayover = aMaxLayover;
+	}
+	
 	public List<Trip> getTrips(Airport aDeparture, Airport aDestination, OffsetDateTime aDepartTime) {
 		Map<Airport, Map<String, List<Flight>>> dataset = collectAData(maxhopcount, aDeparture, aDestination,
 				aDepartTime);
 		List<Trip> validtrips = new LinkedList<Trip>();
-
+		//loop over all possible hop counts
 		for (int i = 1; i <= maxhopcount; i++) {
 			validtrips.addAll(searchForTrips(i, aDeparture, aDestination, aDepartTime, dataset));
 		}
@@ -41,7 +54,7 @@ public class TripBuilder {
 		return validtrips;
 	}
 
-	private static List<Trip> searchForTrips(int aHopCount, Airport aDeparture, Airport aDestination,
+	private List<Trip> searchForTrips(int aHopCount, Airport aDeparture, Airport aDestination,
 			OffsetDateTime aDepartTime, Map<Airport, Map<String, List<Flight>>> aDataSet) {
 		List<Trip> validtrips = new LinkedList<Trip>();
 		if (aHopCount == 1) {
@@ -111,7 +124,7 @@ public class TripBuilder {
 		return validtrips;
 	}
 
-	private static void addFlightsToMap(Airport aDeparture, OffsetDateTime aTime,
+	private void addFlightsToMap(Airport aDeparture, OffsetDateTime aTime,
 			Map<Airport, Map<String, List<Flight>>> aDataSet) {
 		if (!aDataSet.containsKey(aDeparture)) {
 			aDataSet.put(aDeparture, new HashMap<String, List<Flight>>());
@@ -122,7 +135,7 @@ public class TripBuilder {
 		}
 	}
 
-	private static Map<Airport, Map<String, List<Flight>>> collectAData(int aMaxHopCount, Airport aDeparture,
+	private Map<Airport, Map<String, List<Flight>>> collectAData(int aMaxHopCount, Airport aDeparture,
 			Airport aDestination, OffsetDateTime aDepartTime) {
 		Map<Airport, Map<String, List<Flight>>> dataset = new HashMap<Airport, Map<String, List<Flight>>>();
 		if (aMaxHopCount > 0) {
@@ -131,7 +144,7 @@ public class TripBuilder {
 		return dataset;
 	}
 
-	private static void collectData(int aMaxHopCount, Airport aDeparture, Airport aDestination,
+	private void collectData(int aMaxHopCount, Airport aDeparture, Airport aDestination,
 			OffsetDateTime aDepartTime, Map<Airport, Map<String, List<Flight>>> aDataSet) {
 		if (aMaxHopCount > 0) {
 			Collection<OffsetDateTime> datetimes = findPossibleDates(aDepartTime);

@@ -25,7 +25,7 @@ public class TripBuilderTests {
 		Airport la = Airports.getAirport("LAX");
 		
 		OffsetDateTime depart = OffsetDateTime.of(2016, 5, 10, 0, 0, 0, 0, ZoneOffset.ofHours(0));
-		List<Trip> trips = TripBuilder.getInstance().getTrips(boston, la, depart);
+		List<Trip> trips = (new TripBuilder()).getTrips(boston, la, depart);
 
 		OffsetDateTime departuretime = TimeUtil.string2OffsetDateTime("2016 May 10 16:20 GMT", 0);
 		OffsetDateTime arrivaltime = TimeUtil.string2OffsetDateTime("2016 May 10 22:51 GMT", 0);
@@ -48,7 +48,7 @@ public class TripBuilderTests {
 		Airport phoenix = Airports.getAirport("PHX");
 		
 		OffsetDateTime depart = OffsetDateTime.of(2016, 5, 10, 0, 0, 0, 0, ZoneOffset.ofHours(0));
-		List<Trip> trips = TripBuilder.getInstance().getTrips(boston, phoenix, depart);
+		List<Trip> trips = (new TripBuilder()).getTrips(boston, phoenix, depart);
 
 		OffsetDateTime departuretime1 = TimeUtil.string2OffsetDateTime("2016 May 10 11:56 GMT", 0);
 		OffsetDateTime arrivaltime1 = TimeUtil.string2OffsetDateTime("2016 May 10 16:44 GMT", 0);
