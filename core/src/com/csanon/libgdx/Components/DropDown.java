@@ -21,19 +21,17 @@ public class DropDown extends Group{
 	public DropDown(){
 		selectBoxStyle = new SelectBoxStyle();
 		selectBoxStyle.fontColor = Tint.BACKGROUND_COLOR;
-		selectBoxStyle.background = Assets.getInstance().getDrawable(Pic.Pixel);
-		selectBoxStyle.font = Assets.getInstance().getSmallFont();
+		selectBoxStyle.background = Assets.getInstance().getDrawable(Pic.Dropdown_Icon);
+		selectBoxStyle.font = Assets.getInstance().getXSmallFont();
 		selectBoxStyle.scrollStyle = new ScrollPaneStyle();
 		selectBoxStyle.scrollStyle.background = Assets.getInstance().getDrawable(Pic.Pixel);
 		selectBoxStyle.listStyle = new ListStyle();
-		selectBoxStyle.listStyle.font = Assets.getInstance().getSmallFont();
+		selectBoxStyle.listStyle.font = Assets.getInstance().getXSmallFont();
 		selectBoxStyle.listStyle.fontColorSelected = Color.RED;
 		selectBoxStyle.listStyle.fontColorUnselected = Color.ORANGE;
 		selectBoxStyle.listStyle.selection = Assets.getInstance().getDrawable(Pic.Pixel);
 		selectBoxStyle.listStyle.background = Assets.getInstance().getDrawable(Pic.Pixel);
 		selectBox = new SelectBox<String>(selectBoxStyle);
-		selectBox.setSize(150, 50);
-		selectBox.setPosition(300, 300);
 		addActor(selectBox);
 	}
 	
@@ -43,5 +41,14 @@ public class DropDown extends Group{
 		selectBox.setItems(array);
 	}
 	
+	public void setPosition(float x, float y){
+		selectBox.setPosition(x, y);
+	}
+	
+	public void pack(){
+		selectBox.setSize(selectBox.getPrefWidth()+100, selectBox.getPrefHeight());
+		System.out.println(selectBox.getWidth()+" "+selectBox.getHeight());
+		selectBox.validate();
+	}
 	
 }

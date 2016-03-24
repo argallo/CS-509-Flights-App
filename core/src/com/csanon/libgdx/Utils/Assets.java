@@ -85,6 +85,10 @@ public class Assets extends AssetManager {
     public void loadCommonAssets() {
         //load("Appimages/textureatlas.atlas", TextureAtlas.class);
     	load(Pic.Pixel, Texture.class, textureParam);
+    	load(Pic.Dropdown_Icon, Texture.class, textureParam);
+    	load(Pic.Curve_rectangle, Texture.class, textureParam);
+    	load(Pic.Black, Texture.class, textureParam);
+    	load(Pic.Search_Icon, Texture.class, textureParam);
         finishLoading();
     }
 
