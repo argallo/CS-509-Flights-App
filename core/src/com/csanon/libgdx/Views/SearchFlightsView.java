@@ -3,6 +3,7 @@ package com.csanon.libgdx.Views;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.csanon.Airport;
 import com.csanon.Airports;
 import com.csanon.libgdx.Components.Button;
@@ -11,6 +12,7 @@ import com.csanon.libgdx.Components.TextBox;
 import com.csanon.libgdx.Components.TextLabel;
 import com.csanon.libgdx.Components.TintedImage;
 import com.csanon.libgdx.Components.TitleLabel;
+import com.csanon.libgdx.Components.TripsPanel;
 import com.csanon.libgdx.Utils.Assets;
 import com.csanon.libgdx.Utils.Constants;
 import com.csanon.libgdx.Utils.Pic;
@@ -25,7 +27,7 @@ public class SearchFlightsView extends BaseView {
 	private DropDown airportDropdown;
 	private TintedImage background;
 	private TextBox textBox;
-	
+	private TripsPanel tripsPanel;
 
 	@Override
 	public void init() {
@@ -48,6 +50,8 @@ public class SearchFlightsView extends BaseView {
 		icon.setPosition(600, 385);
 		searchButton = new Button(Pic.Pixel, Tint.GRAY, "Search", Assets.getInstance().getMidFont(), icon);
 		
+		tripsPanel = new TripsPanel();
+		//tripsPanel.setVisible(false);
 	}
 
 	@Override
@@ -66,6 +70,7 @@ public class SearchFlightsView extends BaseView {
 		dateLabel.setPosition(805, 500);
 		textBox.setPosition(1060, 500);
 		searchButton.setPosition(Constants.VIRTUAL_WIDTH/2-searchButton.getWidth()/2, 380);
+		tripsPanel.setPosition(Constants.VIRTUAL_WIDTH/2-400, 10);
 	}
 
 	@Override
@@ -77,6 +82,7 @@ public class SearchFlightsView extends BaseView {
 		addActor(dateLabel);
 		addActor(textBox);
 		addActor(searchButton);
+		addActor(tripsPanel);
 
 	}
 
