@@ -1,12 +1,16 @@
 package com.csanon.libgdx.Views;
 
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.csanon.Airport;
 import com.csanon.Airports;
+import com.csanon.Trip;
+import com.csanon.TripBuilder;
 import com.csanon.libgdx.Components.Button;
+import com.csanon.libgdx.Components.ButtonAction;
 import com.csanon.libgdx.Components.DropDown;
 import com.csanon.libgdx.Components.TextBox;
 import com.csanon.libgdx.Components.TextLabel;
@@ -23,8 +27,8 @@ public class SearchFlightsView extends BaseView {
 	private Button searchButton;
 
 	private TitleLabel titleLabel;
-	private TextLabel airportLabel, dateLabel;
-	private DropDown airportDropdown;
+	private TextLabel departureAirportLabel, arrivalAirportLabel, dateLabel;
+	private DropDown departureAirportDropdown, arrivalAirportDropdown;
 	private TintedImage background;
 	private TextBox textBox;
 	private TripsPanel tripsPanel;
@@ -33,23 +37,32 @@ public class SearchFlightsView extends BaseView {
 	public void init() {
 		background = new TintedImage(Pic.Pixel, Tint.BACKGROUND_COLOR);
 		titleLabel = new TitleLabel("Flight Finder");
-		airportLabel = new TextLabel("Select Airport:", Assets.getInstance().getSmallFont());
+		departureAirportLabel = new TextLabel("Depart Airport:", Assets.getInstance().getSmallFont());
+		arrivalAirportLabel = new TextLabel("Arrival Airport:", Assets.getInstance().getSmallFont());
 		dateLabel = new TextLabel("Departure Date:", Assets.getInstance().getSmallFont());
-		airportDropdown = new DropDown();
+		departureAirportDropdown = new DropDown();
+		arrivalAirportDropdown = new DropDown();
 		List<Airport> airports =  Airports.getAirports();
 		List<String> airportNames = new LinkedList<String>();
 		for(Airport airport:airports){
 			airportNames.add(airport.getName()+" ("+airport.getCode()+")");
 		}
-		airportDropdown.setItems(airportNames);
-		airportDropdown.pack();
+		departureAirportDropdown.setItems(airportNames);
+		departureAirportDropdown.pack();
+		arrivalAirportDropdown.setItems(airportNames);
+		arrivalAirportDropdown.pack();
 		textBox = new TextBox(10,"xx/xx/xxxx", TextBox.DATE);
 		
 		TintedImage icon = new TintedImage(Pic.Search_Icon);
-		icon.setSize(90,90);
-		icon.setPosition(600, 385);
+		icon.setSize(90, 90);
+		icon.setPosition(980, 385);
 		searchButton = new Button(Pic.Pixel, Tint.GRAY, "Search", Assets.getInstance().getMidFont(), icon);
-		
+		searchButton.setButtonAction(new ButtonAction() {
+			@Override
+			public void buttonPressed() {
+				handle(0);
+			}
+		});
 		tripsPanel = new TripsPanel();
 		//tripsPanel.setVisible(false);
 	}
@@ -65,20 +78,24 @@ public class SearchFlightsView extends BaseView {
 	@Override
 	public void setPositions() {
 		titleLabel.setPosition(Constants.VIRTUAL_WIDTH/2 - titleLabel.getWidth()/2, 600);
-		airportDropdown.setPosition(235, 500);
-		airportLabel.setPosition(10, 500);
+		departureAirportDropdown.setPosition(235, 500);
+		arrivalAirportDropdown.setPosition(235, 420);
+		departureAirportLabel.setPosition(10, 500);
+		arrivalAirportLabel.setPosition(10, 420);
 		dateLabel.setPosition(805, 500);
 		textBox.setPosition(1060, 500);
-		searchButton.setPosition(Constants.VIRTUAL_WIDTH/2-searchButton.getWidth()/2, 380);
-		tripsPanel.setPosition(Constants.VIRTUAL_WIDTH/2-400, 10);
+		searchButton.setPosition(900, 380);
+		tripsPanel.setPosition(Constants.VIRTUAL_WIDTH / 2 - 400, 10);
 	}
 
 	@Override
 	public void addActors() {
 		addActor(background);
 		addActor(titleLabel);
-		addActor(airportLabel);
-		addActor(airportDropdown);
+		addActor(departureAirportLabel);
+		addActor(arrivalAirportLabel);
+		addActor(departureAirportDropdown);
+		addActor(arrivalAirportDropdown);
 		addActor(dateLabel);
 		addActor(textBox);
 		addActor(searchButton);
@@ -88,8 +105,27 @@ public class SearchFlightsView extends BaseView {
 
 	@Override
 	public void handle(int outcome) {
-		// TODO Auto-generated method stub
+		switch (outcome){
+			case 0:
 
+				int year = Integer.parseInt(textBox.getText().substring(6));
+				int month = Integer.parseInt(textBox.getText().substring(0,2));
+				int day = Integer.parseInt(textBox.getText().substring(3, 5));
+				Airport departAirport = getAirport(departureAirportDropdown.getCurrentItem());
+				Airport arrivalAirport = getAirport(arrivalAirportDropdown.getCurrentItem());
+				System.out.print(year+" "+ month+" "+day);
+				OffsetDateTime depart = OffsetDateTime.of(year, month, day, 0, 0, 0, 0, ZoneOffset.ofHours(0));
+				List<Trip> trips = TripBuilder.getInstance().getTrips(departAirport, arrivalAirport, depart);
+				tripsPanel.updateTrips(trips);
+				break;
+		}
+
+	}
+
+	public Airport getAirport(String airportString){
+		airportString = airportString.substring(airportString.length()-4,airportString.length()-1);
+		System.out.print(airportString);
+		return Airports.getAirport(airportString);
 	}
 
 }

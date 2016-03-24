@@ -50,5 +50,9 @@ public class DropDown extends Group{
 		System.out.println(selectBox.getWidth()+" "+selectBox.getHeight());
 		selectBox.validate();
 	}
+
+	public String getCurrentItem(){
+		return selectBox.getSelected();
+	}
 	
 }

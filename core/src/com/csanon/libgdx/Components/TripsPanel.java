@@ -2,8 +2,13 @@ package com.csanon.libgdx.Components;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.csanon.Flight;
+import com.csanon.Trip;
+import com.csanon.libgdx.Utils.Assets;
 import com.csanon.libgdx.Utils.Pic;
 import com.csanon.libgdx.Utils.Tint;
+
+import java.util.List;
 
 public class TripsPanel extends Group{
 	
@@ -31,6 +36,33 @@ public class TripsPanel extends Group{
 	        //appendNames();
 
 	    }
+
+		public void updateTrips(List<Trip> trips){
+			removeRows();
+			rows.setSize(800, trips.size() * 100);
+			scrollPane.setSize(800, trips.size()*100);
+			for(int i = 0; i < trips.size(); i++){
+				TintedImage row = new TintedImage(Pic.Pixel, Tint.GRAY);
+				Flight flight = trips.get(i).getLegs().get(0); //TODO: this will be more info from each leg
+				String info = "";
+				info += "Flight number:"+flight.getFlightNum()+" ";
+				info += "Duration: "+flight.getDuration()+" ";
+				info += "\nDepart: "+flight.getDepartureTime()+" ";
+				info += "Arrive: "+flight.getArrivalTime()+" ";
+				info += "\nEconomy: "+flight.getEconomyPrice()+" ";
+				info += "First Class: "+flight.getFirstClassPrice()+"\n";
+				TextLabel infoLabel = new TextLabel(info, Assets.getInstance().getXSmallFont());
+				row.setSize(800, 98);
+				infoLabel.setPosition(170, i * 100);
+				row.setPosition(0, i*100);
+				rows.addActor(row);
+				rows.addActor(infoLabel);
+			}
+		}
+
+		public void removeRows(){
+			rows.clear();
+		}
 /*
 	    public void appendNames(){
 	        String names = "";
