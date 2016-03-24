@@ -17,7 +17,7 @@ import com.csanon.server.ServerFactory;
 public class TripBuilder {
 	private static final FlightServer SERVERDEFUALT = ServerFactory.getServer();
 	private static final DateTimeFormatter adateformat = DateTimeFormatter.ofPattern("yyy_MM_dd");
-	
+
 	private static final int MAXHOPCOUNTDEFUALT = 3;
 	private static final int MINLAYOVERDEFAULT = 1 * 60 * 60;
 	private static final int MAXLAYOVERDEFAULT = 5 * 60 * 60;
@@ -124,7 +124,7 @@ public class TripBuilder {
 		return validtrips;
 	}
 
-	private void addFlightsToMap(Airport aDeparture, OffsetDateTime aTime,
+	private boolean addFlightsToMap(Airport aDeparture, OffsetDateTime aTime,
 			Map<Airport, Map<String, List<Flight>>> aDataSet) {
 		if (!aDataSet.containsKey(aDeparture)) {
 			aDataSet.put(aDeparture, new HashMap<String, List<Flight>>());
@@ -132,7 +132,9 @@ public class TripBuilder {
 
 		if (!aDataSet.get(aDeparture).containsKey(adateformat.format(aTime))) {
 			aDataSet.get(aDeparture).put(adateformat.format(aTime), server.getFlightsDeparting(aDeparture, aTime));
+			return true;
 		}
+		return false;
 	}
 
 	private Map<Airport, Map<String, List<Flight>>> collectAData(int aMaxHopCount, Airport aDeparture,
@@ -150,14 +152,17 @@ public class TripBuilder {
 			Collection<OffsetDateTime> datetimes = findPossibleDates(aDepartTime);
 
 			datetimes.forEach(time -> {
-				addFlightsToMap(aDeparture, time, aDataSet);
+				if (addFlightsToMap(aDeparture, time, aDataSet)) {
 
 				aDataSet.get(aDeparture).get(adateformat.format(time)).forEach(flight -> {
-					OffsetDateTime minlayovertime = flight.getArrivalTime().plusSeconds(minlayover);
-					OffsetDateTime maxlayovertime = flight.getArrivalTime().plusSeconds(maxlayover);
-					collectData(aMaxHopCount - 1, flight.getArrivalAirport(), aDestination, minlayovertime, aDataSet);
-					collectData(aMaxHopCount - 1, flight.getArrivalAirport(), aDestination, maxlayovertime, aDataSet);
-				});
+						OffsetDateTime minlayovertime = flight.getArrivalTime().plusSeconds(minlayover);
+						OffsetDateTime maxlayovertime = flight.getArrivalTime().plusSeconds(maxlayover);
+						collectData(aMaxHopCount - 1, flight.getArrivalAirport(), aDestination, minlayovertime,
+								aDataSet);
+						collectData(aMaxHopCount - 1, flight.getArrivalAirport(), aDestination, maxlayovertime,
+								aDataSet);
+					});
+				}
 			});
 
 		}
