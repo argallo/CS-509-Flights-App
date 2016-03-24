@@ -152,7 +152,7 @@ public class TripBuilder {
 			Collection<OffsetDateTime> datetimes = findPossibleDates(aDepartTime);
 
 			datetimes.forEach(time -> {
-				if (addFlightsToMap(aDeparture, time, aDataSet)) {
+				addFlightsToMap(aDeparture, time, aDataSet);
 
 				aDataSet.get(aDeparture).get(adateformat.format(time)).forEach(flight -> {
 						OffsetDateTime minlayovertime = flight.getArrivalTime().plusSeconds(minlayover);
@@ -162,7 +162,6 @@ public class TripBuilder {
 						collectData(aMaxHopCount - 1, flight.getArrivalAirport(), aDestination, maxlayovertime,
 								aDataSet);
 					});
-				}
 			});
 
 		}
