@@ -36,10 +36,10 @@ public class TripBuilderTests {
 											new Price("$360.95"), 50);
 		Trip expectedTrip = new Trip(exepctedFlight);
 
-		assertEquals(trips.size(), 1);
-		assertEquals(trips.get(0).getLayoverTime(), "00:00");
-		assertEquals(trips.get(0).getTotalTime(), "391");
-		assertEquals(trips.get(0), expectedTrip);
+		List<Trip> expectedTrips = new LinkedList<Trip>();
+		expectedTrips.add(expectedTrip);
+		
+		assertEquals(expectedTrips, trips);
 	}
 	
 	@Test
@@ -72,7 +72,6 @@ public class TripBuilderTests {
 		expectedTrips.add(expectedTrip1);
 		expectedTrips.add(expectedTrip2);
 		
-		assertEquals(trips.size(), 2);
-		assertEquals(trips, expectedTrips);
+		assertEquals(expectedTrips, trips);
 	}
 }
