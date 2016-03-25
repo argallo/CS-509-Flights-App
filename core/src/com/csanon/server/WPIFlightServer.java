@@ -104,7 +104,7 @@ public class WPIFlightServer implements FlightServer {
 		int offset = 0;
 		try {
 			HttpRequest request = Unirest.get("http://api.timezonedb.com").queryString("lat", new Double(lat))
-					.queryString("lng", new Double(lon)).queryString("key", "NWZDDPVDUNKW");
+					.queryString("lng", new Double(lon)).queryString("key", config.getLatLongKey());
 			HttpResponse<String> response = request.asString();
 			String result = response.getBody();
 

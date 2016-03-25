@@ -98,6 +98,10 @@ public final class DateTime {
 		return Duration.between(dateTime, other.dateTime);
 	}
 
+	public boolean isUTC() {
+		return dateTime.getOffset().getTotalSeconds() == 0;
+	}
+
 	@Override
 	public String toString() {
 		return dateTime.toZonedDateTime().format(humanDateTimeFormat);
@@ -131,9 +135,5 @@ public final class DateTime {
 			return false;
 		}
 		return true;
-	}
-
-	public boolean isUTC() {
-		return dateTime.getOffset().getTotalSeconds() == 0;
 	}
 }

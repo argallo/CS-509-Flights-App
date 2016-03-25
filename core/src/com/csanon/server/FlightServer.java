@@ -16,6 +16,6 @@ public interface FlightServer {
 	public List<Flight> getFlightsArrivingAt(Airport airportCode, DateTime date);
 
 	public List<Airplane> getAirplanes();
-	
+
 	public int getOffsetFromLatLong(double lat, double lon);
 }

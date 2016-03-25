@@ -18,7 +18,7 @@ public class Airplanes {
 
 	public static void initialize() {
 		if (initialized) {
-			// TODO: throw exception
+			return;
 		}
 		List<Airplane> airplaneList = server.getAirplanes();
 		Map<String, Airplane> airplaneMap = airplaneList.stream()

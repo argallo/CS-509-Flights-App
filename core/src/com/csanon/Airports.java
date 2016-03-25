@@ -18,7 +18,7 @@ public class Airports {
 
 	public static void initialize() {
 		if (initialized) {
-			// TODO: throw exception
+			return;
 		}
 		List<Airport> airportList = server.getAirports();
 		Map<String, Airport> airportMap = airportList.stream()
@@ -28,16 +28,10 @@ public class Airports {
 	}
 
 	public static List<Airport> getAirports() {
-		if(!initialized){
-			//TODO: throw exception
-		}
 		return new LinkedList<Airport>(airports.values());
 	}
 
 	public static Airport getAirport(String code) {
-		if(!initialized){
-			//TODO: throw exception
-		}
 		return airports.get(code);
 	}
 
