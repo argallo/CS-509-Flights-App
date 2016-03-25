@@ -5,24 +5,25 @@ import java.text.ParseException;
 import java.util.Locale;
 
 public class Price {
-	private Float priceVal;
+	private final Float priceVal;
 
 	public Price(float aPriceVal) {
 		priceVal = new Float(aPriceVal);
 	}
 
 	public Price(String aPriceVal) {
+		Float value;
 		// strip off the dollar sign
 		// TODO: make more extensible
 		aPriceVal = aPriceVal.substring(1);
 		try {
-			priceVal = NumberFormat.getNumberInstance(Locale.US).parse(aPriceVal).floatValue();
+			value = NumberFormat.getNumberInstance(Locale.US).parse(aPriceVal).floatValue();
 		} catch (ParseException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			value = 0.0f;
 		}
+		priceVal = value;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -53,7 +54,7 @@ public class Price {
 		return true;
 	}
 
-	public int CompareTo(Price aOther) {
+	public int compareTo(Price aOther) {
 		return priceVal.compareTo(aOther.priceVal);
 	}
 

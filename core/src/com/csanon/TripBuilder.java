@@ -16,7 +16,7 @@ import com.csanon.server.ServerFactory;
 
 public class TripBuilder {
 	private static final FlightServer SERVERDEFUALT = ServerFactory.getServer();
-	private static final DateTimeFormatter adateformat = DateTimeFormatter.ofPattern("yyy_MM_dd");
+	private static final DateTimeFormatter adateformat = DateTimeFormatter.ofPattern("yyyy_MM_dd");
 
 	private static final int MAXHOPCOUNTDEFUALT = 3;
 	private static final int MINLAYOVERDEFAULT = 1 * 60 * 60;

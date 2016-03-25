@@ -17,7 +17,7 @@ import com.mashape.unirest.request.HttpRequest;
 
 public class WPIFlightServer implements FlightServer {
 	private final ServerConfig config;
-	private final DateTimeFormatter serverDateFormat = DateTimeFormatter.ofPattern("yyy_MM_dd");
+	private final DateTimeFormatter serverDateFormat = DateTimeFormatter.ofPattern("yyyy_MM_dd");
 
 	public WPIFlightServer(ServerConfig config) {
 		this.config = config;
