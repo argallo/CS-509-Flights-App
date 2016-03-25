@@ -18,7 +18,7 @@ public class TripBuilder {
 	private static final TripBuilder instance = new TripBuilder();
 	private static final FlightServer server = ServerFactory.getServer();
 	private static final DateTimeFormatter adateformat = DateTimeFormatter.ofPattern("yyy_MM_dd");
-	private static final int maxhopcount = 1;
+	private static final int maxhopcount = 3;
 	private static final int minlayover = 30 * 60;
 	private static final int maxlayover = 2 * 60 * 60;
 

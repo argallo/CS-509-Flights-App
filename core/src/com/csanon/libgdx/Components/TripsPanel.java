@@ -33,35 +33,54 @@ public class TripsPanel extends Group{
 	            row.setPosition(0, i*100);
 	            rows.addActor(row);
 	        }
-	        //appendNames();
 
 	    }
 
 		public void updateTrips(List<Trip> trips){
+			
 			removeRows();
-			rows.setSize(800, trips.size() * 100);
-			scrollPane.setSize(800, trips.size()*100);
-			for(int i = 0; i < trips.size(); i++){
-				TintedImage row = new TintedImage(Pic.Pixel, Tint.GRAY);
+			
+		
+			//scrollPane.setSize(800, trips.size()*100);
+			String info = "";
+			for(int i = 0; i < trips.size()-1; i++){
 				Flight flight = trips.get(i).getLegs().get(0); //TODO: this will be more info from each leg
-				String info = "";
+				
 				info += "Flight number:"+flight.getFlightNum()+" ";
 				info += "Duration: "+flight.getDuration()+" ";
 				info += "\nDepart: "+flight.getDepartureTime()+" ";
 				info += "Arrive: "+flight.getArrivalTime()+" ";
 				info += "\nEconomy: "+flight.getEconomyPrice()+" ";
-				info += "First Class: "+flight.getFirstClassPrice()+"\n";
-				TextLabel infoLabel = new TextLabel(info, Assets.getInstance().getXSmallFont());
-				row.setSize(800, 98);
-				infoLabel.setPosition(170, i * 100);
-				row.setPosition(0, i*100);
-				rows.addActor(row);
-				rows.addActor(infoLabel);
+				info += "First Class: "+flight.getFirstClassPrice()+"\n\n";
 			}
+			Flight flight = trips.get(trips.size()-1).getLegs().get(0);
+			info += "Flight number:"+flight.getFlightNum()+" ";
+			info += "Duration: "+flight.getDuration()+" ";
+			info += "\nDepart: "+flight.getDepartureTime()+" ";
+			info += "Arrive: "+flight.getArrivalTime()+" ";
+			info += "\nEconomy: "+flight.getEconomyPrice()+" ";
+			info += "First Class: "+flight.getFirstClassPrice()+"\n";
+			
+			TextLabel infoLabel = new TextLabel(info, Assets.getInstance().getXSmallFont());
+			infoLabel.setPosition(170, 0);
+			
+			for(int i = 0; i < trips.size(); i++){
+				TintedImage row = new TintedImage(Pic.Pixel, Tint.GRAY);
+				row.setSize(800, 90);
+				//infoLabel.setPosition(170, i * 100);
+				row.setPosition(0, i*92);
+				rows.addActor(row);
+				
+			}
+			
+			rows.addActor(infoLabel);
+			rows.setSize(800, infoLabel.getHeight());
+			scrollPane.invalidate();
+			
 		}
 
 		public void removeRows(){
-			rows.clear();
+			rows.clearChildren();
 		}
 /*
 	    public void appendNames(){
