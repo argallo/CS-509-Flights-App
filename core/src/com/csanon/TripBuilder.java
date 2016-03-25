@@ -17,7 +17,7 @@ public class TripBuilder {
 	private static final int MAXHOPCOUNTDEFUALT = 3;
 	private static final int MINLAYOVERDEFAULT = 1 * 60 * 60;
 	private static final int MAXLAYOVERDEFAULT = 5 * 60 * 60;
-	
+
 	private final FlightServer server;
 	private final int maxhopcount;
 	private final int minlayover;
@@ -26,23 +26,23 @@ public class TripBuilder {
 	public TripBuilder() {
 		this(MAXHOPCOUNTDEFUALT, MINLAYOVERDEFAULT, MAXLAYOVERDEFAULT);
 	}
-	
-	public TripBuilder(int aMaxHopeCount, int aMinLayover, int aMaxLayover) {
-		this(SERVERDEFUALT, aMaxHopeCount, aMinLayover, aMaxLayover);
+
+	public TripBuilder(int aMaxHopCount, int aMinLayover, int aMaxLayover) {
+		this(SERVERDEFUALT, aMaxHopCount, aMinLayover, aMaxLayover);
 	}
-	
-	public TripBuilder(FlightServer aServer, int aMaxHopeCount, int aMinLayover, int aMaxLayover) {
+
+	public TripBuilder(FlightServer aServer, int aMaxHopCount, int aMinLayover, int aMaxLayover) {
 		server = aServer;
-		maxhopcount = aMaxHopeCount;
+		maxhopcount = aMaxHopCount;
 		minlayover = aMinLayover;
 		maxlayover = aMaxLayover;
 	}
-	
+
 	public List<Trip> getTrips(Airport aDeparture, Airport aDestination, DateTime aDepartTime) {
-		Map<Airport, Map<String, List<Flight>>> dataset = collectAData(maxhopcount, aDeparture, aDestination,
+		Map<Airport, Map<String, List<Flight>>> dataset = collectData(maxhopcount, aDeparture, aDestination,
 				aDepartTime);
 		List<Trip> validtrips = new LinkedList<Trip>();
-		//loop over all possible hop counts
+		// loop over all possible hop counts
 		for (int i = 1; i <= maxhopcount; i++) {
 			validtrips.addAll(searchForTrips(i, aDeparture, aDestination, aDepartTime, dataset));
 		}
@@ -50,8 +50,8 @@ public class TripBuilder {
 		return validtrips;
 	}
 
-	private List<Trip> searchForTrips(int aHopCount, Airport aDeparture, Airport aDestination,
-			DateTime aDepartTime, Map<Airport, Map<String, List<Flight>>> aDataSet) {
+	private List<Trip> searchForTrips(int aHopCount, Airport aDeparture, Airport aDestination, DateTime aDepartTime,
+			Map<Airport, Map<String, List<Flight>>> aDataSet) {
 		List<Trip> validtrips = new LinkedList<Trip>();
 		if (aHopCount == 1) {
 			DateTime lowerlimit = aDepartTime.getMidnight();
@@ -59,15 +59,19 @@ public class TripBuilder {
 			Collection<DateTime> datetimes = findPossibleDates(aDepartTime);
 
 			datetimes.forEach(time -> {
-				aDataSet.get(aDeparture).get(time.toServerDateString()).forEach(flight -> {
-					if (flight.getArrivalAirport().equals(aDestination)) {
-						if (lowerlimit.compareTo(flight.getDepartureTime()) <= 0
-								&& upperlimit.compareTo(flight.getDepartureTime()) > 0) {
-							validtrips.add(new Trip(flight));
+				if (aDataSet.containsKey(aDeparture)
+						&& aDataSet.get(aDeparture).containsKey(time.toServerDateString())) {
+					aDataSet.get(aDeparture).get(time.toServerDateString()).forEach(flight -> {
+						if (flight.getArrivalAirport().equals(aDestination)) {
+							if (lowerlimit.compareTo(flight.getDepartureTime()) <= 0
+									&& upperlimit.compareTo(flight.getDepartureTime()) > 0) {
+								validtrips.add(new Trip(flight));
+							}
 						}
-					}
-				});
+					});
+				}
 			});
+
 		} else if (aHopCount > 1) {
 			Map<Airport, Collection<Trip>> tripsbyAirport = new HashMap<Airport, Collection<Trip>>();
 
@@ -76,42 +80,49 @@ public class TripBuilder {
 			Collection<DateTime> datetimes = findPossibleDates(aDepartTime);
 
 			datetimes.forEach(time -> {
-				aDataSet.get(aDeparture).get(time.toServerDateString()).forEach(flight -> {
-					if (!flight.getArrivalAirport().equals(aDestination)) {
-						if (lowerlimit.compareTo(flight.getDepartureTime()) <= 0
-								&& upperlimit.compareTo(flight.getDepartureTime()) > 0) {
-							if (!tripsbyAirport.containsKey(flight.getArrivalAirport())) {
-								tripsbyAirport.put(flight.getArrivalAirport(), new HashSet<Trip>());
+				if (aDataSet.containsKey(aDeparture)
+						&& aDataSet.get(aDeparture).containsKey(time.toServerDateString())) {
+					aDataSet.get(aDeparture).get(time.toServerDateString()).forEach(flight -> {
+						if (!flight.getArrivalAirport().equals(aDestination)) {
+							if (lowerlimit.compareTo(flight.getDepartureTime()) <= 0
+									&& upperlimit.compareTo(flight.getDepartureTime()) > 0) {
+								if (!tripsbyAirport.containsKey(flight.getArrivalAirport())) {
+									tripsbyAirport.put(flight.getArrivalAirport(), new HashSet<Trip>());
+								}
+								DateTime minlayovertime = flight.getArrivalTime().plusSeconds(minlayover);
+								DateTime maxlayovertime = flight.getArrivalTime().plusSeconds(maxlayover);
+								tripsbyAirport.get(flight.getArrivalAirport()).addAll(searchForTrips(aHopCount - 1,
+										flight.getArrivalAirport(), aDestination, minlayovertime, aDataSet));
+								tripsbyAirport.get(flight.getArrivalAirport()).addAll(searchForTrips(aHopCount - 1,
+										flight.getArrivalAirport(), aDestination, maxlayovertime, aDataSet));
 							}
-							DateTime minlayovertime = flight.getArrivalTime().plusSeconds(minlayover);
-							DateTime maxlayovertime = flight.getArrivalTime().plusSeconds(maxlayover);
-							tripsbyAirport.get(flight.getArrivalAirport()).addAll(searchForTrips(aHopCount - 1,
-									flight.getArrivalAirport(), aDestination, minlayovertime, aDataSet));
-							tripsbyAirport.get(flight.getArrivalAirport()).addAll(searchForTrips(aHopCount - 1,
-									flight.getArrivalAirport(), aDestination, maxlayovertime, aDataSet));
 						}
-					}
-				});
+
+					});
+				}
 			});
 
 			datetimes.forEach(time -> {
-				aDataSet.get(aDeparture).get(time.toServerDateString()).forEach(flight -> {
-					if (!flight.getArrivalAirport().equals(aDestination)) {
-						if (lowerlimit.compareTo(flight.getDepartureTime()) <= 0
-								&& upperlimit.compareTo(flight.getDepartureTime()) > 0) {
-							tripsbyAirport.get(flight.getArrivalAirport()).forEach(trip -> {
-								if (flight.getArrivalTime().plusSeconds(minlayover)
-										.compareTo(trip.getLegs().get(0).getDepartureTime()) <= 0
-										&& flight.getArrivalTime().plusSeconds(maxlayover)
-												.compareTo(trip.getLegs().get(0).getDepartureTime()) >= 0) {
-									if (!trip.getAirports().contains(flight.getDepartureAirport())) {
-										validtrips.add(trip.addLeg(flight, true));
+				if (aDataSet.containsKey(aDeparture)
+						&& aDataSet.get(aDeparture).containsKey(time.toServerDateString())) {
+					aDataSet.get(aDeparture).get(time.toServerDateString()).forEach(flight -> {
+						if (!flight.getArrivalAirport().equals(aDestination)) {
+							if (lowerlimit.compareTo(flight.getDepartureTime()) <= 0
+									&& upperlimit.compareTo(flight.getDepartureTime()) > 0) {
+								tripsbyAirport.get(flight.getArrivalAirport()).forEach(trip -> {
+									if (flight.getArrivalTime().plusSeconds(minlayover)
+											.compareTo(trip.getLegs().get(0).getDepartureTime()) <= 0
+											&& flight.getArrivalTime().plusSeconds(maxlayover)
+													.compareTo(trip.getLegs().get(0).getDepartureTime()) >= 0) {
+										if (!trip.getAirports().contains(flight.getDepartureAirport())) {
+											validtrips.add(trip.addLeg(flight, true));
+										}
 									}
-								}
-							});
+								});
+							}
 						}
-					}
-				});
+					});
+				}
 			});
 
 		}
@@ -131,31 +142,56 @@ public class TripBuilder {
 		return false;
 	}
 
-	private Map<Airport, Map<String, List<Flight>>> collectAData(int aMaxHopCount, Airport aDeparture,
+	private Map<Airport, Map<String, List<Flight>>> collectData(int aMaxHopCount, Airport aDeparture,
 			Airport aDestination, DateTime aDepartTime) {
 		Map<Airport, Map<String, List<Flight>>> dataset = new HashMap<Airport, Map<String, List<Flight>>>();
-		if (aMaxHopCount > 0) {
+
+		if (aMaxHopCount == 1) {
 			collectData(aMaxHopCount, aDeparture, aDestination, aDepartTime, dataset);
+		} else if (aMaxHopCount > 1) {
+			collectData(aMaxHopCount - 1, aDeparture, aDestination, aDepartTime, dataset);
+
+			findPossibleArrivalDates(dataset).forEach(datetime -> {
+				server.getFlightsArrivingAt(aDestination, datetime).forEach(flight -> {
+					if (!dataset.containsKey(flight.getDepartureAirport())) {
+						dataset.put(flight.getDepartureAirport(), new HashMap<String, List<Flight>>());
+					}
+
+					if (!dataset.get(flight.getDepartureAirport()).containsKey(datetime.toServerDateString())) {
+						dataset.get(flight.getDepartureAirport()).put(datetime.toServerDateString(),
+								new LinkedList<Flight>());
+					}
+					if (!dataset.get(flight.getDepartureAirport()).get(datetime.toServerDateString())
+							.contains(flight)) {
+						dataset.get(flight.getDepartureAirport()).get(datetime.toServerDateString()).add(flight);
+					}
+				});
+			});
+
 		}
+
 		return dataset;
 	}
 
-	private void collectData(int aMaxHopCount, Airport aDeparture, Airport aDestination,
-			DateTime aDepartTime, Map<Airport, Map<String, List<Flight>>> aDataSet) {
+	private void collectData(int aMaxHopCount, Airport aDeparture, Airport aDestination, DateTime aDepartTime,
+			Map<Airport, Map<String, List<Flight>>> aDataSet) {
 		if (aMaxHopCount > 0) {
 			Collection<DateTime> datetimes = findPossibleDates(aDepartTime);
 
 			datetimes.forEach(time -> {
-				addFlightsToMap(aDeparture, time, aDataSet);
+				if (addFlightsToMap(aDeparture, time, aDataSet)) {
 
-				aDataSet.get(aDeparture).get(time.toServerDateString()).forEach(flight -> {
-					DateTime minlayovertime = flight.getArrivalTime().plusSeconds(minlayover);
-						DateTime maxlayovertime = flight.getArrivalTime().plusSeconds(maxlayover);
-						collectData(aMaxHopCount - 1, flight.getArrivalAirport(), aDestination, minlayovertime,
-								aDataSet);
-						collectData(aMaxHopCount - 1, flight.getArrivalAirport(), aDestination, maxlayovertime,
-								aDataSet);
+					aDataSet.get(aDeparture).get(time.toServerDateString()).forEach(flight -> {
+						if (!flight.getArrivalAirport().equals(aDestination)) {
+							DateTime minlayovertime = flight.getArrivalTime().plusSeconds(minlayover);
+							DateTime maxlayovertime = flight.getArrivalTime().plusSeconds(maxlayover);
+							collectData(aMaxHopCount - 1, flight.getArrivalAirport(), aDestination, minlayovertime,
+									aDataSet);
+							collectData(aMaxHopCount - 1, flight.getArrivalAirport(), aDestination, maxlayovertime,
+									aDataSet);
+						}
 					});
+				}
 			});
 
 		}
@@ -173,4 +209,19 @@ public class TripBuilder {
 		return dts;
 	}
 
+	private static Collection<DateTime> findPossibleArrivalDates(Map<Airport, Map<String, List<Flight>>> aDataSet) {
+		Collection<DateTime> arrivaldates = new HashSet<DateTime>();
+
+		aDataSet.values().forEach(flightsbyDate -> {
+			flightsbyDate.values().forEach(flights -> {
+				flights.forEach(flight -> {
+					arrivaldates.add(flight.getArrivalTime().getMidnight());
+					arrivaldates.add(flight.getArrivalTime().getMidnight().getNextDay());
+					arrivaldates.add(flight.getArrivalTime().getMidnight().getNextDay().getNextDay());
+				});
+			});
+		});
+
+		return arrivaldates;
+	}
 }

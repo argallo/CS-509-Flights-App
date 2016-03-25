@@ -9,7 +9,7 @@ public class Flight {
 	private final String flightNum;
 
 	private final Airport departureAirport;
-	private final DateTime depatureTime;
+	private final DateTime departureTime;
 
 	private final Airport arrivalAirport;
 	private final DateTime arrivalTime;
@@ -28,7 +28,7 @@ public class Flight {
 		flightNum = aFlightNum;
 
 		departureAirport = aDepatureAirport;
-		depatureTime = aDepartureTime;
+		departureTime = aDepartureTime;
 
 		arrivalAirport = anArrivalAirport;
 		arrivalTime = anArrivalTime;
@@ -53,7 +53,7 @@ public class Flight {
 		result = prime * result + ((arrivalAirport == null) ? 0 : arrivalAirport.hashCode());
 		result = prime * result + ((arrivalTime == null) ? 0 : arrivalTime.hashCode());
 		result = prime * result + ((departureAirport == null) ? 0 : departureAirport.hashCode());
-		result = prime * result + ((depatureTime == null) ? 0 : depatureTime.hashCode());
+		result = prime * result + ((departureTime == null) ? 0 : departureTime.hashCode());
 		result = prime * result + ((duration == null) ? 0 : duration.hashCode());
 		result = prime * result + ((flightNum == null) ? 0 : flightNum.hashCode());
 		result = prime * result + ((priceEconomy == null) ? 0 : priceEconomy.hashCode());
@@ -108,11 +108,11 @@ public class Flight {
 		} else if (!departureAirport.equals(other.departureAirport)) {
 			return false;
 		}
-		if (depatureTime == null) {
-			if (other.depatureTime != null) {
+		if (departureTime == null) {
+			if (other.departureTime != null) {
 				return false;
 			}
-		} else if (!depatureTime.equals(other.depatureTime)) {
+		} else if (!departureTime.equals(other.departureTime)) {
 			return false;
 		}
 		if (duration == null) {
@@ -160,7 +160,7 @@ public class Flight {
 		} else {
 			return (airplane.equals(aOther.airplane)) && (duration.equals(aOther.duration))
 					&& (flightNum.equals(aOther.flightNum)) && (departureAirport.equals(aOther.departureAirport))
-					&& (depatureTime.equals(aOther.depatureTime)) && (arrivalAirport.equals(aOther.arrivalAirport))
+					&& (departureTime.equals(aOther.departureTime)) && (arrivalAirport.equals(aOther.arrivalAirport))
 					&& (arrivalTime.equals(aOther.arrivalTime)) && (priceFirstClass.equals(aOther.priceFirstClass))
 					&& (seatsFirstClass == aOther.seatsFirstClass) && (priceEconomy.equals(aOther.priceEconomy))
 					&& (seatsEconomy == aOther.seatsEconomy);
@@ -184,7 +184,7 @@ public class Flight {
 	}
 
 	public DateTime getDepartureTime() {
-		return depatureTime;
+		return departureTime;
 	}
 
 	public DateTime getArrivalTime() {
@@ -207,4 +207,11 @@ public class Flight {
 		return flightNum;
 	}
 
+	public String toString() {
+		String repr = "";
+		repr += departureAirport.getCode() + " -> " + arrivalAirport.getCode() + "\n";
+		repr += "\t" + departureTime.toString() + " -> " + arrivalTime.toString() + "\n";
+		return repr;
+	}
+	
 }

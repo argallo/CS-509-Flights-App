@@ -105,5 +105,15 @@ public class Trip {
 		}
 		return true;
 	}
+	
+	public String toString() {
+		String repr = "=================================\n";
+
+		for (Flight flight: legs) {
+			repr += flight.toString() + "\n";
+		}
+		repr += "=================================\n\n";
+		return repr;
+	}
 
 }
