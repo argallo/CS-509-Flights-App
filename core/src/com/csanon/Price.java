@@ -24,17 +24,33 @@ public class Price {
 	}
 	
 	@Override
-	public boolean equals(Object aOther) {
-		if (aOther == null) {
-			return false;
-		} else if (!(aOther instanceof Price)) {
-			return false;
-		} else if (aOther == this) {
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((priceVal == null) ? 0 : priceVal.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
 			return true;
-		} else {
-			Price other = (Price)aOther;
-			return (priceVal.equals(other.priceVal));
 		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Price other = (Price) obj;
+		if (priceVal == null) {
+			if (other.priceVal != null) {
+				return false;
+			}
+		} else if (!priceVal.equals(other.priceVal)) {
+			return false;
+		}
+		return true;
 	}
 
 	public int CompareTo(Price aOther) {
