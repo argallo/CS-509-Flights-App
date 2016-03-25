@@ -1,6 +1,6 @@
 package com.csanon;
 
-import java.time.OffsetDateTime;
+import com.csanon.time.DateTime;
 
 public class Flight {
 
@@ -9,10 +9,10 @@ public class Flight {
 	private final String flightNum;
 
 	private final Airport departureAirport;
-	private final OffsetDateTime depatureTime;
+	private final DateTime depatureTime;
 
 	private final Airport arrivalAirport;
-	private final OffsetDateTime arrivalTime;
+	private final DateTime arrivalTime;
 
 	private final Price priceFirstClass;
 	private final int seatsFirstClass;
@@ -21,7 +21,7 @@ public class Flight {
 	private final int seatsEconomy;
 
 	public Flight(Airplane aAirplane, String aDuration, String aFlightNum, Airport aDepatureAirport,
-			OffsetDateTime aDepartureTime, Airport anArrivalAirport, OffsetDateTime anArrivalTime,
+			DateTime aDepartureTime, Airport anArrivalAirport, DateTime anArrivalTime,
 			Price aPriceFirstClass, int aSeatsFirstClassRemaining, Price aPriceEconomy, int aSeatsEconomyRemaining) {
 		airplane = aAirplane;
 		duration = aDuration;
@@ -183,11 +183,11 @@ public class Flight {
 		return priceEconomy;
 	}
 
-	public OffsetDateTime getDepartureTime() {
+	public DateTime getDepartureTime() {
 		return depatureTime;
 	}
 
-	public OffsetDateTime getArrivalTime() {
+	public DateTime getArrivalTime() {
 		return arrivalTime;
 	}
 

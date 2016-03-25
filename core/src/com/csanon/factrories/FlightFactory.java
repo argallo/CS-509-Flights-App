@@ -1,6 +1,5 @@
 package com.csanon.factrories;
 
-import java.time.OffsetDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -12,7 +11,7 @@ import com.csanon.Airport;
 import com.csanon.Airports;
 import com.csanon.Flight;
 import com.csanon.Price;
-import com.csanon.TimeUtil;
+import com.csanon.time.DateTime;
 
 public class FlightFactory {
 
@@ -27,9 +26,11 @@ public class FlightFactory {
 		return INSTANCE;
 	}
 
-	public Flight makeFlight(Airplane airplane, String duration, String flightNumber, Airport departureAirport, OffsetDateTime departureTime, Airport arrivalAirport, OffsetDateTime arrivalTime, Price priceFirstClass, int seatsFirstClass,
+	public Flight makeFlight(Airplane airplane, String duration, String flightNumber, Airport departureAirport, DateTime departureTime, Airport arrivalAirport,
+			DateTime arrivalTime, Price priceFirstClass, int seatsFirstClass,
 			Price priceEconomy, int seatsEconomy) {
-		return new Flight(airplane, duration, flightNumber, departureAirport, departureTime, arrivalAirport, arrivalTime, priceFirstClass, seatsFirstClass, priceEconomy, seatsEconomy);
+		return new Flight(airplane, duration, flightNumber, departureAirport, departureTime, arrivalAirport, arrivalTime, priceFirstClass, seatsFirstClass, priceEconomy,
+				seatsEconomy);
 	}
 
 	public List<Flight> parseFlightsFromXML(String xml) {
@@ -48,13 +49,13 @@ public class FlightFactory {
 			Element departureNode = flightNode.getChildByName("Departure");
 			String departureCode = departureNode.get("Code");
 			// TODO: insert real offset
-			OffsetDateTime departureTime = TimeUtil.string2OffsetDateTime(departureNode.get("Time"), 0);
+			DateTime departureTime = DateTime.of(departureNode.get("Time"), 0);
 
 			// get arrival info
 			Element arrivalNode = flightNode.getChildByName("Arrival");
 			String arrivalCode = arrivalNode.get("Code");
 			// TODO: insert real offset
-			OffsetDateTime arrivalTime = TimeUtil.string2OffsetDateTime(arrivalNode.get("Time"), 0);
+			DateTime arrivalTime = DateTime.of(arrivalNode.get("Time"), 0);
 
 			// get seating info
 			Element seatingNode = flightNode.getChildByName("Seating");
@@ -73,7 +74,8 @@ public class FlightFactory {
 			Airport arrivalAirport = Airports.getAirport(arrivalCode);
 			Airplane airplane = Airplanes.getAirplane(airplaneName);
 
-			Flight flight = makeFlight(airplane, duration, flightNumber, departureAirport, departureTime, arrivalAirport, arrivalTime, priceFirstClass, seatsFirstClass, priceEconomy, seatsEconomy);
+			Flight flight = makeFlight(airplane, duration, flightNumber, departureAirport, departureTime, arrivalAirport, arrivalTime, priceFirstClass, seatsFirstClass,
+					priceEconomy, seatsEconomy);
 
 			flights.add(flight);
 		});

@@ -1,9 +1,5 @@
 package com.csanon;
 
-import java.time.LocalTime;
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -13,10 +9,10 @@ import java.util.Map;
 
 import com.csanon.server.FlightServer;
 import com.csanon.server.ServerFactory;
+import com.csanon.time.DateTime;
 
 public class TripBuilder {
 	private static final FlightServer SERVERDEFUALT = ServerFactory.getServer();
-	private static final DateTimeFormatter adateformat = DateTimeFormatter.ofPattern("yyyy_MM_dd");
 
 	private static final int MAXHOPCOUNTDEFUALT = 3;
 	private static final int MINLAYOVERDEFAULT = 1 * 60 * 60;
@@ -42,7 +38,7 @@ public class TripBuilder {
 		maxlayover = aMaxLayover;
 	}
 	
-	public List<Trip> getTrips(Airport aDeparture, Airport aDestination, OffsetDateTime aDepartTime) {
+	public List<Trip> getTrips(Airport aDeparture, Airport aDestination, DateTime aDepartTime) {
 		Map<Airport, Map<String, List<Flight>>> dataset = collectAData(maxhopcount, aDeparture, aDestination,
 				aDepartTime);
 		List<Trip> validtrips = new LinkedList<Trip>();
@@ -55,16 +51,15 @@ public class TripBuilder {
 	}
 
 	private List<Trip> searchForTrips(int aHopCount, Airport aDeparture, Airport aDestination,
-			OffsetDateTime aDepartTime, Map<Airport, Map<String, List<Flight>>> aDataSet) {
+			DateTime aDepartTime, Map<Airport, Map<String, List<Flight>>> aDataSet) {
 		List<Trip> validtrips = new LinkedList<Trip>();
 		if (aHopCount == 1) {
-			ZoneOffset offset = aDepartTime.getOffset();
-			OffsetDateTime lowerlimit = OffsetDateTime.of(aDepartTime.toLocalDate(), LocalTime.MIDNIGHT, offset);
-			OffsetDateTime upperlimit = lowerlimit.plusDays(1);
-			Collection<OffsetDateTime> datetimes = findPossibleDates(aDepartTime);
+			DateTime lowerlimit = aDepartTime.getMidnight();
+			DateTime upperlimit = lowerlimit.getNextDay();
+			Collection<DateTime> datetimes = findPossibleDates(aDepartTime);
 
 			datetimes.forEach(time -> {
-				aDataSet.get(aDeparture).get(adateformat.format(time)).forEach(flight -> {
+				aDataSet.get(aDeparture).get(time.toServerDateString()).forEach(flight -> {
 					if (flight.getArrivalAirport().equals(aDestination)) {
 						if (lowerlimit.compareTo(flight.getDepartureTime()) <= 0
 								&& upperlimit.compareTo(flight.getDepartureTime()) > 0) {
@@ -76,21 +71,20 @@ public class TripBuilder {
 		} else if (aHopCount > 1) {
 			Map<Airport, Collection<Trip>> tripsbyAirport = new HashMap<Airport, Collection<Trip>>();
 
-			ZoneOffset offset = aDepartTime.getOffset();
-			OffsetDateTime lowerlimit = OffsetDateTime.of(aDepartTime.toLocalDate(), LocalTime.MIDNIGHT, offset);
-			OffsetDateTime upperlimit = lowerlimit.plusDays(1);
-			Collection<OffsetDateTime> datetimes = findPossibleDates(aDepartTime);
+			DateTime lowerlimit = aDepartTime.getMidnight();
+			DateTime upperlimit = lowerlimit.getNextDay();
+			Collection<DateTime> datetimes = findPossibleDates(aDepartTime);
 
 			datetimes.forEach(time -> {
-				aDataSet.get(aDeparture).get(adateformat.format(time)).forEach(flight -> {
+				aDataSet.get(aDeparture).get(time.toServerDateString()).forEach(flight -> {
 					if (!flight.getArrivalAirport().equals(aDestination)) {
 						if (lowerlimit.compareTo(flight.getDepartureTime()) <= 0
 								&& upperlimit.compareTo(flight.getDepartureTime()) > 0) {
 							if (!tripsbyAirport.containsKey(flight.getArrivalAirport())) {
 								tripsbyAirport.put(flight.getArrivalAirport(), new HashSet<Trip>());
 							}
-							OffsetDateTime minlayovertime = flight.getArrivalTime().plusSeconds(minlayover);
-							OffsetDateTime maxlayovertime = flight.getArrivalTime().plusSeconds(maxlayover);
+							DateTime minlayovertime = flight.getArrivalTime().plusSeconds(minlayover);
+							DateTime maxlayovertime = flight.getArrivalTime().plusSeconds(maxlayover);
 							tripsbyAirport.get(flight.getArrivalAirport()).addAll(searchForTrips(aHopCount - 1,
 									flight.getArrivalAirport(), aDestination, minlayovertime, aDataSet));
 							tripsbyAirport.get(flight.getArrivalAirport()).addAll(searchForTrips(aHopCount - 1,
@@ -101,7 +95,7 @@ public class TripBuilder {
 			});
 
 			datetimes.forEach(time -> {
-				aDataSet.get(aDeparture).get(adateformat.format(time)).forEach(flight -> {
+				aDataSet.get(aDeparture).get(time.toServerDateString()).forEach(flight -> {
 					if (!flight.getArrivalAirport().equals(aDestination)) {
 						if (lowerlimit.compareTo(flight.getDepartureTime()) <= 0
 								&& upperlimit.compareTo(flight.getDepartureTime()) > 0) {
@@ -124,21 +118,21 @@ public class TripBuilder {
 		return validtrips;
 	}
 
-	private boolean addFlightsToMap(Airport aDeparture, OffsetDateTime aTime,
+	private boolean addFlightsToMap(Airport aDeparture, DateTime aTime,
 			Map<Airport, Map<String, List<Flight>>> aDataSet) {
 		if (!aDataSet.containsKey(aDeparture)) {
 			aDataSet.put(aDeparture, new HashMap<String, List<Flight>>());
 		}
 
-		if (!aDataSet.get(aDeparture).containsKey(adateformat.format(aTime))) {
-			aDataSet.get(aDeparture).put(adateformat.format(aTime), server.getFlightsDeparting(aDeparture, aTime));
+		if (!aDataSet.get(aDeparture).containsKey(aTime.toServerDateString())) {
+			aDataSet.get(aDeparture).put(aTime.toServerDateString(), server.getFlightsDeparting(aDeparture, aTime));
 			return true;
 		}
 		return false;
 	}
 
 	private Map<Airport, Map<String, List<Flight>>> collectAData(int aMaxHopCount, Airport aDeparture,
-			Airport aDestination, OffsetDateTime aDepartTime) {
+			Airport aDestination, DateTime aDepartTime) {
 		Map<Airport, Map<String, List<Flight>>> dataset = new HashMap<Airport, Map<String, List<Flight>>>();
 		if (aMaxHopCount > 0) {
 			collectData(aMaxHopCount, aDeparture, aDestination, aDepartTime, dataset);
@@ -147,16 +141,16 @@ public class TripBuilder {
 	}
 
 	private void collectData(int aMaxHopCount, Airport aDeparture, Airport aDestination,
-			OffsetDateTime aDepartTime, Map<Airport, Map<String, List<Flight>>> aDataSet) {
+			DateTime aDepartTime, Map<Airport, Map<String, List<Flight>>> aDataSet) {
 		if (aMaxHopCount > 0) {
-			Collection<OffsetDateTime> datetimes = findPossibleDates(aDepartTime);
+			Collection<DateTime> datetimes = findPossibleDates(aDepartTime);
 
 			datetimes.forEach(time -> {
 				addFlightsToMap(aDeparture, time, aDataSet);
 
-				aDataSet.get(aDeparture).get(adateformat.format(time)).forEach(flight -> {
-						OffsetDateTime minlayovertime = flight.getArrivalTime().plusSeconds(minlayover);
-						OffsetDateTime maxlayovertime = flight.getArrivalTime().plusSeconds(maxlayover);
+				aDataSet.get(aDeparture).get(time.toServerDateString()).forEach(flight -> {
+					DateTime minlayovertime = flight.getArrivalTime().plusSeconds(minlayover);
+						DateTime maxlayovertime = flight.getArrivalTime().plusSeconds(maxlayover);
 						collectData(aMaxHopCount - 1, flight.getArrivalAirport(), aDestination, minlayovertime,
 								aDataSet);
 						collectData(aMaxHopCount - 1, flight.getArrivalAirport(), aDestination, maxlayovertime,
@@ -167,14 +161,13 @@ public class TripBuilder {
 		}
 	}
 
-	private static Collection<OffsetDateTime> findPossibleDates(OffsetDateTime aTime) {
-		ZoneOffset offset = aTime.getOffset();
-		OffsetDateTime basetime = OffsetDateTime.of(aTime.toLocalDate(), LocalTime.MIDNIGHT, offset);
-		Collection<OffsetDateTime> dts = new HashSet<OffsetDateTime>();
-		dts.add(basetime.withOffsetSameInstant(ZoneOffset.ofHours(0)));
-		if (offset.getTotalSeconds() != 0) {
-			basetime = basetime.plusDays(1);
-			dts.add(basetime.withOffsetSameInstant(ZoneOffset.ofHours(0)));
+	private static Collection<DateTime> findPossibleDates(DateTime aTime) {
+		DateTime basetime = aTime.getMidnight();
+		Collection<DateTime> dts = new HashSet<DateTime>();
+		dts.add(basetime.getUTC());
+		if (aTime.isUTC()) {
+			basetime = basetime.getNextDay();
+			dts.add(basetime.getUTC());
 		}
 
 		return dts;

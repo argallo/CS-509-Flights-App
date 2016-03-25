@@ -2,8 +2,6 @@ package com.csanon.server;
 
 import static org.junit.Assert.assertTrue;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.List;
 
 import org.junit.Before;
@@ -14,16 +12,16 @@ import com.csanon.Airplanes;
 import com.csanon.Airport;
 import com.csanon.Airports;
 import com.csanon.Flight;
+import com.csanon.time.DateTime;
 
 public class WPIFlightServerTest {
 	
 	Airport airport;
-	OffsetDateTime date;
+	DateTime date;
 	
 	@Before
 	public void setUp() throws Exception {
-		ZoneOffset offset = ZoneOffset.of("-00:00");
-		date = OffsetDateTime.of(2016, 5, 10, 0, 0, 0, 0, offset);
+		date = DateTime.of(2016, 5, 10, 0);
 		Airports.initialize();
 		Airplanes.initialize();
 		airport = Airports.getAirport("BOS");

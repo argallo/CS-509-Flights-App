@@ -1,7 +1,5 @@
 package com.csanon.libgdx.Views;
 
-import java.time.OffsetDateTime;
-import java.time.ZoneOffset;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,6 +19,7 @@ import com.csanon.libgdx.Utils.Assets;
 import com.csanon.libgdx.Utils.Constants;
 import com.csanon.libgdx.Utils.Pic;
 import com.csanon.libgdx.Utils.Tint;
+import com.csanon.time.DateTime;
 
 public class SearchFlightsView extends BaseView {
 
@@ -114,7 +113,7 @@ public class SearchFlightsView extends BaseView {
 				Airport departAirport = getAirport(departureAirportDropdown.getCurrentItem());
 				Airport arrivalAirport = getAirport(arrivalAirportDropdown.getCurrentItem());
 				System.out.print(year+" "+ month+" "+day);
-				OffsetDateTime depart = OffsetDateTime.of(year, month, day, 0, 0, 0, 0, ZoneOffset.ofHours(0));
+				DateTime depart = DateTime.of(year, month, day, 0);
 				List<Trip> trips = (new TripBuilder()).getTrips(departAirport, arrivalAirport, depart);
 				tripsPanel.updateTrips(trips);
 				break;
