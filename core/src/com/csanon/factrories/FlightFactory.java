@@ -39,7 +39,6 @@ public class FlightFactory {
 
 		flightsNode.getChildrenByName("Flight").iterator().forEachRemaining(flightNode -> {
 
-			// TODO: use all fo the flight data
 			// get attributes
 			String airplaneName = flightNode.get("Airplane");
 			String duration = flightNode.get("FlightTime");

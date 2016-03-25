@@ -115,7 +115,7 @@ public class SearchFlightsView extends BaseView {
 				Airport arrivalAirport = getAirport(arrivalAirportDropdown.getCurrentItem());
 				System.out.print(year+" "+ month+" "+day);
 				OffsetDateTime depart = OffsetDateTime.of(year, month, day, 0, 0, 0, 0, ZoneOffset.ofHours(0));
-				List<Trip> trips = TripBuilder.getInstance().getTrips(departAirport, arrivalAirport, depart);
+				List<Trip> trips = (new TripBuilder()).getTrips(departAirport, arrivalAirport, depart);
 				tripsPanel.updateTrips(trips);
 				break;
 		}

@@ -13,21 +13,56 @@ public class Airplane {
 		EconomySeats = aEconomySeats;
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
-	public boolean equals(Object aOther) {
-		if (aOther == null) {
-			return false;
-		} else if (!(aOther instanceof Airplane)) {
-			return false;
-		} else if (aOther == this) {
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + EconomySeats;
+		result = prime * result + FirstClassSeats;
+		result = prime * result + ((Manufacturer == null) ? 0 : Manufacturer.hashCode());
+		result = prime * result + ((Model == null) ? 0 : Model.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
 			return true;
-		} else {
-			Airplane other = (Airplane)aOther;
-			return (Manufacturer.equals(other.Manufacturer)) && 
-					(Model.equals(other.Model)) && 
-					(FirstClassSeats == other.FirstClassSeats) && 
-					(EconomySeats == other.EconomySeats);
 		}
+		if (obj == null) {
+			return false;
+		}
+		if (getClass() != obj.getClass()) {
+			return false;
+		}
+		Airplane other = (Airplane) obj;
+		if (EconomySeats != other.EconomySeats) {
+			return false;
+		}
+		if (FirstClassSeats != other.FirstClassSeats) {
+			return false;
+		}
+		if (Manufacturer == null) {
+			if (other.Manufacturer != null) {
+				return false;
+			}
+		} else if (!Manufacturer.equals(other.Manufacturer)) {
+			return false;
+		}
+		if (Model == null) {
+			if (other.Model != null) {
+				return false;
+			}
+		} else if (!Model.equals(other.Model)) {
+			return false;
+		}
+		return true;
 	}
 	
 	public String getManufacturer() {
