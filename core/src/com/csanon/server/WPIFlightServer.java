@@ -1,6 +1,17 @@
 package com.csanon.server;
 
+import java.io.IOException;
+import java.io.StringReader;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import com.csanon.Airplane;
 import com.csanon.Airport;
@@ -86,6 +97,53 @@ public class WPIFlightServer implements FlightServer {
 		}
 
 		return airplanes;
+	}
+
+	@Override
+	public int getOffsetFromLatLong(double lat, double lon) {
+		int offset = 0;
+		try {
+			HttpRequest request = Unirest.get("http://api.timezonedb.com").queryString("lat", new Double(lat))
+					.queryString("lng", new Double(lon)).queryString("key", "NWZDDPVDUNKW");
+			HttpResponse<String> response = request.asString();
+			String result = response.getBody();
+
+			/**
+			 * load the xml string into a DOM document check whether the result is valid and then return the offset
+			 */
+			try {
+				DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
+				DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
+				InputSource inputSource = new InputSource();
+				inputSource.setCharacterStream(new StringReader(result));
+
+				Document docTimezone = docBuilder.parse(inputSource);
+
+				Element topelement = docTimezone.getDocumentElement();
+				String status = topelement.getAttributeNode("status").getValue();
+
+				if (!status.equals("OK")) {
+					// TODO : throw exception saying not a valid message
+				}
+
+				offset = Integer.parseInt(topelement.getAttributeNode("gmtOffset").getValue());
+
+			} catch (ParserConfigurationException e) {
+				e.printStackTrace();
+				// TODO: handle
+			} catch (IOException e) {
+				e.printStackTrace();
+				// TODO: handle
+			} catch (SAXException e) {
+				e.printStackTrace();
+				// TODO: handle
+			}
+		} catch (UnirestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			// TODO: handle
+		}
+		return offset;
 	}
 
 }

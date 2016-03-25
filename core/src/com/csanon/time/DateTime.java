@@ -1,7 +1,5 @@
 package com.csanon.time;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.time.Duration;
 import java.time.LocalTime;
 import java.time.OffsetDateTime;
@@ -9,19 +7,8 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
-import com.mashape.unirest.http.HttpResponse;
-import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
-import com.mashape.unirest.request.HttpRequest;
+import com.csanon.server.FlightServer;
+import com.csanon.server.ServerFactory;
 
 /**
  * Immutable date time class
@@ -30,14 +17,20 @@ public final class DateTime {
 	private static final DateTimeFormatter serverDateTimeFormat = DateTimeFormatter.ofPattern("yyyy MMM dd HH:mm z");
 	private static final DateTimeFormatter serverDateFormat = DateTimeFormatter.ofPattern("yyyy_MM_dd");
 	private static final DateTimeFormatter humanDateTimeFormat = DateTimeFormatter.ofPattern("MM/dd/yy HH:mm z");
+	private static final FlightServer server = ServerFactory.getServer();
 	private final OffsetDateTime dateTime;
 
 	/**
 	 * Creates a DateDime from year month and day at midnight with the given offset
-	 * @param year Year
-	 * @param month Month
-	 * @param day Day
-	 * @param offset Time zone offset
+	 * 
+	 * @param year
+	 *            Year
+	 * @param month
+	 *            Month
+	 * @param day
+	 *            Day
+	 * @param offset
+	 *            Time zone offset
 	 * @return New DateTime
 	 */
 	public static DateTime of(int year, int month, int day, int offset) {
@@ -46,6 +39,7 @@ public final class DateTime {
 
 	/**
 	 * Creates a new DateTime with the offset from the given lat long
+	 * 
 	 * @param dateString
 	 * @param lat
 	 * @param lon
@@ -64,7 +58,7 @@ public final class DateTime {
 	}
 
 	private DateTime(String dateString, double lat, double lon) {
-		this(dateString, getOffsetByLatLong(lat, lon));
+		this(dateString, server.getOffsetFromLatLong(lat, lon));
 	}
 
 	private DateTime(String dateString, int offset) {
@@ -104,54 +98,8 @@ public final class DateTime {
 		return Duration.between(dateTime, other.dateTime);
 	}
 
-	public static int getOffsetByLatLong(double Lat, double Long) {
-		int offset = 0;
-		try {
-			HttpRequest request = Unirest.get("http://api.timezonedb.com").queryString("lat", new Double(Lat))
-					.queryString("lng", new Double(Long)).queryString("key", "NWZDDPVDUNKW");
-			HttpResponse<String> response = request.asString();
-			String result = response.getBody();
-
-			/**
-			 * load the xml string into a DOM document check whether the result is valid and then return the offset
-			 */
-			try {
-				DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-				InputSource inputSource = new InputSource();
-				inputSource.setCharacterStream(new StringReader(result));
-
-				Document docTimezone = docBuilder.parse(inputSource);
-
-				Element topelement = docTimezone.getDocumentElement();
-				String status = topelement.getAttributeNode("status").getValue();
-
-				if (!status.equals("OK")) {
-					// TODO : throw exception saying not a valid message
-				}
-
-				offset = Integer.parseInt(topelement.getAttributeNode("gmtOffset").getValue());
-
-			} catch (ParserConfigurationException e) {
-				e.printStackTrace();
-				// TODO: handle
-			} catch (IOException e) {
-				e.printStackTrace();
-				// TODO: handle
-			} catch (SAXException e) {
-				e.printStackTrace();
-				// TODO: handle
-			}
-		} catch (UnirestException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			// TODO: handle
-		}
-		return offset;
-	}
-	
 	@Override
-	public String toString(){
+	public String toString() {
 		return dateTime.toZonedDateTime().format(humanDateTimeFormat);
 	}
 
