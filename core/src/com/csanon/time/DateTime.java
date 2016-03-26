@@ -61,7 +61,11 @@ public final class DateTime {
 	private DateTime(String dateString, int offset) {
 		OffsetDateTime DateTime = ZonedDateTime.parse(dateString, serverDateTimeFormat).toOffsetDateTime();
 		//System.out.println("Offset" + offset);
-		dateTime = DateTime.withOffsetSameInstant(ZoneOffset.of("" + offset));
+		String sign = "";
+		if(offset >= 0){
+			sign = "+";
+		}
+		dateTime = DateTime.withOffsetSameInstant(ZoneOffset.of(sign + offset));
 	}
 
 	private DateTime(OffsetDateTime dateTime) {

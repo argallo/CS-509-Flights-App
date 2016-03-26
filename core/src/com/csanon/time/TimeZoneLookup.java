@@ -42,31 +42,38 @@ public class TimeZoneLookup {
 		int offset;
 		String latLongString = lat + "," + lon;
 		if (latLongMap.containsKey(latLongString)) {
-			System.out.println("GETTING FROM CACHE");
 			offset = latLongMap.get(latLongString);
 		} else {
-			System.out.println("RETRIEVING FROM SERVER");
-			try {
-				offset = server.getOffsetFromLatLong(lat, lon);
-				latLongMap.put(latLongString, offset);
-				if (prefs != null) {
-					prefs.putInteger(latLongString, offset);
-					prefs.flush();
-				}
-			} catch (Exception e) {
-				System.out.println("ERROR calling again");
-				try {
-					Thread.sleep(1000);
-				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				return getOffsetFromLatLong(lat, lon);
-			}
+			offset = getOffsetFromServer(lat, lon, latLongString, 0);
 		}
 
 		int result = offset / 60 / 60;
 		// System.out.println("RESULT: " + result);
 		return result;
+	}
+
+	private int getOffsetFromServer(double lat, double lon, String latLongString, int count) {
+		int offset;
+		try {
+			offset = server.getOffsetFromLatLong(lat, lon);
+			latLongMap.put(latLongString, offset);
+			if (prefs != null) {
+				prefs.putInteger(latLongString, offset);
+				prefs.flush();
+			}
+		} catch (Exception e) {
+			try {
+				Thread.sleep(1000);
+			} catch (InterruptedException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			if (count > 5) {
+				return 0;
+			} else {
+				return getOffsetFromServer(lat, lon, latLongString, count++);
+			}
+		}
+		return offset;
 	}
 }
