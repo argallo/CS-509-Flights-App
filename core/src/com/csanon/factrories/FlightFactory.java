@@ -49,13 +49,17 @@ public class FlightFactory {
 			Element departureNode = flightNode.getChildByName("Departure");
 			String departureCode = departureNode.get("Code");
 			// TODO: insert real offset
-			DateTime departureTime = DateTime.of(departureNode.get("Time"), 0);
 
 			// get arrival info
 			Element arrivalNode = flightNode.getChildByName("Arrival");
 			String arrivalCode = arrivalNode.get("Code");
 			// TODO: insert real offset
-			DateTime arrivalTime = DateTime.of(arrivalNode.get("Time"), 0);
+
+			Airport departureAirport = Airports.getAirport(departureCode);
+			Airport arrivalAirport = Airports.getAirport(arrivalCode);
+
+			DateTime arrivalTime = DateTime.of(arrivalNode.get("Time"), arrivalAirport.getLatitude(), arrivalAirport.getLongitude());
+			DateTime departureTime = DateTime.of(departureNode.get("Time"), departureAirport.getLatitude(), departureAirport.getLongitude());
 
 			// get seating info
 			Element seatingNode = flightNode.getChildByName("Seating");
@@ -70,8 +74,6 @@ public class FlightFactory {
 			int seatsEconomy = Integer.parseInt(coachNode.getText());
 			Price priceEconomy = new Price(coachNode.get("Price"));
 
-			Airport departureAirport = Airports.getAirport(departureCode);
-			Airport arrivalAirport = Airports.getAirport(arrivalCode);
 			Airplane airplane = Airplanes.getAirplane(airplaneName);
 
 			Flight flight = makeFlight(airplane, duration, flightNumber, departureAirport, departureTime, arrivalAirport, arrivalTime, priceFirstClass, seatsFirstClass,

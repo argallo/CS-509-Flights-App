@@ -7,9 +7,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import com.csanon.server.FlightServer;
-import com.csanon.server.ServerFactory;
-
 /**
  * Immutable date time class
  */
@@ -17,7 +14,7 @@ public final class DateTime {
 	private static final DateTimeFormatter serverDateTimeFormat = DateTimeFormatter.ofPattern("yyyy MMM dd HH:mm z");
 	private static final DateTimeFormatter serverDateFormat = DateTimeFormatter.ofPattern("yyyy_MM_dd");
 	private static final DateTimeFormatter humanDateTimeFormat = DateTimeFormatter.ofPattern("MM/dd/yy HH:mm z");
-	private static final FlightServer server = ServerFactory.getServer();
+	private static final TimeZoneLookup timeZoneLookup = TimeZoneLookup.getInstance();
 	private final OffsetDateTime dateTime;
 
 	/**
@@ -58,12 +55,13 @@ public final class DateTime {
 	}
 
 	private DateTime(String dateString, double lat, double lon) {
-		this(dateString, server.getOffsetFromLatLong(lat, lon));
+		this(dateString, timeZoneLookup.getOffsetFromLatLong(lat, lon));
 	}
 
 	private DateTime(String dateString, int offset) {
 		OffsetDateTime DateTime = ZonedDateTime.parse(dateString, serverDateTimeFormat).toOffsetDateTime();
-		dateTime = DateTime.withOffsetSameInstant(ZoneOffset.ofHoursMinutesSeconds(0, 0, offset));
+		//System.out.println("Offset" + offset);
+		dateTime = DateTime.withOffsetSameInstant(ZoneOffset.of("" + offset));
 	}
 
 	private DateTime(OffsetDateTime dateTime) {

@@ -17,5 +17,5 @@ public interface FlightServer {
 
 	public List<Airplane> getAirplanes();
 
-	public int getOffsetFromLatLong(double lat, double lon);
+	public int getOffsetFromLatLong(double lat, double lon) throws Exception;
 }
