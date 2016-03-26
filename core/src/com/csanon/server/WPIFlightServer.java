@@ -99,13 +99,13 @@ public class WPIFlightServer implements FlightServer {
 		int offset = 0;
 		try {
 			OffsetLatLongHolder values = OffsetLatLong.getInstance().getOffset(lat, lon);
-			
+
 			if (values == null) {
 				TimeUnit.MILLISECONDS.sleep(2000);
 				HttpRequest request = Unirest.get("http://api.timezonedb.com").queryString("lat", new Double(lat))
 						.queryString("lng", new Double(lon)).queryString("key", config.getLatLongKey());
 				HttpResponse<String> response = request.asString();
-				if(response.getStatus() != 200) {
+				if (response.getStatus() != 200) {
 					throw new UnirestException("Invalid response (likely rate limit)");
 				}
 				String result = response.getBody();
@@ -114,7 +114,7 @@ public class WPIFlightServer implements FlightServer {
 				offset = Integer.parseInt(topelement.getChildByName("gmtOffset").getText());
 				values = OffsetLatLong.getInstance().setOffset(lat, lon, offset);
 			}
-			
+
 			offset = values.getOffset();
 
 		} catch (UnirestException e) {
@@ -125,23 +125,23 @@ public class WPIFlightServer implements FlightServer {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
-		/*HttpRequest request = Unirest.get(config.getLatLongURL()).queryString("lat", new Double(lat))
-				.queryString("lng", new Double(lon)).queryString("key", config.getLatLongKey());
-		HttpResponse<String> response = request.asString();
 
-		if (response.getStatus() != 200) {
-			throw new Exception();
-		} else {
-			String result = response.getBody();
-			System.out.println(response.getStatus());
-
-			System.out.println(result);
-			XmlReader reader = new XmlReader();
-			Element resultNode = reader.parse(result);
-
-			offset = Integer.parseInt(resultNode.get("gmtOffset"));
-		}*/
+		/*
+		 * HttpRequest request =
+		 * Unirest.get(config.getLatLongURL()).queryString("lat", new
+		 * Double(lat)) .queryString("lng", new Double(lon)).queryString("key",
+		 * config.getLatLongKey()); HttpResponse<String> response =
+		 * request.asString();
+		 * 
+		 * if (response.getStatus() != 200) { throw new Exception(); } else {
+		 * String result = response.getBody();
+		 * System.out.println(response.getStatus());
+		 * 
+		 * System.out.println(result); XmlReader reader = new XmlReader();
+		 * Element resultNode = reader.parse(result);
+		 * 
+		 * offset = Integer.parseInt(resultNode.get("gmtOffset")); }
+		 */
 
 		return offset;
 	}
