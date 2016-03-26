@@ -63,7 +63,10 @@ public final class DateTime {
 
 	private DateTime(String dateString, int offset) {
 		OffsetDateTime DateTime = ZonedDateTime.parse(dateString, serverDateTimeFormat).toOffsetDateTime();
-		dateTime = DateTime.withOffsetSameInstant(ZoneOffset.ofHoursMinutesSeconds(0, 0, offset));
+		int seconds = offset % 60;
+		int minutes = ((offset - seconds) / 60 ) % 60;
+		int hours = (((offset - seconds) / 60 - minutes) / 60 ) % 24;
+		dateTime = DateTime.withOffsetSameInstant(ZoneOffset.ofHoursMinutesSeconds(hours, minutes, seconds));
 	}
 
 	private DateTime(OffsetDateTime dateTime) {
@@ -100,6 +103,13 @@ public final class DateTime {
 
 	public boolean isUTC() {
 		return dateTime.getOffset().getTotalSeconds() == 0;
+	}
+	
+	public DateTime withNewOffset(int offset) {
+		int seconds = offset % 60;
+		int minutes = ((offset - seconds) / 60 ) % 60;
+		int hours = (((offset - seconds) / 60 - minutes) / 60 ) % 24;
+		return DateTime.of(dateTime.withOffsetSameInstant(ZoneOffset.ofHoursMinutesSeconds(hours, minutes, seconds)));
 	}
 
 	@Override

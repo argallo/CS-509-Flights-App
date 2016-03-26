@@ -1,21 +1,15 @@
 package com.csanon.server;
 
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
+import com.badlogic.gdx.utils.XmlReader;
+import com.badlogic.gdx.utils.XmlReader.Element;
 import com.csanon.Airplane;
 import com.csanon.Airport;
 import com.csanon.Flight;
+import com.csanon.OffsetLatLong;
+import com.csanon.OffsetLatLong.OffsetLatLongHolder;
 import com.csanon.factrories.AirplaneFactory;
 import com.csanon.factrories.AirportFactory;
 import com.csanon.factrories.FlightFactory;
@@ -24,6 +18,7 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 public class WPIFlightServer implements FlightServer {
 	private final ServerConfig config;
@@ -103,46 +98,34 @@ public class WPIFlightServer implements FlightServer {
 	public int getOffsetFromLatLong(double lat, double lon) {
 		int offset = 0;
 		try {
-			HttpRequest request = Unirest.get("http://api.timezonedb.com").queryString("lat", new Double(lat))
-					.queryString("lng", new Double(lon)).queryString("key", config.getLatLongKey());
-			HttpResponse<String> response = request.asString();
-			String result = response.getBody();
-
-			/**
-			 * load the xml string into a DOM document check whether the result is valid and then return the offset
-			 */
-			try {
-				DocumentBuilderFactory docBuilderFactory = DocumentBuilderFactory.newInstance();
-				DocumentBuilder docBuilder = docBuilderFactory.newDocumentBuilder();
-				InputSource inputSource = new InputSource();
-				inputSource.setCharacterStream(new StringReader(result));
-
-				Document docTimezone = docBuilder.parse(inputSource);
-
-				Element topelement = docTimezone.getDocumentElement();
-				String status = topelement.getAttributeNode("status").getValue();
-
-				if (!status.equals("OK")) {
-					// TODO : throw exception saying not a valid message
+			OffsetLatLongHolder values = OffsetLatLong.getInstance().getOffset(lat, lon);
+			
+			if (values == null) {
+				TimeUnit.MILLISECONDS.sleep(2000);
+				HttpRequest request = Unirest.get("http://api.timezonedb.com").queryString("lat", new Double(lat))
+						.queryString("lng", new Double(lon)).queryString("key", config.getLatLongKey());
+				HttpResponse<String> response = request.asString();
+				if(response.getStatus() != 200) {
+					throw new UnirestException("Invalid response (likely rate limit)");
 				}
-
-				offset = Integer.parseInt(topelement.getAttributeNode("gmtOffset").getValue());
-
-			} catch (ParserConfigurationException e) {
-				e.printStackTrace();
-				// TODO: handle
-			} catch (IOException e) {
-				e.printStackTrace();
-				// TODO: handle
-			} catch (SAXException e) {
-				e.printStackTrace();
-				// TODO: handle
+				String result = response.getBody();
+				final XmlReader reader = new XmlReader();
+				Element topelement = reader.parse(result);
+				offset = Integer.parseInt(topelement.getChildByName("gmtOffset").getText());
+				values = OffsetLatLong.getInstance().setOffset(lat, lon, offset);
 			}
+			
+			offset = values.getOffset();
+
 		} catch (UnirestException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 			// TODO: handle
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
 		return offset;
 	}
 

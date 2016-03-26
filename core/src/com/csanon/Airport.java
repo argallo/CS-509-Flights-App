@@ -1,15 +1,18 @@
 package com.csanon;
 
-;
+import com.csanon.server.FlightServer;
+import com.csanon.server.ServerFactory;
 
 public class Airport {
+	private static final FlightServer SERVERDEFUALT = ServerFactory.getServer();
+	
 	/*
 	 * Constant number for the range of latitude and longitude.
 	 */
-	static final double MAX_LA=90.00;
-	static final double MIN_LA=-90.00;
-	static final double MAX_LO=180.00;
-	static final double MIN_LO=-180.00;
+	public static final double MAX_LA=90.00;
+	public static final double MIN_LA=-90.00;
+	public static final double MAX_LO=180.00;
+	public static final double MIN_LO=-180.00;
 	
 	/*
 	 * Attributes for the airport.
@@ -19,15 +22,14 @@ public class Airport {
 	private final String acode;
 	private final double alongitude;
 	private final double alatitude;
+	private final int offset;
+	
 	
 	/*
 	 * Construct the default constructor without params.
 	 */
 	public Airport(){
-		aname="";
-		acode="";
-		alongitude=MAX_LO;
-		alatitude=MAX_LA;	
+		this("", "", MAX_LA, MAX_LO);
 	}
 	
 	/*
@@ -45,6 +47,7 @@ public class Airport {
 		this.acode=code;
 		alongitude=la;
 		alatitude=lo;
+		offset = SERVERDEFUALT.getOffsetFromLatLong(la, lo);
 	}
 	/*
 	 * Initialize the constructor. All input are in string format.
@@ -56,10 +59,7 @@ public class Airport {
 	 */
 	
 	public Airport(String name, String code, String la, String lo){
-		aname=name;
-		acode=code;
-		alatitude=Double.parseDouble(la);
-		alongitude=Double.parseDouble(lo);
+		this(name, code, Double.parseDouble(la), Double.parseDouble(lo));
 	}
 	
 	
@@ -72,15 +72,16 @@ public class Airport {
 	}
 	
 	
-	
 	public Double getLatitude(){
 		return alatitude;
 	}
 	
-	
-	
 	public Double getLongitude(){
 		return alongitude;
+	}
+	
+	public int getOffset() {
+		return offset;
 	}
 	
 	@Override
