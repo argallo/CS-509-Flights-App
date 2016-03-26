@@ -95,7 +95,7 @@ public class WPIFlightServer implements FlightServer {
 	}
 
 	@Override
-	public int getOffsetFromLatLong(double lat, double lon) {
+	public int getOffsetFromLatLong(double lat, double lon) throws Exception {
 		int offset = 0;
 		try {
 			OffsetLatLongHolder values = OffsetLatLong.getInstance().getOffset(lat, lon);
@@ -126,6 +126,23 @@ public class WPIFlightServer implements FlightServer {
 			e.printStackTrace();
 		}
 		
+		/*HttpRequest request = Unirest.get(config.getLatLongURL()).queryString("lat", new Double(lat))
+				.queryString("lng", new Double(lon)).queryString("key", config.getLatLongKey());
+		HttpResponse<String> response = request.asString();
+
+		if (response.getStatus() != 200) {
+			throw new Exception();
+		} else {
+			String result = response.getBody();
+			System.out.println(response.getStatus());
+
+			System.out.println(result);
+			XmlReader reader = new XmlReader();
+			Element resultNode = reader.parse(result);
+
+			offset = Integer.parseInt(resultNode.get("gmtOffset"));
+		}*/
+
 		return offset;
 	}
 

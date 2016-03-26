@@ -2,10 +2,10 @@ package com.csanon;
 
 import com.csanon.server.FlightServer;
 import com.csanon.server.ServerFactory;
+import com.csanon.time.TimeZoneLookup;
 
 public class Airport {
-	private static final FlightServer SERVERDEFUALT = ServerFactory.getServer();
-	
+
 	/*
 	 * Constant number for the range of latitude and longitude.
 	 */
@@ -13,11 +13,11 @@ public class Airport {
 	public static final double MIN_LA=-90.00;
 	public static final double MAX_LO=180.00;
 	public static final double MIN_LO=-180.00;
-	
+
 	/*
 	 * Attributes for the airport.
 	 */
-	
+
 	private final String aname;
 	private final String acode;
 	private final double alongitude;
@@ -31,15 +31,18 @@ public class Airport {
 	public Airport(){
 		this("", "", MAX_LA, MAX_LO);
 	}
-	
+
 	/*
-	 * Initialize the constructor. 
+	 * Initialize the constructor.
 	 * 
 	 * All attributes were put with the demand format.
 	 * 
 	 * @param name The airport name that human can read.
+	 * 
 	 * @param code The 3 letter airport code that identify the airport.
+	 * 
 	 * @param latitude The north/south coordinate of the airport.
+	 * 
 	 * @param longitude The east/west coordinate of the airport.
 	 */
 	public Airport(String name, String code, double la, double lo){
@@ -47,43 +50,44 @@ public class Airport {
 		this.acode=code;
 		alongitude=la;
 		alatitude=lo;
-		offset = SERVERDEFUALT.getOffsetFromLatLong(la, lo);
+		offset = TimeZoneLookup.getInstance().getOffsetFromLatLong(alongitude, alatitude);
 	}
+	
 	/*
 	 * Initialize the constructor. All input are in string format.
 	 * 
 	 * @param name The airport name that human can read.
+	 * 
 	 * @param code The 3 letter airport code that identify the airport.
+	 * 
 	 * @param latitude The north/south coordinate of the airport.
+	 * 
 	 * @param longitude The east/west coordinate of the airport.
 	 */
-	
 	public Airport(String name, String code, String la, String lo){
 		this(name, code, Double.parseDouble(la), Double.parseDouble(lo));
 	}
-	
-	
-	public String getName(){
+
+	public String getName() {
 		return aname;
 	}
-	
-	public String getCode(){
+
+	public String getCode() {
 		return acode;
 	}
-	
-	
-	public Double getLatitude(){
+
+	public Double getLatitude() {
 		return alatitude;
 	}
-	
-	public Double getLongitude(){
+
+	public Double getLongitude() {
 		return alongitude;
 	}
 	
 	public int getOffset() {
 		return offset;
 	}
-	
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -132,26 +136,24 @@ public class Airport {
 		}
 		return true;
 	}
-	
-	
+
 	public boolean isValid() {
-		
+
 		// If the name is null, airport is not valid.
 		if ((aname == null) || (aname == ""))
 			return false;
-		
+
 		// If we don't have a 3 character code, object isn't valid
 		if ((acode == null) || (acode.length() != 3))
 			return false;
-		
+
 		// Verify latitude and longitude are within range
 		if ((alatitude > MAX_LA) || (alatitude < MIN_LA) ||
-			(alongitude > MAX_LO) || (alongitude < MIN_LO)) {
+				(alongitude > MAX_LO) || (alongitude < MIN_LO)) {
 			return false;
 		}
-		
+
 		return true;
 	}
-	
-	
+
 }

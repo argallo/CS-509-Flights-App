@@ -45,6 +45,10 @@ public class OffsetLatLong implements Serializable {
 			offset = aOffset;
 			return offset;
 		}
+		
+		public String toString() {
+			return "(" + lat + "," + lon + ") -> " + offset;
+		}
 	}
 	
 	private static final long serialVersionUID = 1L;
