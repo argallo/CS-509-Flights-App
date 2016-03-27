@@ -1,11 +1,14 @@
 package com.csanon.time;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.badlogic.gdx.Application;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.backends.lwjgl.LwjglPreferences;
+import com.badlogic.gdx.files.FileHandle;
 import com.csanon.server.FlightServer;
 import com.csanon.server.ServerFactory;
 
@@ -13,6 +16,7 @@ public class TimeZoneLookup {
 
 	private static final FlightServer server = ServerFactory.getServer();
 	private static final TimeZoneLookup INSTANCE = new TimeZoneLookup();
+	private static final String SECONDFILENAME = "/OffsetLatLong.pref";
 	private final Preferences prefs;
 	private final Map<String, Integer> latLongMap;
 
@@ -24,14 +28,15 @@ public class TimeZoneLookup {
 		Application app = Gdx.app;
 		if (app != null) {
 			prefs = app.getPreferences("comcsanonlatlongoffsets");
-			((Map<String, String>) prefs.get()).forEach((key, value) -> {
-				latLongMap.put(key, Integer.parseInt(value));
-			});
-
-			System.out.println("Loaded " + latLongMap.size() + "items");
 		} else {
-			prefs = null;
+			prefs = new LwjglPreferences(new FileHandle(System.getProperty("user.dir") + SECONDFILENAME));
 		}
+		
+		((Map<String, String>) prefs.get()).forEach((key, value) -> {
+			latLongMap.put(key, Integer.parseInt(value));
+		});
+
+		System.out.println("Loaded " + latLongMap.size() + "items");
 	}
 
 	public static TimeZoneLookup getInstance() {

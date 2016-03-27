@@ -8,8 +8,6 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 import com.csanon.Airplane;
 import com.csanon.Airport;
 import com.csanon.Flight;
-import com.csanon.OffsetLatLong;
-import com.csanon.OffsetLatLong.OffsetLatLongHolder;
 import com.csanon.factrories.AirplaneFactory;
 import com.csanon.factrories.AirportFactory;
 import com.csanon.factrories.FlightFactory;
@@ -18,7 +16,6 @@ import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 
 public class WPIFlightServer implements FlightServer {
 	private final ServerConfig config;
@@ -97,51 +94,23 @@ public class WPIFlightServer implements FlightServer {
 	@Override
 	public int getOffsetFromLatLong(double lat, double lon) throws Exception {
 		int offset = 0;
-		try {
-			OffsetLatLongHolder values = OffsetLatLong.getInstance().getOffset(lat, lon);
 
-			if (values == null) {
-				TimeUnit.MILLISECONDS.sleep(2000);
-				HttpRequest request = Unirest.get("http://api.timezonedb.com").queryString("lat", new Double(lat))
-						.queryString("lng", new Double(lon)).queryString("key", config.getLatLongKey());
-				HttpResponse<String> response = request.asString();
-				if (response.getStatus() != 200) {
-					throw new UnirestException("Invalid response (likely rate limit)");
-				}
-				String result = response.getBody();
-				final XmlReader reader = new XmlReader();
-				Element topelement = reader.parse(result);
-				offset = Integer.parseInt(topelement.getChildByName("gmtOffset").getText());
-				values = OffsetLatLong.getInstance().setOffset(lat, lon, offset);
-			}
+		TimeUnit.MILLISECONDS.sleep(2000);
 
-			offset = values.getOffset();
+		HttpRequest request = Unirest.get(config.getLatLongURL()).queryString("lat", new Double(lat))
+				.queryString("lng", new Double(lon)).queryString("key", config.getLatLongKey());
+		HttpResponse<String> response = request.asString();
 
-		} catch (UnirestException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			// TODO: handle
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if (response.getStatus() != 200) {
+			throw new Exception();
+		} else {
+			String result = response.getBody();
+			
+			XmlReader reader = new XmlReader();
+			Element resultNode = reader.parse(result);
+
+			offset = Integer.parseInt(resultNode.get("gmtOffset"));
 		}
-
-		/*
-		 * HttpRequest request =
-		 * Unirest.get(config.getLatLongURL()).queryString("lat", new
-		 * Double(lat)) .queryString("lng", new Double(lon)).queryString("key",
-		 * config.getLatLongKey()); HttpResponse<String> response =
-		 * request.asString();
-		 * 
-		 * if (response.getStatus() != 200) { throw new Exception(); } else {
-		 * String result = response.getBody();
-		 * System.out.println(response.getStatus());
-		 * 
-		 * System.out.println(result); XmlReader reader = new XmlReader();
-		 * Element resultNode = reader.parse(result);
-		 * 
-		 * offset = Integer.parseInt(resultNode.get("gmtOffset")); }
-		 */
 
 		return offset;
 	}
