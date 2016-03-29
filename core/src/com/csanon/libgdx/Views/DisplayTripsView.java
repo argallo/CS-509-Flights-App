@@ -1,8 +1,7 @@
 package com.csanon.libgdx.Views;
 
-import java.util.LinkedList;
-import java.util.List;
-
+import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.csanon.Airport;
 import com.csanon.Airports;
 import com.csanon.Trip;
@@ -21,7 +20,10 @@ import com.csanon.libgdx.Utils.Pic;
 import com.csanon.libgdx.Utils.Tint;
 import com.csanon.time.DateTime;
 
-public class SearchFlightsView extends BaseView {
+import java.util.LinkedList;
+import java.util.List;
+
+public class DisplayTripsView extends BaseView {
 
 	private Button searchButton;
 
@@ -63,6 +65,15 @@ public class SearchFlightsView extends BaseView {
 			}
 		});
 		tripsPanel = new TripsPanel();
+        addAction(Actions.sequence(Actions.delay(1f), new Action() {
+            @Override
+            public boolean act(float delta) {
+                List<Trip> trips = (new TripBuilder()).getTrips(SearchFlightsHomeView.departureAirport, SearchFlightsHomeView.arriavalAirport, SearchFlightsHomeView.dateTime);
+                tripsPanel.updateTrips(trips);
+                return true;
+            }
+        }));
+
 		//tripsPanel.setVisible(false);
 	}
 

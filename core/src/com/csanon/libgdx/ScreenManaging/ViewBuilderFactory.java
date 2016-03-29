@@ -2,8 +2,9 @@ package com.csanon.libgdx.ScreenManaging;
 
 import com.csanon.libgdx.Utils.ViewID;
 import com.csanon.libgdx.Views.BaseView;
+import com.csanon.libgdx.Views.DisplayTripsView;
 import com.csanon.libgdx.Views.EmptyView;
-import com.csanon.libgdx.Views.SearchFlightsView;
+import com.csanon.libgdx.Views.SearchFlightsHomeView;
 import com.csanon.libgdx.Views.SplashView;
 
 /**
@@ -19,8 +20,10 @@ public class ViewBuilderFactory {
         switch(viewID) {
             case SPLASH:
                 return new SplashView();
-            case SEARCH:
-                return new SearchFlightsView();
+            case SEARCH_MAIN:
+                return new SearchFlightsHomeView();
+            case DISPLAY_SEARCH:
+                return new DisplayTripsView();
             default:
                 return new EmptyView();
         }

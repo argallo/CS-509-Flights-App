@@ -91,7 +91,7 @@ public class SplashView extends BaseView {
      */
     public void completeSplashView(){
         counting = false;
-        ViewManager.getInstance().transitionViewTo(ViewID.SEARCH, TransitionType.DEFAULT_TRANSITION);
+        ViewManager.getInstance().transitionViewTo(ViewID.SEARCH_MAIN, TransitionType.DEFAULT_TRANSITION);
     }
 
 }

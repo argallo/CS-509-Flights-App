@@ -19,10 +19,7 @@ public class TextBox extends Group{
     public static final int DATE = 3;
     public static final int EMAIL = 1;
     public static final int CHARDIG = 2;
-    private static final String EMAIL_PATTERN =
-            "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
-                    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
-    private static final String DATE_PATTERN = "\\d{2}-\\d{2}-\\d{4}";
+    private static final String DATE_PATTERN = "(0?[1-9]|1[012])/(0?[1-9]|[12][0-9]|3[01])/((19|20)\\d\\d)";
     		
     private TextField textField;
     private TextField.TextFieldStyle style;
@@ -75,17 +72,6 @@ public class TextBox extends Group{
                     		return true;
                     	}
                     	return false;
-                    case EMAIL:
-                        if(Character.isDigit(c)||Character.isLetter(c) || c == '.'){
-                            return true;
-                        }
-                        if(c == '@'){
-                            if(textField.getText().contains("@")){
-                                return false;
-                            }
-                            return true;
-                        }
-                        return false;
                     case CHARDIG:
                         return (Character.isDigit(c)||Character.isLetter(c)) ? true : false;
                 }
@@ -129,20 +115,11 @@ public class TextBox extends Group{
 
     public boolean isValid() {
         backgroundFocused.setVisible(false);
-        if(textField.getText().isEmpty()){
-            textField.setText(backgroundText);
-            textField.setPasswordMode(false);
-        }
-
-        if(textField.getText().equals(backgroundText)){
-            textField.getStyle().fontColor = Color.RED;
-            return false;
-        }
 
         /**
-         * Check if email is valid
+         * Check if date is valid
          */
-        if(filterType == EMAIL && !textField.getText().matches(EMAIL_PATTERN)){
+        if(filterType == DATE && !textField.getText().matches(DATE_PATTERN)){
             textField.getStyle().fontColor = Color.RED;
             return false;
         }
