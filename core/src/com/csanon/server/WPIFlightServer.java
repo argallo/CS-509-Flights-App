@@ -109,8 +109,6 @@ public class WPIFlightServer implements FlightServer {
 	public int getOffsetFromLatLong(double lat, double lon) throws Exception {
 		int offset = 0;
 
-		TimeUnit.MILLISECONDS.sleep(2000);
-
 		HttpRequest request = Unirest.get(config.getLatLongURL()).queryString("lat", new Double(lat))
 				.queryString("lng", new Double(lon)).queryString("key", config.getLatLongKey());
 		HttpResponse<String> response = request.asString();
