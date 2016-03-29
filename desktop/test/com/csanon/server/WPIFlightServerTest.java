@@ -22,20 +22,20 @@ import com.csanon.Flight;
 import com.csanon.time.DateTime;
 
 public class WPIFlightServerTest {
-	
+
 	private static final String SECONDFILENAME = "/OffsetLatLong.pref";
 	Airport airport;
 	DateTime date;
-	
+
 	@Before
 	public void setUp() throws Exception {
-		
-		//mock the application and preferences
+
+		// mock the application and preferences
 		Application app = mock(Application.class);
 		Preferences pref = new LwjglPreferences(new FileHandle(System.getProperty("user.dir") + SECONDFILENAME));
 		when(app.getPreferences("comcsanonlatlongoffsets")).thenReturn(pref);
 		Gdx.app = app;
-		
+
 		date = DateTime.of(2016, 5, 10, 0);
 		Airports.initialize();
 		Airplanes.initialize();
@@ -70,6 +70,20 @@ public class WPIFlightServerTest {
 		FlightServer server = ServerFactory.getServer();
 		List<Airplane> result = server.getAirplanes();
 		assertTrue(result.size() > 0);
+	}
+
+	@Test
+	public void testLockServer() {
+		FlightServer server = ServerFactory.getServer();
+		boolean result = server.lockServer();
+		assertTrue(result);
+	}
+
+	@Test
+	public void testUnlockServer() {
+		FlightServer server = ServerFactory.getServer();
+		boolean result = server.unlockServer();
+		assertTrue(result);
 	}
 
 }

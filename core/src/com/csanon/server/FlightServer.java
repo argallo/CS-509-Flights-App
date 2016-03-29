@@ -18,4 +18,8 @@ public interface FlightServer {
 	public List<Airplane> getAirplanes();
 
 	public int getOffsetFromLatLong(double lat, double lon) throws Exception;
+
+	public boolean lockServer();
+
+	public boolean unlockServer();
 }

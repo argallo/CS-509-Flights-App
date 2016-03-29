@@ -129,4 +129,46 @@ public class WPIFlightServer implements FlightServer {
 		return offset;
 	}
 
+	@Override
+	public boolean lockServer() {
+		boolean successful = false;
+		HttpRequest request = Unirest.post(config.getURL()).queryString("team", config.getTeamNum())
+				.queryString("action", "lockDB");
+		try {
+			HttpResponse<String> response = request.asString();
+			System.out.println(response.getBody() + response.getStatus());
+			if (response.getStatus() != 202) {
+				throw new HTTPException(response.getStatus());
+
+			} else {
+				successful = true;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return successful;
+	}
+
+	@Override
+	public boolean unlockServer() {
+		boolean successful = false;
+		HttpRequest request = Unirest.post(config.getURL()).queryString("team", config.getTeamNum())
+				.queryString("action", "unlockDB");
+		try {
+			HttpResponse<String> response = request.asString();
+			System.out.println(response.getBody() + response.getStatus());
+			if (response.getStatus() != 202) {
+				throw new HTTPException(response.getStatus());
+
+			} else {
+				successful = true;
+			}
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return successful;
+	}
+
 }
