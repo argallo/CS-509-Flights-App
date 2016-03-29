@@ -2,6 +2,8 @@ package com.csanon;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -11,12 +13,23 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.badlogic.gdx.Application;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
+import com.badlogic.gdx.backends.lwjgl.LwjglPreferences;
+import com.badlogic.gdx.files.FileHandle;
 import com.csanon.time.DateTime;
 
 public class TripBuilderTests {
 
 	@Before
 	public void setUp() {
+		// mock the application and preferences
+		Application app = mock(Application.class);
+		Preferences pref = new LwjglPreferences(new FileHandle(System.getProperty("user.dir") + "/OffsetLatLong.pref"));
+		when(app.getPreferences("comcsanonlatlongoffsets")).thenReturn(pref);
+		Gdx.app = app;
+		
 		Airports.initialize();
 		Airplanes.initialize();
 	}
@@ -31,11 +44,12 @@ public class TripBuilderTests {
 			assertTrue(legs.size() <= aMaxHopCount);
 
 			// check to make sure the departtime is on the same day as the first leg
-			DateTime lowerlimit = aDepartTime.withNewOffset(aDeparture.getOffset()).getUTC().plusSeconds(-aDeparture.getOffset()).withNewOffset(aDeparture.getOffset()).getMidnight();
+			DateTime lowerlimit = aDepartTime.withNewOffset(aDeparture.getOffset()).getUTC().plusSeconds(-aDeparture.getOffset()).withNewOffset(aDeparture.getOffset())
+					.getMidnight();
 			DateTime upperlimit = lowerlimit.getNextDay();
 			assertTrue(lowerlimit.compareTo(legs.get(0).getDepartureTime()) <= 0);
 			assertTrue(upperlimit.compareTo(legs.get(0).getDepartureTime()) > 0);
-			
+
 			// check to make sure that there are no duplicates of airports
 			assertEquals(legs.size() + 1, (new HashSet<Airport>(trip.getAirports()).size()));
 

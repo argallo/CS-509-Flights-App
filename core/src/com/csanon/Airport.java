@@ -1,7 +1,5 @@
 package com.csanon;
 
-import com.csanon.server.FlightServer;
-import com.csanon.server.ServerFactory;
 import com.csanon.time.TimeZoneLookup;
 
 public class Airport {

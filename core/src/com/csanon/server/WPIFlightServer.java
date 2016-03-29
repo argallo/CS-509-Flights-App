@@ -3,6 +3,8 @@ package com.csanon.server;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import javax.xml.ws.http.HTTPException;
+
 import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.csanon.Airplane;
@@ -14,7 +16,6 @@ import com.csanon.factrories.FlightFactory;
 import com.csanon.time.DateTime;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
-import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
 
 public class WPIFlightServer implements FlightServer {
@@ -27,20 +28,25 @@ public class WPIFlightServer implements FlightServer {
 	@Override
 	public List<Airport> getAirports() {
 		List<Airport> airports = null;
+
+		HttpRequest request = Unirest.get(config.getURL()).queryString("team", config.getTeamNum())
+				.queryString("action", "list").queryString("list_type", "airports");
+
 		try {
-			HttpRequest request = Unirest.get(config.getURL()).queryString("team", config.getTeamNum())
-					.queryString("action", "list").queryString("list_type", "airports");
-			System.out.println(request.getUrl());
+			// get the response
 			HttpResponse<String> response = request.asString();
-			String result = response.getBody();
 
-			airports = AirportFactory.getInstance().parseAirportsFromXML(result);
+			if (response.getStatus() != 200) {
+				throw new HTTPException(response.getStatus());
 
-		} catch (UnirestException e) {
-			// TODO Auto-generated catch block
+			} else {
+				String result = response.getBody();
+
+				airports = AirportFactory.getInstance().parseAirportsFromXML(result);
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return airports;
 	}
 
@@ -59,35 +65,43 @@ public class WPIFlightServer implements FlightServer {
 		String dateString = date.toServerDateString();
 		String airportCode = airport.getCode();
 
+		HttpRequest request = Unirest.get(config.getURL()).queryString("team", config.getTeamNum())
+				.queryString("action", "list").queryString("list_type", direction)
+				.queryString("airport", airportCode).queryString("day", dateString);
 		try {
-			HttpRequest request = Unirest.get(config.getURL()).queryString("team", config.getTeamNum())
-					.queryString("action", "list").queryString("list_type", direction)
-					.queryString("airport", airportCode).queryString("day", dateString);
 			HttpResponse<String> response = request.asString();
-			String result = response.getBody();
-			flights = FlightFactory.getInstance().parseFlightsFromXML(result);
-		} catch (UnirestException e) {
-			// TODO Auto-generated catch block
+
+			if (response.getStatus() != 200) {
+				throw new HTTPException(response.getStatus());
+			} else {
+				String result = response.getBody();
+				flights = FlightFactory.getInstance().parseFlightsFromXML(result);
+
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return flights;
 	}
 
 	@Override
 	public List<Airplane> getAirplanes() {
 		List<Airplane> airplanes = null;
+
+		HttpRequest request = Unirest.get(config.getURL()).queryString("team", config.getTeamNum())
+				.queryString("action", "list").queryString("list_type", "airplanes");
 		try {
-			HttpRequest request = Unirest.get(config.getURL()).queryString("team", config.getTeamNum())
-					.queryString("action", "list").queryString("list_type", "airplanes");
 			HttpResponse<String> response = request.asString();
-			String result = response.getBody();
-			airplanes = AirplaneFactory.getInstance().parseAirplanesFromXML(result);
-		} catch (UnirestException e) {
-			// TODO Auto-generated catch block
+
+			if (response.getStatus() != 200) {
+				throw new HTTPException(response.getStatus());
+			} else {
+				String result = response.getBody();
+				airplanes = AirplaneFactory.getInstance().parseAirplanesFromXML(result);
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
 		return airplanes;
 	}
 
@@ -102,10 +116,10 @@ public class WPIFlightServer implements FlightServer {
 		HttpResponse<String> response = request.asString();
 
 		if (response.getStatus() != 200) {
-			throw new Exception();
+			throw new HTTPException(response.getStatus());
 		} else {
 			String result = response.getBody();
-			
+
 			XmlReader reader = new XmlReader();
 			Element resultNode = reader.parse(result);
 
