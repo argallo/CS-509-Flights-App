@@ -98,7 +98,7 @@ public class TripBuilderTests {
 		Airport phoenix = Airports.getAirport("PHX");
 
 		DateTime depart = DateTime.of(2016, 5, 10, 0);
-		List<Trip> trips = (new TripBuilder()).getTrips(boston, phoenix, depart);
+		List<Trip> actualtrips = (new TripBuilder()).getTrips(boston, phoenix, depart);
 
 		DateTime departuretime1 = DateTime.of("2016 May 10 11:56 GMT", boston.getOffset());
 		DateTime arrivaltime1 = DateTime.of("2016 May 10 16:44 GMT", phoenix.getOffset());
@@ -116,6 +116,7 @@ public class TripBuilderTests {
 		expectedTrips.add(expectedTrip1);
 		expectedTrips.add(expectedTrip2);
 
-		assertEquals(expectedTrips, trips);
+		assertValidTrips(actualtrips, boston, phoenix, depart, 3, 1 * 60 * 60, 5 * 60 * 60);
+		assertEquals(expectedTrips, actualtrips);
 	}
 }

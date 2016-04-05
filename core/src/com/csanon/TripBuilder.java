@@ -89,11 +89,6 @@ public class TripBuilder {
 								DateTime minlayovertime = flight.getArrivalTime().plusSeconds(minlayover);
 								DateTime maxlayovertime = flight.getArrivalTime().plusSeconds(maxlayover);
 
-								Collection<Trip> t = searchForTrips(aHopCount - 1, flight.getArrivalAirport(),
-										aDestination, minlayovertime, aDataSet);
-								t = searchForTrips(aHopCount - 1, flight.getArrivalAirport(), aDestination,
-										maxlayovertime, aDataSet);
-
 								tripsbyAirport.get(flight.getArrivalAirport()).addAll(searchForTrips(aHopCount - 1,
 										flight.getArrivalAirport(), aDestination, minlayovertime, aDataSet));
 								tripsbyAirport.get(flight.getArrivalAirport()).addAll(searchForTrips(aHopCount - 1,
@@ -118,7 +113,6 @@ public class TripBuilder {
 											&& flight.getArrivalTime().plusSeconds(maxlayover)
 													.compareTo(trip.getLegs().get(0).getDepartureTime()) >= 0) {
 										if (!trip.getAirports().contains(flight.getDepartureAirport())) {
-											;
 											validtrips.add(trip.addLeg(flight, true));
 										}
 									}
