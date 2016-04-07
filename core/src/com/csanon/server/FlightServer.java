@@ -5,6 +5,7 @@ import java.util.List;
 import com.csanon.Airplane;
 import com.csanon.Airport;
 import com.csanon.Flight;
+import com.csanon.Trip;
 import com.csanon.time.DateTime;
 
 public interface FlightServer {
@@ -22,4 +23,8 @@ public interface FlightServer {
 	public boolean lockServer();
 
 	public boolean unlockServer();
+	
+	public boolean checkTripAvailable(Trip trip);
+	
+	public void bookTrip(Trip trip);
 }

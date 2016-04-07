@@ -1,6 +1,7 @@
 package com.csanon.server;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.xml.ws.http.HTTPException;
 
@@ -9,12 +10,14 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 import com.csanon.Airplane;
 import com.csanon.Airport;
 import com.csanon.Flight;
+import com.csanon.Trip;
 import com.csanon.factrories.AirplaneFactory;
 import com.csanon.factrories.AirportFactory;
 import com.csanon.factrories.FlightFactory;
 import com.csanon.time.DateTime;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
 
 public class WPIFlightServer implements FlightServer {
@@ -65,8 +68,8 @@ public class WPIFlightServer implements FlightServer {
 		String airportCode = airport.getCode();
 
 		HttpRequest request = Unirest.get(config.getURL()).queryString("team", config.getTeamNum())
-				.queryString("action", "list").queryString("list_type", direction)
-				.queryString("airport", airportCode).queryString("day", dateString);
+				.queryString("action", "list").queryString("list_type", direction).queryString("airport", airportCode)
+				.queryString("day", dateString);
 		try {
 			HttpResponse<String> response = request.asString();
 
@@ -166,6 +169,54 @@ public class WPIFlightServer implements FlightServer {
 			e.printStackTrace();
 		}
 		return successful;
+	}
+
+	@Override
+	public boolean checkTripAvailable(Trip trip) {
+		boolean available = true;
+		// TODO: confirm lock
+
+		// For each of the flights in the trip, confirm that the specified class
+		// of seat is still available
+		for (Flight flight : trip.getLegs()) {
+
+			// TODO: get flight again from server
+			Flight serverFlight = null;
+
+			// TODO: check that seat still available
+			boolean result = false;
+
+			// if the flight is unavailable set available to false and break
+			if (!result) {
+				available = false;
+				break;
+			}
+		}
+
+		return available;
+	}
+
+	@Override
+	public void bookTrip(Trip trip) {
+
+		//TODO: confirm lock
+		
+		// for each flight in the trip, book the flight with the assosciated
+		// seating
+		//TODO: change seat class to dynamic
+		String flightsXML = trip.getLegs().stream()
+				.map(flight -> "<Flight number=\"" + flight.getFlightNum() + "\" seating=\"" + "Coach" + "\"/>")
+				.collect(Collectors.joining());
+		flightsXML = "<Flights>" + flightsXML + "</Flights>";
+
+		HttpRequest request = Unirest.post(config.getURL()).queryString("team", config.getTeamNum())
+				.queryString("action", "buyTickets").queryString("flightData", flightsXML);
+
+		try {
+			HttpResponse<String> response = request.asString();
+		} catch (UnirestException e) {
+
+		}
 	}
 
 }
