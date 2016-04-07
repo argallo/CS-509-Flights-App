@@ -12,7 +12,6 @@ import com.csanon.libgdx.Components.DropDown;
 import com.csanon.libgdx.Components.TextBox;
 import com.csanon.libgdx.Components.TextLabel;
 import com.csanon.libgdx.Components.TintedImage;
-import com.csanon.libgdx.Components.TitleLabel;
 import com.csanon.libgdx.Components.TripsPanel;
 import com.csanon.libgdx.Utils.Assets;
 import com.csanon.libgdx.Utils.Constants;
@@ -27,7 +26,7 @@ public class DisplayTripsView extends BaseView {
 
 	private Button searchButton;
 
-	private TitleLabel titleLabel;
+	//private TitleLabel titleLabel;
 	private TextLabel departureAirportLabel, arrivalAirportLabel, dateLabel;
 	private DropDown departureAirportDropdown, arrivalAirportDropdown;
 	private TintedImage background;
@@ -37,7 +36,7 @@ public class DisplayTripsView extends BaseView {
 	@Override
 	public void init() {
 		background = new TintedImage(Pic.Pixel, Tint.BACKGROUND_COLOR);
-		titleLabel = new TitleLabel("Flight Finder");
+		//titleLabel = new TitleLabel("Flight Finder");
 		departureAirportLabel = new TextLabel("Depart Airport:", Assets.getInstance().getSmallFont());
 		arrivalAirportLabel = new TextLabel("Arrival Airport:", Assets.getInstance().getSmallFont());
 		dateLabel = new TextLabel("Departure Date:", Assets.getInstance().getSmallFont());
@@ -52,11 +51,11 @@ public class DisplayTripsView extends BaseView {
 		departureAirportDropdown.pack();
 		arrivalAirportDropdown.setItems(airportNames);
 		arrivalAirportDropdown.pack();
-		textBox = new TextBox(10,"xx/xx/xxxx", TextBox.DATE);
+		textBox = new TextBox(10,"05/10/2016", TextBox.DATE);
 		
 		TintedImage icon = new TintedImage(Pic.Search_Icon);
 		icon.setSize(90, 90);
-		icon.setPosition(980, 385);
+		icon.setPosition(980, 535);
 		searchButton = new Button(Pic.Pixel, Tint.GRAY, "Search", Assets.getInstance().getMidFont(), icon);
 		searchButton.setButtonAction(new ButtonAction() {
 			@Override
@@ -87,21 +86,21 @@ public class DisplayTripsView extends BaseView {
 
 	@Override
 	public void setPositions() {
-		titleLabel.setPosition(Constants.VIRTUAL_WIDTH/2 - titleLabel.getWidth()/2, 600);
-		departureAirportDropdown.setPosition(235, 500);
-		arrivalAirportDropdown.setPosition(235, 420);
-		departureAirportLabel.setPosition(10, 500);
-		arrivalAirportLabel.setPosition(10, 420);
-		dateLabel.setPosition(805, 500);
-		textBox.setPosition(1060, 500);
-		searchButton.setPosition(900, 380);
+		//titleLabel.setPosition(Constants.VIRTUAL_WIDTH/2 - titleLabel.getWidth()/2, 600);
+		departureAirportDropdown.setPosition(235, 650);
+		arrivalAirportDropdown.setPosition(235, 570);
+		departureAirportLabel.setPosition(10, 650);
+		arrivalAirportLabel.setPosition(10, 570);
+		dateLabel.setPosition(805, 650);
+		textBox.setPosition(1060, 650);
+		searchButton.setPosition(900, 530);
 		tripsPanel.setPosition(Constants.VIRTUAL_WIDTH / 2 - 400, 10);
 	}
 
 	@Override
 	public void addActors() {
 		addActor(background);
-		addActor(titleLabel);
+		//addActor(titleLabel);
 		addActor(departureAirportLabel);
 		addActor(arrivalAirportLabel);
 		addActor(departureAirportDropdown);
@@ -117,7 +116,6 @@ public class DisplayTripsView extends BaseView {
 	public void handle(int outcome) {
 		switch (outcome){
 			case 0:
-
 				int year = Integer.parseInt(textBox.getText().substring(6));
 				int month = Integer.parseInt(textBox.getText().substring(0,2));
 				int day = Integer.parseInt(textBox.getText().substring(3, 5));
@@ -138,4 +136,10 @@ public class DisplayTripsView extends BaseView {
 		return Airports.getAirport(airportString);
 	}
 
+
+    @Override
+    public void act(float delta) {
+        super.act(delta);
+
+    }
 }
