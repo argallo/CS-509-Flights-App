@@ -50,14 +50,20 @@ public class Assets extends AssetManager {
     public void createFonts(){
         generator = new FreeTypeFontGenerator(Gdx.files.internal("Font/arial.ttf"));
         font = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        font.magFilter = textureParam.magFilter;
+        font.minFilter = textureParam.minFilter;
         font.size = 20;
         xsmallFont = generator.generateFont(font);
+        xsmallFont.getRegion().getTexture().setFilter(textureParam.minFilter, textureParam.magFilter);
         font.size = 35;
         smallFont = generator.generateFont(font);
+        smallFont.getRegion().getTexture().setFilter(textureParam.minFilter, textureParam.magFilter);
         font.size = 50;
         midFont = generator.generateFont(font);
+        midFont.getRegion().getTexture().setFilter(textureParam.minFilter, textureParam.magFilter);
         font.size = 100;
         largeFont = generator.generateFont(font);
+        largeFont.getRegion().getTexture().setFilter(textureParam.minFilter, textureParam.magFilter);
     }
 
     /**

@@ -4,8 +4,8 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Batch;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.csanon.libgdx.Utils.ColorHelper;
 
@@ -41,18 +41,24 @@ public class Button extends TintedImage {
             this.icon = icon;
         }
         this.backgroundColor = backgroundColor;
-        this.addListener(new InputListener() {
+        this.addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                if (buttonAction != null)
+                    buttonAction.buttonPressed();
+            }
+
             @Override
             public boolean touchDown(InputEvent event, float x, float y, int pointer, int button) {
+                super.touchDown(event, x, y, pointer, button);
                 setTint(pressedColor);
                 return true;
             }
 
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
+                super.touchUp(event, x, y, pointer, button);
                 setTint(getBackgroundColor());
-                if (buttonAction != null)
-                    buttonAction.buttonPressed();
             }
         });
     }
