@@ -5,6 +5,7 @@ import java.util.List;
 import com.csanon.Airplane;
 import com.csanon.Airport;
 import com.csanon.Flight;
+import com.csanon.SeatClass;
 import com.csanon.Trip;
 import com.csanon.time.DateTime;
 
@@ -24,7 +25,7 @@ public interface FlightServer {
 
 	public boolean unlockServer();
 	
-	public boolean checkTripAvailable(Trip trip);
-	
-	public void bookTrip(Trip trip);
+	public boolean checkTripAvailable(Trip trip, SeatClass seatClass);
+
+	public void bookTrip(Trip trip, SeatClass seatClass);
 }

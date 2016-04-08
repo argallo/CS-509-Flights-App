@@ -10,6 +10,7 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 import com.csanon.Airplane;
 import com.csanon.Airport;
 import com.csanon.Flight;
+import com.csanon.SeatClass;
 import com.csanon.Trip;
 import com.csanon.factrories.AirplaneFactory;
 import com.csanon.factrories.AirportFactory;
@@ -64,7 +65,7 @@ public class WPIFlightServer implements FlightServer {
 
 	private List<Flight> getFlights(Airport airport, DateTime date, String direction) {
 		List<Flight> flights = null;
-		String dateString = date.toServerDateString();
+		String dateString = date.getUTC().toServerDateString();
 		String airportCode = airport.getCode();
 
 		HttpRequest request = Unirest.get(config.getURL()).queryString("team", config.getTeamNum())
@@ -172,7 +173,7 @@ public class WPIFlightServer implements FlightServer {
 	}
 
 	@Override
-	public boolean checkTripAvailable(Trip trip) {
+	public boolean checkTripAvailable(Trip trip, SeatClass seatClass) {
 		boolean available = true;
 		// TODO: confirm lock
 
@@ -180,11 +181,14 @@ public class WPIFlightServer implements FlightServer {
 		// of seat is still available
 		for (Flight flight : trip.getLegs()) {
 
-			// TODO: get flight again from server
-			Flight serverFlight = null;
+			Flight serverFlight = getFlightFromServer(flight);
 
-			// TODO: check that seat still available
 			boolean result = false;
+			if (seatClass == SeatClass.ECONOMY) {
+				result = serverFlight.checkEconomyAvailable(1);
+			} else {
+				result = serverFlight.checkFirstClassAvailable(1);
+			}
 
 			// if the flight is unavailable set available to false and break
 			if (!result) {
@@ -196,16 +200,29 @@ public class WPIFlightServer implements FlightServer {
 		return available;
 	}
 
-	@Override
-	public void bookTrip(Trip trip) {
+	private Flight getFlightFromServer(Flight flight) {
+		Flight result = null;
+		List<Flight> flights = getFlightsDeparting(flight.getDepartureAirport(), flight.getDepartureTime());
 
-		//TODO: confirm lock
-		
-		// for each flight in the trip, book the flight with the assosciated
+		for (Flight serverFlight : flights) {
+			if (serverFlight.getFlightNum().equals(serverFlight.getFlightNum())) {
+				result = serverFlight;
+				break;
+			}
+		}
+
+		return result;
+	}
+
+	@Override
+	public void bookTrip(Trip trip, SeatClass seatClass) {
+
+		// TODO: confirm lock
+
+		// for each flight in the trip, book the flight with the associated
 		// seating
-		//TODO: change seat class to dynamic
 		String flightsXML = trip.getLegs().stream()
-				.map(flight -> "<Flight number=\"" + flight.getFlightNum() + "\" seating=\"" + "Coach" + "\"/>")
+				.map(flight -> "<Flight number=\"" + flight.getFlightNum() + "\" seating=\"" + seatClass + "\"/>")
 				.collect(Collectors.joining());
 		flightsXML = "<Flights>" + flightsXML + "</Flights>";
 
