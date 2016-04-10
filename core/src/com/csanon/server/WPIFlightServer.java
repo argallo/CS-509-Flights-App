@@ -1,6 +1,7 @@
 package com.csanon.server;
 
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 import javax.xml.ws.http.HTTPException;
@@ -23,6 +24,7 @@ import com.mashape.unirest.request.HttpRequest;
 
 public class WPIFlightServer implements FlightServer {
 	private final ServerConfig config;
+	private final Lock lock = new Lock();
 
 	public WPIFlightServer(ServerConfig config) {
 		this.config = config;
@@ -131,7 +133,7 @@ public class WPIFlightServer implements FlightServer {
 	}
 
 	@Override
-	public boolean lockServer() {
+	public boolean lockServer(Consumer<String> callback) {
 		boolean successful = false;
 		HttpRequest request = Unirest.post(config.getURL()).queryString("team", config.getTeamNum())
 				.queryString("action", "lockDB");
@@ -143,6 +145,7 @@ public class WPIFlightServer implements FlightServer {
 
 			} else {
 				successful = true;
+				lock.lock(callback);
 			}
 
 		} catch (Exception e) {
@@ -164,6 +167,7 @@ public class WPIFlightServer implements FlightServer {
 
 			} else {
 				successful = true;
+				lock.unlock();
 			}
 
 		} catch (Exception e) {
@@ -173,31 +177,34 @@ public class WPIFlightServer implements FlightServer {
 	}
 
 	@Override
-	public boolean checkTripAvailable(Trip trip, SeatClass seatClass) {
+	public boolean checkTripAvailable(Trip trip, SeatClass seatClass) throws Exception {
 		boolean available = true;
-		// TODO: confirm lock
+		if (!lock.isLocked()) {
+			throw new Exception();
+		} else {
 
-		// For each of the flights in the trip, confirm that the specified class
-		// of seat is still available
-		for (Flight flight : trip.getLegs()) {
+			// For each of the flights in the trip, confirm that the specified class
+			// of seat is still available
+			for (Flight flight : trip.getLegs()) {
 
-			Flight serverFlight = getFlightFromServer(flight);
+				Flight serverFlight = getFlightFromServer(flight);
 
-			boolean result = false;
-			if (seatClass == SeatClass.ECONOMY) {
-				result = serverFlight.checkEconomyAvailable(1);
-			} else {
-				result = serverFlight.checkFirstClassAvailable(1);
+				boolean result = false;
+				if (seatClass == SeatClass.ECONOMY) {
+					result = serverFlight.checkEconomyAvailable(1);
+				} else {
+					result = serverFlight.checkFirstClassAvailable(1);
+				}
+
+				// if the flight is unavailable set available to false and break
+				if (!result) {
+					available = false;
+					break;
+				}
 			}
 
-			// if the flight is unavailable set available to false and break
-			if (!result) {
-				available = false;
-				break;
-			}
+			return available;
 		}
-
-		return available;
 	}
 
 	private Flight getFlightFromServer(Flight flight) {
@@ -215,24 +222,27 @@ public class WPIFlightServer implements FlightServer {
 	}
 
 	@Override
-	public void bookTrip(Trip trip, SeatClass seatClass) {
+	public void bookTrip(Trip trip, SeatClass seatClass) throws Exception {
 
-		// TODO: confirm lock
+		if (!lock.isLocked()) {
+			throw new Exception();
+		} else {
 
-		// for each flight in the trip, book the flight with the associated
-		// seating
-		String flightsXML = trip.getLegs().stream()
-				.map(flight -> "<Flight number=\"" + flight.getFlightNum() + "\" seating=\"" + seatClass + "\"/>")
-				.collect(Collectors.joining());
-		flightsXML = "<Flights>" + flightsXML + "</Flights>";
+			// for each flight in the trip, book the flight with the associated
+			// seating
+			String flightsXML = trip.getLegs().stream()
+					.map(flight -> "<Flight number=\"" + flight.getFlightNum() + "\" seating=\"" + seatClass + "\"/>")
+					.collect(Collectors.joining());
+			flightsXML = "<Flights>" + flightsXML + "</Flights>";
 
-		HttpRequest request = Unirest.post(config.getURL()).queryString("team", config.getTeamNum())
-				.queryString("action", "buyTickets").queryString("flightData", flightsXML);
+			HttpRequest request = Unirest.post(config.getURL()).queryString("team", config.getTeamNum())
+					.queryString("action", "buyTickets").queryString("flightData", flightsXML);
 
-		try {
-			HttpResponse<String> response = request.asString();
-		} catch (UnirestException e) {
+			try {
+				HttpResponse<String> response = request.asString();
+			} catch (UnirestException e) {
 
+			}
 		}
 	}
 

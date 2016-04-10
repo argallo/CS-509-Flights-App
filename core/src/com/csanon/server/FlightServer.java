@@ -1,6 +1,7 @@
 package com.csanon.server;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 import com.csanon.Airplane;
 import com.csanon.Airport;
@@ -21,11 +22,11 @@ public interface FlightServer {
 
 	public int getOffsetFromLatLong(double lat, double lon) throws Exception;
 
-	public boolean lockServer();
+	public boolean lockServer(Consumer<String> callback);
 
 	public boolean unlockServer();
 	
-	public boolean checkTripAvailable(Trip trip, SeatClass seatClass);
+	public boolean checkTripAvailable(Trip trip, SeatClass seatClass) throws Exception;
 
-	public void bookTrip(Trip trip, SeatClass seatClass);
+	public void bookTrip(Trip trip, SeatClass seatClass) throws Exception;
 }
