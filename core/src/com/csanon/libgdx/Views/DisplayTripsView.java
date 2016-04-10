@@ -13,10 +13,13 @@ import com.csanon.libgdx.Components.TextBox;
 import com.csanon.libgdx.Components.TextLabel;
 import com.csanon.libgdx.Components.TintedImage;
 import com.csanon.libgdx.Components.TripsPanel;
+import com.csanon.libgdx.ScreenManaging.TransitionType;
+import com.csanon.libgdx.ScreenManaging.ViewManager;
 import com.csanon.libgdx.Utils.Assets;
 import com.csanon.libgdx.Utils.Constants;
 import com.csanon.libgdx.Utils.Pic;
 import com.csanon.libgdx.Utils.Tint;
+import com.csanon.libgdx.Utils.ViewID;
 import com.csanon.time.DateTime;
 
 import java.util.LinkedList;
@@ -24,14 +27,19 @@ import java.util.List;
 
 public class DisplayTripsView extends BaseView {
 
+    static Trip TripTO, TripBACK;
+
 	private Button searchButton;
 
 	//private TitleLabel titleLabel;
 	private TextLabel departureAirportLabel, arrivalAirportLabel, dateLabel;
 	private DropDown departureAirportDropdown, arrivalAirportDropdown;
 	private TintedImage background;
-	private TextBox textBox;
+	private TextBox departureDateTextBox;
 	private TripsPanel tripsPanel;
+    private Button confirmBtn;
+    private Trip selectedTripTo;
+    private Trip selectedTripBack;
 
 	@Override
 	public void init() {
@@ -51,7 +59,7 @@ public class DisplayTripsView extends BaseView {
 		departureAirportDropdown.pack();
 		arrivalAirportDropdown.setItems(airportNames);
 		arrivalAirportDropdown.pack();
-		textBox = new TextBox(10,"05/10/2016", TextBox.DATE);
+		departureDateTextBox = new TextBox(10,"05/10/2016", TextBox.DATE);
 		
 		TintedImage icon = new TintedImage(Pic.Search_Icon);
 		icon.setSize(90, 90);
@@ -63,7 +71,7 @@ public class DisplayTripsView extends BaseView {
 				handle(0);
 			}
 		});
-		tripsPanel = new TripsPanel();
+		tripsPanel = new TripsPanel(this);
         addAction(Actions.sequence(Actions.delay(1f), new Action() {
             @Override
             public boolean act(float delta) {
@@ -73,15 +81,25 @@ public class DisplayTripsView extends BaseView {
             }
         }));
 
-		//tripsPanel.setVisible(false);
+        confirmBtn = new Button(Pic.Pixel, Tint.GRAY, "Book", Assets.getInstance().getSmallFont());
+        confirmBtn.setVisible(false);
+        confirmBtn.setButtonAction(new ButtonAction() {
+            @Override
+            public void buttonPressed() {
+                TripTO = selectedTripTo;
+                TripBACK = selectedTripBack;
+                ViewManager.getInstance().transitionViewTo(ViewID.BOOKING, TransitionType.SLIDE_R_TRANSITION);
+            }
+        });
 	}
 
 	@Override
 	public void setSizes() {
 		// TODO Auto-generated method stub
 		background.setSize(Constants.VIRTUAL_WIDTH, Constants.VIRTUAL_HEIGHT);
-		textBox.setSize(160, 35);
+		departureDateTextBox.setSize(160, 35);
 		searchButton.setSize(250, 100);
+        confirmBtn.setSize(150, 70);
 	}
 
 	@Override
@@ -92,9 +110,10 @@ public class DisplayTripsView extends BaseView {
 		departureAirportLabel.setPosition(10, 650);
 		arrivalAirportLabel.setPosition(10, 570);
 		dateLabel.setPosition(805, 650);
-		textBox.setPosition(1060, 650);
+		departureDateTextBox.setPosition(1060, 650);
 		searchButton.setPosition(900, 530);
 		tripsPanel.setPosition(Constants.VIRTUAL_WIDTH / 2 - 400, 10);
+        confirmBtn.setPosition(1100, 10);
 	}
 
 	@Override
@@ -106,26 +125,29 @@ public class DisplayTripsView extends BaseView {
 		addActor(departureAirportDropdown);
 		addActor(arrivalAirportDropdown);
 		addActor(dateLabel);
-		addActor(textBox);
+		addActor(departureDateTextBox);
 		addActor(searchButton);
 		addActor(tripsPanel);
-
+        addActor(confirmBtn);
 	}
 
 	@Override
 	public void handle(int outcome) {
 		switch (outcome){
 			case 0:
-				int year = Integer.parseInt(textBox.getText().substring(6));
-				int month = Integer.parseInt(textBox.getText().substring(0,2));
-				int day = Integer.parseInt(textBox.getText().substring(3, 5));
+				String date = departureDateTextBox.getText();
+                System.out.println(date);
+                int year, month, day;
+                String[] dateArray = date.split("/");
+                year = Integer.parseInt(dateArray[2]);
+                day = Integer.parseInt(dateArray[1]);
+                month = Integer.parseInt(dateArray[0]);
 				Airport departAirport = getAirport(departureAirportDropdown.getCurrentItem());
 				Airport arrivalAirport = getAirport(arrivalAirportDropdown.getCurrentItem());
 				System.out.print(year+" "+ month+" "+day);
 				DateTime depart = DateTime.of(year, month, day, 0);
 				List<Trip> trips = (new TripBuilder()).getTrips(departAirport, arrivalAirport, depart);
 				tripsPanel.updateTrips(trips);
-				break;
 		}
 
 	}
@@ -141,5 +163,15 @@ public class DisplayTripsView extends BaseView {
     public void act(float delta) {
         super.act(delta);
 
+    }
+
+    public void setSelectedTripTo(Trip selectedTrip) {
+        this.selectedTripTo = selectedTrip;
+        confirmBtn.setVisible(true);
+    }
+//TODO: check to see if round trips selected before setting book button to true
+    public void setSelectedTripBack(Trip selectedTrip) {
+        this.selectedTripBack = selectedTrip;
+        confirmBtn.setVisible(true);
     }
 }

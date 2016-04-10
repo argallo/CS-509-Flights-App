@@ -20,6 +20,7 @@ public class Button extends TintedImage {
     Color pressedColor;
     ButtonAction buttonAction;
     TintedImage icon;
+    boolean staySelected = false;
 
     public Button(String mainImage, Color backgroundColor){
         this(mainImage, backgroundColor, "", null, null);
@@ -58,7 +59,9 @@ public class Button extends TintedImage {
             @Override
             public void touchUp(InputEvent event, float x, float y, int pointer, int button) {
                 super.touchUp(event, x, y, pointer, button);
-                setTint(getBackgroundColor());
+                if(!staySelected) {
+                    setTint(getBackgroundColor());
+                }
             }
         });
     }
@@ -109,4 +112,15 @@ public class Button extends TintedImage {
         buttonLabel.setText(text);
     }
 
+    public Color getPressedColor() {
+        return pressedColor;
+    }
+
+    public void setStaySelected(boolean staySelected) {
+        this.staySelected = staySelected;
+    }
+
+    public boolean isStaySelected() {
+        return staySelected;
+    }
 }

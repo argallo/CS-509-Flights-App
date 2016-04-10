@@ -9,20 +9,24 @@ import com.badlogic.gdx.utils.Align;
 import com.csanon.Flight;
 import com.csanon.Trip;
 import com.csanon.libgdx.Utils.Assets;
-import com.csanon.libgdx.Utils.LogUtils;
 import com.csanon.libgdx.Utils.Pic;
 import com.csanon.libgdx.Utils.Tint;
+import com.csanon.libgdx.Views.DisplayTripsView;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class TripsPanel extends Group {
 
 	private ScrollPane scrollPane;
-	//private Group rows;
-    float scrollSize = 0;
-    Table table;
+    private DisplayTripsView displayTripsView;
+    private ArrayList<Button> tripButtons;
+    private float scrollSize = 0;
+    private Table table;
 
-	public TripsPanel() {
+	public TripsPanel(DisplayTripsView displayTripsView) {
+        this.displayTripsView = displayTripsView;
+        tripButtons = new ArrayList<>();
 		setSize(800, 500);
         table = new Table();
         table.setTouchable(Touchable.childrenOnly);
@@ -56,10 +60,19 @@ public class TripsPanel extends Group {
             TextLabel infoLabel = new TextLabel(info, Assets.getInstance().getXSmallFont(), Align.left);
             infoLabel.setTouchable(Touchable.disabled);
             Button row = new Button(Pic.Pixel, Tint.GRAY);
+            tripButtons.add(row);
+            final int tripindex = i;
             row.setButtonAction(new ButtonAction() {
                 @Override
                 public void buttonPressed() {
-                    LogUtils.Log("CLICKED");
+                    for(Button button:tripButtons){
+                        button.setTint(Tint.GRAY);
+                        button.setStaySelected(false);
+                    }
+                    row.setTint(row.getPressedColor());
+                    row.setStaySelected(true);
+                    //TODO: add param to tripview telling it which one it is To or Back
+                    displayTripsView.setSelectedTripTo(trips.get(tripindex));
                 }
             });
             Stack stack = new Stack(row,infoLabel);

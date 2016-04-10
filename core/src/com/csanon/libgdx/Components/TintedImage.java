@@ -29,11 +29,13 @@ public class TintedImage extends Image {
     public TintedImage(TextureRegion texture, Color tint) {
         this(texture);
         this.tint = tint;
+        this.previousColor = tint;
     }
 
     public TintedImage(Drawable drawable, Color tint){
         this(drawable);
         this.tint = tint;
+        this.previousColor = tint;
     }
 
     private TintedImage(TextureRegion texture){
@@ -47,6 +49,7 @@ public class TintedImage extends Image {
     public TintedImage(Color tint){
         super();
         this.tint = tint;
+        this.previousColor = tint;
     }
 
     @Override

@@ -115,7 +115,6 @@ public class TextBox extends Group{
 
     public boolean isValid() {
         backgroundFocused.setVisible(false);
-
         /**
          * Check if date is valid
          */

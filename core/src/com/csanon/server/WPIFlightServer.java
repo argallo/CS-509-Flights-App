@@ -239,7 +239,7 @@ public class WPIFlightServer implements FlightServer {
 					.queryString("action", "buyTickets").queryString("flightData", flightsXML);
 
 			try {
-				HttpResponse<String> response = request.asString();
+				request.asString();
 			} catch (UnirestException e) {
 
 			}
