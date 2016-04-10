@@ -24,7 +24,7 @@ import com.csanon.time.DateTime;
 
 public class TripBuilderTests {
 
-	private static FlightServer MockServer1 = mock(FlightServer.class);
+	private static FlightServer MOCKSERVER= mock(FlightServer.class);
 	Flight BOS2LAX_9_1 = null;
 	Flight BOS2LAX_10_1 = null;
 	Flight BOS2LAX_10_2 = null;
@@ -218,14 +218,14 @@ public class TripBuilderTests {
 		
 		
 		//start with the base case for all possiblites
-		when(MockServer1.getFlightsDeparting(any(Airport.class), any(DateTime.class))).thenReturn(new LinkedList<Flight>());
-		when(MockServer1.getFlightsArrivingAt(any(Airport.class), any(DateTime.class))).thenReturn(new LinkedList<Flight>());
+		when(MOCKSERVER.getFlightsDeparting(any(Airport.class), any(DateTime.class))).thenReturn(new LinkedList<Flight>());
+		when(MOCKSERVER.getFlightsArrivingAt(any(Airport.class), any(DateTime.class))).thenReturn(new LinkedList<Flight>());
 		
 		List<Flight> temp = new LinkedList<Flight>();
 		
 		//Server mocking for boston
 		temp.add(BOS2LAX_9_1);
-		when(MockServer1.getFlightsDeparting(boston, DateTime.of(2016, 5, 9, 0))).thenReturn(new LinkedList<Flight>(temp));
+		when(MOCKSERVER.getFlightsDeparting(boston, DateTime.of(2016, 5, 9, 0))).thenReturn(new LinkedList<Flight>(temp));
 		temp.clear();
 
 		temp.add(BOS2LAX_10_1);
@@ -233,7 +233,7 @@ public class TripBuilderTests {
 		temp.add(BOS2MDW_10_2);
 		temp.add(BOS2PHX_10_1);
 		temp.add(BOS2MCI_10_1);
-		when(MockServer1.getFlightsDeparting(boston, DateTime.of(2016, 5, 10, 0))).thenReturn(new LinkedList<Flight>(temp));
+		when(MOCKSERVER.getFlightsDeparting(boston, DateTime.of(2016, 5, 10, 0))).thenReturn(new LinkedList<Flight>(temp));
 		temp.clear();
 		
 		temp.add(BOS2LAX_10_2);
@@ -241,64 +241,64 @@ public class TripBuilderTests {
 		temp.add(BOS2PHX_10_2);
 		temp.add(BOS2MCI_10_2);
 		temp.add(BOS2LAX_11_1);
-		when(MockServer1.getFlightsDeparting(boston, DateTime.of(2016, 5, 11, 0))).thenReturn(new LinkedList<Flight>(temp));
+		when(MOCKSERVER.getFlightsDeparting(boston, DateTime.of(2016, 5, 11, 0))).thenReturn(new LinkedList<Flight>(temp));
 		temp.clear();
 		
 		//Server mocking for Chicago
 		temp.add(MDW2LAX_10_1);
 		temp.add(MDW2LAX_10_2);
 		temp.add(MDW2PHX_10_1);
-		when(MockServer1.getFlightsDeparting(chicago, DateTime.of(2016, 5, 10, 0))).thenReturn(new LinkedList<Flight>(temp));
+		when(MOCKSERVER.getFlightsDeparting(chicago, DateTime.of(2016, 5, 10, 0))).thenReturn(new LinkedList<Flight>(temp));
 		temp.clear();
 
 		temp.add(MDW2LAX_11_1);
-		when(MockServer1.getFlightsDeparting(chicago, DateTime.of(2016, 5, 11, 0))).thenReturn(new LinkedList<Flight>(temp));
+		when(MOCKSERVER.getFlightsDeparting(chicago, DateTime.of(2016, 5, 11, 0))).thenReturn(new LinkedList<Flight>(temp));
 		temp.clear();
 		
 		//Server mocking for Kansas City
 		temp.add(MCI2BOS_10_1);
 		temp.add(MCI2MDW_10_1);
-		when(MockServer1.getFlightsDeparting(kansascity, DateTime.of(2016, 5, 10, 0))).thenReturn(new LinkedList<Flight>(temp));
+		when(MOCKSERVER.getFlightsDeparting(kansascity, DateTime.of(2016, 5, 10, 0))).thenReturn(new LinkedList<Flight>(temp));
 		temp.clear();
 
 		temp.add(MCI2BOS_11_1);
 		temp.add(MCI2MDW_11_1);
 		temp.add(MCI2MDW_11_2);
-		when(MockServer1.getFlightsDeparting(kansascity, DateTime.of(2016, 5, 11, 0))).thenReturn(new LinkedList<Flight>(temp));
+		when(MOCKSERVER.getFlightsDeparting(kansascity, DateTime.of(2016, 5, 11, 0))).thenReturn(new LinkedList<Flight>(temp));
 		temp.clear();
 		
 		//Server mocking for Phoenix
 		temp.add(PHX2LAX_10_1);
 		temp.add(PHX2MCI_10_1);
 		temp.add(PHX2BOS_10_1);
-		when(MockServer1.getFlightsDeparting(phoenix, DateTime.of(2016, 5, 10, 0))).thenReturn(new LinkedList<Flight>(temp));
+		when(MOCKSERVER.getFlightsDeparting(phoenix, DateTime.of(2016, 5, 10, 0))).thenReturn(new LinkedList<Flight>(temp));
 		temp.clear();
 
 		temp.add(PHX2LAX_11_1);
 		temp.add(PHX2MCI_11_1);
-		when(MockServer1.getFlightsDeparting(phoenix, DateTime.of(2016, 5, 11, 0))).thenReturn(new LinkedList<Flight>(temp));
+		when(MOCKSERVER.getFlightsDeparting(phoenix, DateTime.of(2016, 5, 11, 0))).thenReturn(new LinkedList<Flight>(temp));
 		temp.clear();
 		
 		//Server mocking for Los Angeles
 		temp.add(LAX2MCI_10_1);
 		temp.add(LAX2MDW_10_1);
-		when(MockServer1.getFlightsDeparting(losangeles, DateTime.of(2016, 5, 10, 0))).thenReturn(new LinkedList<Flight>(temp));
+		when(MOCKSERVER.getFlightsDeparting(losangeles, DateTime.of(2016, 5, 10, 0))).thenReturn(new LinkedList<Flight>(temp));
 		temp.clear();
 
 		temp.add(LAX2BOS_10_1);
 		temp.add(LAX2PHX_10_1);
 		temp.add(LAX2PHX_11_1);
-		when(MockServer1.getFlightsDeparting(losangeles, DateTime.of(2016, 5, 11, 0))).thenReturn(new LinkedList<Flight>(temp));
+		when(MOCKSERVER.getFlightsDeparting(losangeles, DateTime.of(2016, 5, 11, 0))).thenReturn(new LinkedList<Flight>(temp));
 		temp.clear();
 		
 		temp.add(LAX2MCI_11_1);
-		when(MockServer1.getFlightsDeparting(losangeles, DateTime.of(2016, 5, 12, 0))).thenReturn(new LinkedList<Flight>(temp));
+		when(MOCKSERVER.getFlightsDeparting(losangeles, DateTime.of(2016, 5, 12, 0))).thenReturn(new LinkedList<Flight>(temp));
 		temp.clear();
 		
 		temp.add(BOS2LAX_9_1);
 		temp.add(BOS2LAX_10_1);
 		temp.add(MDW2LAX_10_1);
-		when(MockServer1.getFlightsArrivingAt(losangeles, DateTime.of(2016, 5, 10, 0))).thenReturn(new LinkedList<Flight>(temp));
+		when(MOCKSERVER.getFlightsArrivingAt(losangeles, DateTime.of(2016, 5, 10, 0))).thenReturn(new LinkedList<Flight>(temp));
 		temp.clear();
 		
 		temp.add(BOS2LAX_10_2);
@@ -308,9 +308,8 @@ public class TripBuilderTests {
 		temp.add(MDW2LAX_11_1);
 		temp.add(PHX2LAX_10_1);
 		temp.add(PHX2LAX_11_1);
-		when(MockServer1.getFlightsArrivingAt(losangeles, DateTime.of(2016, 5, 11, 0))).thenReturn(new LinkedList<Flight>(temp));
+		when(MOCKSERVER.getFlightsArrivingAt(losangeles, DateTime.of(2016, 5, 11, 0))).thenReturn(new LinkedList<Flight>(temp));
 		temp.clear();
-
 
 	}
 
@@ -358,7 +357,7 @@ public class TripBuilderTests {
 		Airport arriveairport = Airports.getAirport("LAX");
 
 		DateTime depart = DateTime.of(2016, 5, 10, 0);
-		List<Trip> actualtrips = (new TripBuilder(MockServer1, 1, 1*60*60, 5*60*60)).getTrips(departureairport, arriveairport, depart);
+		List<Trip> actualtrips = (new TripBuilder(MOCKSERVER, 1, 1*60*60, 5*60*60)).getTrips(departureairport, arriveairport, depart);
 
 		List<Trip> expectedtrips = new LinkedList<Trip>();
 		expectedtrips.add(new Trip(BOS2LAX_10_1));
@@ -375,7 +374,7 @@ public class TripBuilderTests {
 		Airport arriveairport = Airports.getAirport("LAX");
 
 		DateTime depart = DateTime.of(2016, 5, 10, 0);
-		List<Trip> actualtrips = (new TripBuilder(MockServer1, 2, 1*60*60, 5*60*60)).getTrips(departureairport, arriveairport, depart);
+		List<Trip> actualtrips = (new TripBuilder(MOCKSERVER, 2, 1*60*60, 5*60*60)).getTrips(departureairport, arriveairport, depart);
 
 		List<Trip> expectedtrips = new LinkedList<Trip>();
 		expectedtrips.add(new Trip(BOS2LAX_10_1));
@@ -397,7 +396,7 @@ public class TripBuilderTests {
 		Airport arriveairport = Airports.getAirport("LAX");
 
 		DateTime depart = DateTime.of(2016, 5, 10, 0);
-		List<Trip> actualtrips = (new TripBuilder(MockServer1)).getTrips(departureairport, arriveairport, depart);
+		List<Trip> actualtrips = (new TripBuilder(MOCKSERVER)).getTrips(departureairport, arriveairport, depart);
 
 		List<Trip> expectedtrips = new LinkedList<Trip>();
 		expectedtrips.add(new Trip(BOS2LAX_10_1));
