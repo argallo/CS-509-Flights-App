@@ -2,6 +2,7 @@ package com.csanon.libgdx.ScreenManaging;
 
 import com.csanon.libgdx.Utils.ViewID;
 import com.csanon.libgdx.Views.BaseView;
+import com.csanon.libgdx.Views.BookingView;
 import com.csanon.libgdx.Views.DisplayTripsView;
 import com.csanon.libgdx.Views.EmptyView;
 import com.csanon.libgdx.Views.SearchFlightsHomeView;
@@ -24,6 +25,8 @@ public class ViewBuilderFactory {
                 return new SearchFlightsHomeView();
             case DISPLAY_SEARCH:
                 return new DisplayTripsView();
+            case BOOKING:
+                return new BookingView();
             default:
                 return new EmptyView();
         }

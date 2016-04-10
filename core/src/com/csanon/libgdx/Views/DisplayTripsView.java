@@ -13,16 +13,21 @@ import com.csanon.libgdx.Components.TextBox;
 import com.csanon.libgdx.Components.TextLabel;
 import com.csanon.libgdx.Components.TintedImage;
 import com.csanon.libgdx.Components.TripsPanel;
+import com.csanon.libgdx.ScreenManaging.TransitionType;
+import com.csanon.libgdx.ScreenManaging.ViewManager;
 import com.csanon.libgdx.Utils.Assets;
 import com.csanon.libgdx.Utils.Constants;
 import com.csanon.libgdx.Utils.Pic;
 import com.csanon.libgdx.Utils.Tint;
+import com.csanon.libgdx.Utils.ViewID;
 import com.csanon.time.DateTime;
 
 import java.util.LinkedList;
 import java.util.List;
 
 public class DisplayTripsView extends BaseView {
+
+    static Trip TripTO, TripBACK;
 
 	private Button searchButton;
 
@@ -32,6 +37,9 @@ public class DisplayTripsView extends BaseView {
 	private TintedImage background;
 	private TextBox textBox;
 	private TripsPanel tripsPanel;
+    private Button confirmBtn;
+    private Trip selectedTripTo;
+    private Trip selectedTripBack;
 
 	@Override
 	public void init() {
@@ -63,7 +71,7 @@ public class DisplayTripsView extends BaseView {
 				handle(0);
 			}
 		});
-		tripsPanel = new TripsPanel();
+		tripsPanel = new TripsPanel(this);
         addAction(Actions.sequence(Actions.delay(1f), new Action() {
             @Override
             public boolean act(float delta) {
@@ -73,7 +81,16 @@ public class DisplayTripsView extends BaseView {
             }
         }));
 
-		//tripsPanel.setVisible(false);
+        confirmBtn = new Button(Pic.Pixel, Tint.GRAY, "Book", Assets.getInstance().getSmallFont());
+        confirmBtn.setVisible(false);
+        confirmBtn.setButtonAction(new ButtonAction() {
+            @Override
+            public void buttonPressed() {
+                TripTO = selectedTripTo;
+                TripBACK = selectedTripBack;
+                ViewManager.getInstance().transitionViewTo(ViewID.BOOKING, TransitionType.SLIDE_R_TRANSITION);
+            }
+        });
 	}
 
 	@Override
@@ -82,6 +99,7 @@ public class DisplayTripsView extends BaseView {
 		background.setSize(Constants.VIRTUAL_WIDTH, Constants.VIRTUAL_HEIGHT);
 		textBox.setSize(160, 35);
 		searchButton.setSize(250, 100);
+        confirmBtn.setSize(150, 70);
 	}
 
 	@Override
@@ -95,6 +113,7 @@ public class DisplayTripsView extends BaseView {
 		textBox.setPosition(1060, 650);
 		searchButton.setPosition(900, 530);
 		tripsPanel.setPosition(Constants.VIRTUAL_WIDTH / 2 - 400, 10);
+        confirmBtn.setPosition(1100, 10);
 	}
 
 	@Override
@@ -109,7 +128,7 @@ public class DisplayTripsView extends BaseView {
 		addActor(textBox);
 		addActor(searchButton);
 		addActor(tripsPanel);
-
+        addActor(confirmBtn);
 	}
 
 	@Override
@@ -141,5 +160,15 @@ public class DisplayTripsView extends BaseView {
     public void act(float delta) {
         super.act(delta);
 
+    }
+
+    public void setSelectedTripTo(Trip selectedTrip) {
+        this.selectedTripTo = selectedTrip;
+        confirmBtn.setVisible(true);
+    }
+//TODO: check to see if round trips selected before setting book button to true
+    public void setSelectedTripBack(Trip selectedTrip) {
+        this.selectedTripBack = selectedTrip;
+        confirmBtn.setVisible(true);
     }
 }
