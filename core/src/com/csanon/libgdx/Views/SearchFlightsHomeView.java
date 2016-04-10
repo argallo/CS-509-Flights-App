@@ -109,18 +109,13 @@ public class SearchFlightsHomeView  extends BaseView{
         switch (outcome){
             case 0:
                 if(textBox.isValid()) {
-                    String date = textBox.getText().replace("/", "");
+                    String date = textBox.getText();
                     System.out.println(date);
                     int year, month, day;
-                    if(date.length() == 8){
-                        year = Integer.parseInt(textBox.getText().substring(6));
-                        month = Integer.parseInt(textBox.getText().substring(0, 2));
-                        day = Integer.parseInt(textBox.getText().substring(3, 5));
-                    } else {
-                        year = Integer.parseInt(textBox.getText().substring(5));
-                        month = Integer.parseInt(textBox.getText().substring(0, 1));
-                        day = Integer.parseInt(textBox.getText().substring(2, 4));
-                    }
+                    String[] dateArray = date.split("/");
+                    year = Integer.parseInt(dateArray[2]);
+                    month = Integer.parseInt(dateArray[1]);
+                    day = Integer.parseInt(dateArray[0]);
 
                     Airport departAirport = getAirport(departureAirportDropdown.getCurrentItem());
                     Airport arrivalAirport = getAirport(arrivalAirportDropdown.getCurrentItem());

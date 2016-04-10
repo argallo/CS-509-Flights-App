@@ -35,7 +35,7 @@ public class DisplayTripsView extends BaseView {
 	private TextLabel departureAirportLabel, arrivalAirportLabel, dateLabel;
 	private DropDown departureAirportDropdown, arrivalAirportDropdown;
 	private TintedImage background;
-	private TextBox textBox;
+	private TextBox departureDateTextBox;
 	private TripsPanel tripsPanel;
     private Button confirmBtn;
     private Trip selectedTripTo;
@@ -59,7 +59,7 @@ public class DisplayTripsView extends BaseView {
 		departureAirportDropdown.pack();
 		arrivalAirportDropdown.setItems(airportNames);
 		arrivalAirportDropdown.pack();
-		textBox = new TextBox(10,"05/10/2016", TextBox.DATE);
+		departureDateTextBox = new TextBox(10,"05/10/2016", TextBox.DATE);
 		
 		TintedImage icon = new TintedImage(Pic.Search_Icon);
 		icon.setSize(90, 90);
@@ -97,7 +97,7 @@ public class DisplayTripsView extends BaseView {
 	public void setSizes() {
 		// TODO Auto-generated method stub
 		background.setSize(Constants.VIRTUAL_WIDTH, Constants.VIRTUAL_HEIGHT);
-		textBox.setSize(160, 35);
+		departureDateTextBox.setSize(160, 35);
 		searchButton.setSize(250, 100);
         confirmBtn.setSize(150, 70);
 	}
@@ -110,7 +110,7 @@ public class DisplayTripsView extends BaseView {
 		departureAirportLabel.setPosition(10, 650);
 		arrivalAirportLabel.setPosition(10, 570);
 		dateLabel.setPosition(805, 650);
-		textBox.setPosition(1060, 650);
+		departureDateTextBox.setPosition(1060, 650);
 		searchButton.setPosition(900, 530);
 		tripsPanel.setPosition(Constants.VIRTUAL_WIDTH / 2 - 400, 10);
         confirmBtn.setPosition(1100, 10);
@@ -125,7 +125,7 @@ public class DisplayTripsView extends BaseView {
 		addActor(departureAirportDropdown);
 		addActor(arrivalAirportDropdown);
 		addActor(dateLabel);
-		addActor(textBox);
+		addActor(departureDateTextBox);
 		addActor(searchButton);
 		addActor(tripsPanel);
         addActor(confirmBtn);
@@ -135,16 +135,19 @@ public class DisplayTripsView extends BaseView {
 	public void handle(int outcome) {
 		switch (outcome){
 			case 0:
-				int year = Integer.parseInt(textBox.getText().substring(6));
-				int month = Integer.parseInt(textBox.getText().substring(0,2));
-				int day = Integer.parseInt(textBox.getText().substring(3, 5));
+				String date = departureDateTextBox.getText();
+                System.out.println(date);
+                int year, month, day;
+                String[] dateArray = date.split("/");
+                year = Integer.parseInt(dateArray[2]);
+                month = Integer.parseInt(dateArray[1]);
+                day = Integer.parseInt(dateArray[0]);
 				Airport departAirport = getAirport(departureAirportDropdown.getCurrentItem());
 				Airport arrivalAirport = getAirport(arrivalAirportDropdown.getCurrentItem());
 				System.out.print(year+" "+ month+" "+day);
 				DateTime depart = DateTime.of(year, month, day, 0);
 				List<Trip> trips = (new TripBuilder()).getTrips(departAirport, arrivalAirport, depart);
 				tripsPanel.updateTrips(trips);
-				break;
 		}
 
 	}

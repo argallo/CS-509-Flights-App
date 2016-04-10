@@ -1,9 +1,8 @@
 package com.csanon.server;
 
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.function.Consumer;
-
-import com.badlogic.gdx.utils.Timer;
-import com.badlogic.gdx.utils.Timer.Task;
 
 public class Lock {
 
@@ -13,25 +12,24 @@ public class Lock {
 	public void lock(Consumer<String> callback) {
 		if (!LOCKED) {
 			LOCKED = true;
-			timer.scheduleTask(new Task() {
+			timer.schedule(new TimerTask() {
 
 				@Override
 				public void run() {
 					callback.accept("Server Lock Has Timed Out");
 					LOCKED = false;
 				}
-			}, 120.0f);
+			}, 120000);
 		}
 	}
 
 	public void unlock() {
 		if (LOCKED) {
-			timer.clear();
-			
+			timer.cancel();
 		}
 	}
-	
-	public boolean isLocked(){
+
+	public boolean isLocked() {
 		return LOCKED;
 	}
 }
