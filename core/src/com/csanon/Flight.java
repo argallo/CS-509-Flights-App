@@ -213,5 +213,13 @@ public class Flight {
 		repr += "\t" + departureTime.toString() + " -> " + arrivalTime.toString() + "\n";
 		return repr;
 	}
+
+	public boolean checkEconomyAvailable(int numSeats) {
+		return airplane.getEconomySeatCount() >= seatsEconomy + numSeats;
+	}
+	
+	public boolean checkFirstClassAvailable(int numSeats){
+		return airplane.getFirstClassSeatCount() >= seatsFirstClass + numSeats;
+	}
 	
 }

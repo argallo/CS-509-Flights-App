@@ -75,7 +75,7 @@ public class WPIFlightServerTest {
 	@Test
 	public void testLockServer() {
 		FlightServer server = ServerFactory.getServer();
-		boolean result = server.lockServer();
+		boolean result = server.lockServer(string -> {});
 		assertTrue(result);
 	}
 
