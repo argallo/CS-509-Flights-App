@@ -140,8 +140,8 @@ public class DisplayTripsView extends BaseView {
                 int year, month, day;
                 String[] dateArray = date.split("/");
                 year = Integer.parseInt(dateArray[2]);
-                month = Integer.parseInt(dateArray[1]);
-                day = Integer.parseInt(dateArray[0]);
+                day = Integer.parseInt(dateArray[1]);
+                month = Integer.parseInt(dateArray[0]);
 				Airport departAirport = getAirport(departureAirportDropdown.getCurrentItem());
 				Airport arrivalAirport = getAirport(arrivalAirportDropdown.getCurrentItem());
 				System.out.print(year+" "+ month+" "+day);
