@@ -1,6 +1,8 @@
 package com.csanon.server;
 
 import java.util.List;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 import javax.xml.ws.http.HTTPException;
 
@@ -9,16 +11,20 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 import com.csanon.Airplane;
 import com.csanon.Airport;
 import com.csanon.Flight;
+import com.csanon.SeatClass;
+import com.csanon.Trip;
 import com.csanon.factrories.AirplaneFactory;
 import com.csanon.factrories.AirportFactory;
 import com.csanon.factrories.FlightFactory;
 import com.csanon.time.DateTime;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 import com.mashape.unirest.request.HttpRequest;
 
 public class WPIFlightServer implements FlightServer {
 	private final ServerConfig config;
+	private final Lock lock = new Lock();
 
 	public WPIFlightServer(ServerConfig config) {
 		this.config = config;
@@ -61,12 +67,12 @@ public class WPIFlightServer implements FlightServer {
 
 	private List<Flight> getFlights(Airport airport, DateTime date, String direction) {
 		List<Flight> flights = null;
-		String dateString = date.toServerDateString();
+		String dateString = date.getUTC().toServerDateString();
 		String airportCode = airport.getCode();
 
 		HttpRequest request = Unirest.get(config.getURL()).queryString("team", config.getTeamNum())
-				.queryString("action", "list").queryString("list_type", direction)
-				.queryString("airport", airportCode).queryString("day", dateString);
+				.queryString("action", "list").queryString("list_type", direction).queryString("airport", airportCode)
+				.queryString("day", dateString);
 		try {
 			HttpResponse<String> response = request.asString();
 
@@ -127,7 +133,7 @@ public class WPIFlightServer implements FlightServer {
 	}
 
 	@Override
-	public boolean lockServer() {
+	public boolean lockServer(Consumer<String> callback) {
 		boolean successful = false;
 		HttpRequest request = Unirest.post(config.getURL()).queryString("team", config.getTeamNum())
 				.queryString("action", "lockDB");
@@ -139,6 +145,7 @@ public class WPIFlightServer implements FlightServer {
 
 			} else {
 				successful = true;
+				lock.lock(callback);
 			}
 
 		} catch (Exception e) {
@@ -160,12 +167,83 @@ public class WPIFlightServer implements FlightServer {
 
 			} else {
 				successful = true;
+				lock.unlock();
 			}
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return successful;
+	}
+
+	@Override
+	public boolean checkTripAvailable(Trip trip, SeatClass seatClass) throws Exception {
+		boolean available = true;
+		if (!lock.isLocked()) {
+			throw new Exception();
+		} else {
+
+			// For each of the flights in the trip, confirm that the specified class
+			// of seat is still available
+			for (Flight flight : trip.getLegs()) {
+
+				Flight serverFlight = getFlightFromServer(flight);
+
+				boolean result = false;
+				if (seatClass == SeatClass.ECONOMY) {
+					result = serverFlight.checkEconomyAvailable(1);
+				} else {
+					result = serverFlight.checkFirstClassAvailable(1);
+				}
+
+				// if the flight is unavailable set available to false and break
+				if (!result) {
+					available = false;
+					break;
+				}
+			}
+
+			return available;
+		}
+	}
+
+	private Flight getFlightFromServer(Flight flight) {
+		Flight result = null;
+		List<Flight> flights = getFlightsDeparting(flight.getDepartureAirport(), flight.getDepartureTime());
+
+		for (Flight serverFlight : flights) {
+			if (serverFlight.getFlightNum().equals(serverFlight.getFlightNum())) {
+				result = serverFlight;
+				break;
+			}
+		}
+
+		return result;
+	}
+
+	@Override
+	public void bookTrip(Trip trip, SeatClass seatClass) throws Exception {
+
+		if (!lock.isLocked()) {
+			throw new Exception();
+		} else {
+
+			// for each flight in the trip, book the flight with the associated
+			// seating
+			String flightsXML = trip.getLegs().stream()
+					.map(flight -> "<Flight number=\"" + flight.getFlightNum() + "\" seating=\"" + seatClass + "\"/>")
+					.collect(Collectors.joining());
+			flightsXML = "<Flights>" + flightsXML + "</Flights>";
+
+			HttpRequest request = Unirest.post(config.getURL()).queryString("team", config.getTeamNum())
+					.queryString("action", "buyTickets").queryString("flightData", flightsXML);
+
+			try {
+				HttpResponse<String> response = request.asString();
+			} catch (UnirestException e) {
+
+			}
+		}
 	}
 
 }
