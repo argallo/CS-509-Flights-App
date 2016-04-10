@@ -35,7 +35,7 @@ public class FlightFactory {
 
 	public List<Flight> parseFlightsFromXML(String xml) {
 		List<Flight> flights = new LinkedList<Flight>();
-
+		
 		Element flightsNode = reader.parse(xml);
 
 		flightsNode.getChildrenByName("Flight").iterator().forEachRemaining(flightNode -> {
