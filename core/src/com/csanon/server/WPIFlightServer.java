@@ -46,7 +46,7 @@ public class WPIFlightServer implements FlightServer {
 
 			} else {
 				String result = response.getBody();
-
+				
 				airports = AirportFactory.getInstance().parseAirportsFromXML(result);
 			}
 		} catch (Exception e) {
@@ -81,6 +81,7 @@ public class WPIFlightServer implements FlightServer {
 			} else {
 				String result = response.getBody();
 				flights = FlightFactory.getInstance().parseFlightsFromXML(result);
+				System.out.println(result);
 
 			}
 		} catch (Exception e) {
@@ -102,6 +103,7 @@ public class WPIFlightServer implements FlightServer {
 				throw new HTTPException(response.getStatus());
 			} else {
 				String result = response.getBody();
+				System.out.println(result);
 				airplanes = AirplaneFactory.getInstance().parseAirplanesFromXML(result);
 			}
 		} catch (Exception e) {

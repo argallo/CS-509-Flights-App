@@ -46,9 +46,9 @@ public class Airport {
 	public Airport(String name, String code, double la, double lo){
 		this.aname=name;
 		this.acode=code;
-		alongitude=la;
-		alatitude=lo;
-		offset = TimeZoneLookup.getInstance().getOffsetFromLatLong(alongitude, alatitude);
+		alongitude=lo;
+		alatitude=la;
+		offset = TimeZoneLookup.getInstance().getOffsetFromLatLong(alatitude, alongitude);
 	}
 	
 	/*
