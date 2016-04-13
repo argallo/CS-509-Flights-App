@@ -46,7 +46,7 @@ public class WPIFlightServer implements FlightServer {
 
 			} else {
 				String result = response.getBody();
-				
+
 				airports = AirportFactory.getInstance().parseAirportsFromXML(result);
 			}
 		} catch (Exception e) {
@@ -74,6 +74,7 @@ public class WPIFlightServer implements FlightServer {
 				.queryString("action", "list").queryString("list_type", direction).queryString("airport", airportCode)
 				.queryString("day", dateString);
 		try {
+			//System.out.println(request.getUrl());
 			HttpResponse<String> response = request.asString();
 
 			if (response.getStatus() != 200) {
@@ -81,7 +82,7 @@ public class WPIFlightServer implements FlightServer {
 			} else {
 				String result = response.getBody();
 				flights = FlightFactory.getInstance().parseFlightsFromXML(result);
-				System.out.println(result);
+				// System.out.println(result);
 
 			}
 		} catch (Exception e) {
@@ -103,7 +104,7 @@ public class WPIFlightServer implements FlightServer {
 				throw new HTTPException(response.getStatus());
 			} else {
 				String result = response.getBody();
-				System.out.println(result);
+				//System.out.println(result);
 				airplanes = AirplaneFactory.getInstance().parseAirplanesFromXML(result);
 			}
 		} catch (Exception e) {
@@ -141,7 +142,7 @@ public class WPIFlightServer implements FlightServer {
 				.queryString("action", "lockDB");
 		try {
 			HttpResponse<String> response = request.asString();
-			System.out.println(response.getBody() + response.getStatus());
+			// System.out.println(response.getBody() + response.getStatus());
 			if (response.getStatus() != 202) {
 				throw new HTTPException(response.getStatus());
 
@@ -163,7 +164,7 @@ public class WPIFlightServer implements FlightServer {
 				.queryString("action", "unlockDB");
 		try {
 			HttpResponse<String> response = request.asString();
-			System.out.println(response.getBody() + response.getStatus());
+			//System.out.println(response.getBody() + response.getStatus());
 			if (response.getStatus() != 202) {
 				throw new HTTPException(response.getStatus());
 
@@ -214,7 +215,7 @@ public class WPIFlightServer implements FlightServer {
 		List<Flight> flights = getFlightsDeparting(flight.getDepartureAirport(), flight.getDepartureTime());
 
 		for (Flight serverFlight : flights) {
-			if (serverFlight.getFlightNum().equals(serverFlight.getFlightNum())) {
+			if (serverFlight.getFlightNum().equals(flight.getFlightNum())) {
 				result = serverFlight;
 				break;
 			}
@@ -229,7 +230,10 @@ public class WPIFlightServer implements FlightServer {
 		if (!lock.isLocked()) {
 			throw new Exception();
 		} else {
-
+			trip.getLegs().forEach(flight -> {
+				Flight f = getFlightFromServer(flight);
+				System.out.println(f.getFlightNum() + ", " + f.getEconomySeats());
+			});
 			// for each flight in the trip, book the flight with the associated
 			// seating
 			String flightsXML = trip.getLegs().stream()
@@ -239,9 +243,19 @@ public class WPIFlightServer implements FlightServer {
 
 			HttpRequest request = Unirest.post(config.getURL()).queryString("team", config.getTeamNum())
 					.queryString("action", "buyTickets").queryString("flightData", flightsXML);
+			//System.out.println(request.getUrl());
 
 			try {
-				request.asString();
+				HttpResponse<String> test = request.asString();
+				if (test.getStatus() == 202) {
+					System.out.println("Successfully booked trip");
+					trip.getLegs().forEach(flight -> {
+						Flight f = getFlightFromServer(flight);
+						System.out.println(f.getFlightNum() + ", " + f.getEconomySeats());
+					});
+				} else {
+					System.out.println("ERROR");
+				}
 			} catch (UnirestException e) {
 
 			}

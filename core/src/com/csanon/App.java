@@ -55,9 +55,9 @@ public class App extends ApplicationAdapter {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         stage.act(Gdx.graphics.getDeltaTime());
         stage.draw();
-        fpsLogger.log();
+        //fpsLogger.log();
         if (TimeUtils.nanoTime() - startTime > 1000000000) /* 1,000,000,000ns == one second */{
-            Gdx.app.log("Draws", "amt: " + this.batch.totalRenderCalls);
+            //Gdx.app.log("Draws", "amt: " + this.batch.totalRenderCalls);
             startTime = TimeUtils.nanoTime();
         }
     }

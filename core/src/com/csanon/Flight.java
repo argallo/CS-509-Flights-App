@@ -22,7 +22,7 @@ public class Flight {
 
 	public Flight(Airplane aAirplane, String aDuration, String aFlightNum, Airport aDepatureAirport,
 			DateTime aDepartureTime, Airport anArrivalAirport, DateTime anArrivalTime,
-			Price aPriceFirstClass, int aSeatsFirstClassRemaining, Price aPriceEconomy, int aSeatsEconomyRemaining) {
+			Price aPriceFirstClass, int seatsBookedFirstClass, Price aPriceEconomy, int seatsBookedEconomy) {
 		airplane = aAirplane;
 		duration = aDuration;
 		flightNum = aFlightNum;
@@ -34,10 +34,10 @@ public class Flight {
 		arrivalTime = anArrivalTime;
 
 		priceFirstClass = aPriceFirstClass;
-		seatsFirstClass = airplane.getFirstClassSeatCount() - aSeatsFirstClassRemaining;
+		seatsFirstClass = seatsBookedFirstClass;
 
 		priceEconomy = aPriceEconomy;
-		seatsEconomy = airplane.getEconomySeatCount() - aSeatsFirstClassRemaining;
+		seatsEconomy = seatsBookedEconomy;
 	}
 
 	/*
