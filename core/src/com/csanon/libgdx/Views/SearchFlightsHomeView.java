@@ -119,7 +119,6 @@ public class SearchFlightsHomeView  extends BaseView{
 
                     Airport departAirport = getAirport(departureAirportDropdown.getCurrentItem());
                     Airport arrivalAirport = getAirport(arrivalAirportDropdown.getCurrentItem());
-                    System.out.print(year + " " + month + " " + day);
                     DateTime depart = DateTime.of(year, month, day, 0);
                     setGlobals(departAirport, arrivalAirport, depart);
                     ViewManager.getInstance().transitionViewTo(ViewID.DISPLAY_SEARCH, TransitionType.SLIDE_R_TRANSITION);
@@ -138,7 +137,6 @@ public class SearchFlightsHomeView  extends BaseView{
 
     public Airport getAirport(String airportString){
         airportString = airportString.substring(airportString.length()-4,airportString.length()-1);
-        System.out.print(airportString);
         return Airports.getAirport(airportString);
     }
 

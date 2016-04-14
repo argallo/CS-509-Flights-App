@@ -1,8 +1,5 @@
 package com.csanon.libgdx.Views;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.csanon.Airport;
@@ -24,6 +21,9 @@ import com.csanon.libgdx.Utils.Pic;
 import com.csanon.libgdx.Utils.Tint;
 import com.csanon.libgdx.Utils.ViewID;
 import com.csanon.time.DateTime;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class DisplayTripsView extends BaseView {
 
@@ -143,7 +143,6 @@ public class DisplayTripsView extends BaseView {
 			month = Integer.parseInt(dateArray[0]);
 			Airport departAirport = getAirport(departureAirportDropdown.getCurrentItem());
 			Airport arrivalAirport = getAirport(arrivalAirportDropdown.getCurrentItem());
-			System.out.print(year + " " + month + " " + day);
 			DateTime depart = DateTime.of(year, month, day, 0);
 
 			// Run the search delayed so we can see the loading message
