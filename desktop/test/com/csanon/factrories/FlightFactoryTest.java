@@ -1,6 +1,6 @@
 package com.csanon.factrories;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -14,7 +14,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.backends.lwjgl.LwjglPreferences;
 import com.badlogic.gdx.files.FileHandle;
-import com.csanon.Airplane;
 import com.csanon.Airplanes;
 import com.csanon.Airports;
 import com.csanon.Flight;

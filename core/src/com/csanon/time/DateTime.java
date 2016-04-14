@@ -13,7 +13,8 @@ import java.time.format.DateTimeFormatter;
 public final class DateTime {
 	private static final DateTimeFormatter serverDateTimeFormat = DateTimeFormatter.ofPattern("yyyy MMM dd HH:mm z");
 	private static final DateTimeFormatter serverDateFormat = DateTimeFormatter.ofPattern("yyyy_MM_dd");
-	private static final DateTimeFormatter humanDateTimeFormat = DateTimeFormatter.ofPattern("MM/dd/yy HH:mm z");
+	private static final DateTimeFormatter humanDateTimeFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy HH:mm z");
+	private static final DateTimeFormatter humanDateFormat = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 	private static final TimeZoneLookup timeZoneLookup = TimeZoneLookup.getInstance();
 	private final OffsetDateTime dateTime;
 
@@ -142,5 +143,9 @@ public final class DateTime {
 			return false;
 		}
 		return true;
+	}
+
+	public String toDateString() {
+		return dateTime.toZonedDateTime().format(humanDateFormat);
 	}
 }

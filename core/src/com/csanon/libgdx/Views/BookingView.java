@@ -84,6 +84,8 @@ public class BookingView extends BaseView {
 		case CONFIRM:
 			try {
 				server.bookTrip(tripTo, seatClass);
+				// TODO display success
+
 			} catch (Exception e) {
 				// TODO display something
 			}

@@ -8,7 +8,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.List.ListStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane.ScrollPaneStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox.SelectBoxStyle;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.csanon.libgdx.Utils.Assets;
 import com.csanon.libgdx.Utils.Pic;
 import com.csanon.libgdx.Utils.Tint;
@@ -53,6 +52,10 @@ public class DropDown extends Group{
 
 	public String getCurrentItem(){
 		return selectBox.getSelected();
+	}
+	
+	public void setSelected(String item){
+		selectBox.setSelected(item);
 	}
 	
 }
