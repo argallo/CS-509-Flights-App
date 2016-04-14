@@ -38,9 +38,8 @@ public class FlightFactoryTest {
 		String xml="<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?><Flights><Flight Airplane=\"737\" FlightTime=\"25\" Number=\"2807\"><Departure><Code>BOS</Code><Time>2016 May 10 00:05 GMT</Time></Departure><Arrival><Code>LGA</Code><Time>2016 May 10 00:30 GMT</Time></Arrival><Seating><FirstClass Price=\"$67.11\">9</FirstClass><Coach Price=\"$18.79\">85</Coach></Seating></Flight></Flights>";
 		List<Flight> flights=FlightFactory.getInstance().parseFlightsFromXML(xml);
 		Flight flight=flights.get(0);
-//I don't know why not passed....
-		//assertEquals(9,flight.getFirstClassSeats());
-		//assertEquals(85,flight.getEconomySeats());
+		assertEquals(9,flight.getFirstClassSeats());
+		assertEquals(85,flight.getEconomySeats());
 		assertEquals(new Price((float) 67.11),flight.getFirstClassPrice());
 		assertEquals(new Price((float)18.79),flight.getEconomyPrice());
 		assertEquals(DateTime.of("2016 May 10 00:05 GMT", Airports.getAirport("BOS").getOffset()),flight.getDepartureTime());
