@@ -11,5 +11,6 @@ public class Pic {
         public static final String Curve_rectangle = "Splash/curverectangle.png";
         public static final String Black = "Splash/black.png";
         public static final String Search_Icon = "Splash/explore_icon.png";
+        public static final String Blank_Popup = "Splash/blankpopup.png";
 
 }

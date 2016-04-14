@@ -146,7 +146,7 @@ public class DisplayTripsView extends BaseView {
 			DateTime depart = DateTime.of(year, month, day, 0);
 
 			// Run the search delayed so we can see the loading message
-			addAction(Actions.sequence(Actions.delay(1f), new Action() {
+			addAction(Actions.sequence(Actions.delay(2f), new Action() {
 				@Override
 				public boolean act(float delta) {
 					List<Trip> trips = (new TripBuilder()).getTrips(departAirport, arrivalAirport, depart);

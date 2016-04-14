@@ -95,6 +95,7 @@ public class Assets extends AssetManager {
     	load(Pic.Curve_rectangle, Texture.class, textureParam);
     	load(Pic.Black, Texture.class, textureParam);
     	load(Pic.Search_Icon, Texture.class, textureParam);
+    	load(Pic.Blank_Popup, Texture.class, textureParam);
         finishLoading();
     }
 
