@@ -1,5 +1,7 @@
 package com.csanon.libgdx.Views;
 
+import java.util.function.Consumer;
+
 import com.csanon.SeatClass;
 import com.csanon.Trip;
 import com.csanon.libgdx.Components.AbsPopup;
@@ -16,8 +18,6 @@ import com.csanon.libgdx.Utils.Tint;
 import com.csanon.libgdx.Utils.ViewID;
 import com.csanon.server.FlightServer;
 import com.csanon.server.ServerFactory;
-
-import java.util.function.Consumer;
 
 /**
  * Created by Gallo on 4/10/2016.
