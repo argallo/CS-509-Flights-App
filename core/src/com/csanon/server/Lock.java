@@ -8,6 +8,11 @@ public class Lock {
 
 	private static boolean LOCKED = false;
 	private static Timer timer = new Timer();
+	private final int lockTime;
+
+	public Lock(int lockTime) {
+		this.lockTime = lockTime;
+	}
 
 	public void lock(Consumer<String> callback) {
 		if (!LOCKED) {
@@ -19,7 +24,7 @@ public class Lock {
 					callback.accept("Server Lock Has Timed Out");
 					LOCKED = false;
 				}
-			}, 120000);
+			}, lockTime * 1000);
 		}
 	}
 

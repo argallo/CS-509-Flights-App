@@ -49,7 +49,9 @@ public class BookingView extends BaseView {
 		});
 
 		// TODO make real callback
-		Consumer<String> callback = null;
+		Consumer<String> callback = message -> {
+			popup.activatePopup(message);
+		};
 		// Get a lock on the server
 		boolean locked = server.lockServer(callback);
 		if (!locked) {
