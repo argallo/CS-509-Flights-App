@@ -30,7 +30,7 @@ public class BookingView extends BaseView {
 	private Trip tripTo;
 	private Trip tripBack;
 	private SeatClass seatClass;
-    private BookingPopup popup;
+	private BookingPopup popup;
 
 	@Override
 	public void init() {
@@ -38,7 +38,7 @@ public class BookingView extends BaseView {
 		tripTo = DisplayTripsView.TripTO;
 		seatClass = SeatClass.ECONOMY;// TODO changes
 		tripBack = DisplayTripsView.TripBACK;
-        popup = new BookingPopup(this);
+		popup = new BookingPopup(this);
 		background = new TintedImage(Pic.Pixel, Tint.BACKGROUND_COLOR);
 		confirmBtn = new Button(Pic.Pixel, Tint.GRAY, "Confirm", Assets.getInstance().getXSmallFont());
 		confirmBtn.setButtonAction(new ButtonAction() {
@@ -53,20 +53,17 @@ public class BookingView extends BaseView {
 		// Get a lock on the server
 		boolean locked = server.lockServer(callback);
 		if (!locked) {
-			// TODO: display something
-            popup.activatePopup("Error: No Server Lock :)");
+			popup.activatePopup("Error: No Server Lock :)");
 		} else {
 			try {
 				boolean available = server.checkTripAvailable(tripTo, seatClass);
 				if (!available) {
-					// TODO display something
-                    popup.activatePopup("Sorry This Trip is UNAVAILABLE");
-					//System.out.println("TRIP UNAVAILABLE");
+					popup.activatePopup("Sorry This Trip is UNAVAILABLE");
+					// System.out.println("TRIP UNAVAILABLE");
 				}
 			} catch (Exception e) {
-				// TODO Display something
-                popup.activatePopup("Error: Something went wrong!");
-				//System.out.println("ERROR");
+				popup.activatePopup("Error: Something went wrong!");
+				// System.out.println("ERROR");
 			}
 		}
 	}
@@ -86,27 +83,25 @@ public class BookingView extends BaseView {
 	public void addActors() {
 		addActor(background);
 		addActor(confirmBtn);
-        addActor(popup);
+		addActor(popup);
 	}
 
 	@Override
 	public void handle(int outcome) {
 		switch (outcome) {
-		    case CONFIRM:
-			    try {
-				    server.bookTrip(tripTo, seatClass);
-                    server.unlockServer();
-                    popup.activatePopup("Success! Trip has been Booked");
-				    // TODO display success
+		case CONFIRM:
+			try {
+				server.bookTrip(tripTo, seatClass);
+				server.unlockServer();
+				popup.activatePopup("Success! Trip has been Booked");
 
-			    } catch (Exception e) {
-                    popup.activatePopup("Error: No Server Lock :)");
-				// TODO display something
-			    }
-                break;
-            case AbsPopup.CLOSE:
-                ViewManager.getInstance().transitionViewTo(ViewID.DISPLAY_SEARCH, TransitionType.SLIDE_L_TRANSITION);
-        }
+			} catch (Exception e) {
+				popup.activatePopup("Error: No Server Lock :)");
+			}
+			break;
+		case AbsPopup.CLOSE:
+			ViewManager.getInstance().transitionViewTo(ViewID.DISPLAY_SEARCH, TransitionType.SLIDE_L_TRANSITION);
+		}
 	}
 
 }

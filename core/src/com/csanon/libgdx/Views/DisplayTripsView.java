@@ -1,5 +1,8 @@
 package com.csanon.libgdx.Views;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.csanon.Airport;
@@ -22,10 +25,6 @@ import com.csanon.libgdx.Utils.Pic;
 import com.csanon.libgdx.Utils.Tint;
 import com.csanon.libgdx.Utils.ViewID;
 import com.csanon.time.DateTime;
-
-import java.util.LinkedList;
-import java.util.List;
-import java.util.stream.Collectors;
 
 public class DisplayTripsView extends BaseView {
 
@@ -155,14 +154,7 @@ public class DisplayTripsView extends BaseView {
 				@Override
 				public boolean act(float delta) {
 					List<Trip> trips = (new TripBuilder()).getTrips(departAirport, arrivalAirport, depart);
-					trips = trips.stream().filter(trip -> {
-						if (seatClassSelection == SeatClass.ECONOMY) {
-							return trip.hasEconomySeatsAvailable(1);
-						} else {
-							return trip.hasFirstClassSeatsAvailable(1);
-						}
-					}).collect(Collectors.toList());
-					tripsPanel.updateTrips(trips);
+					tripsPanel.updateTrips(trips, seatClassSelection);
 					return true;
 				}
 			}));
