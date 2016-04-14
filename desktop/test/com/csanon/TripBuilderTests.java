@@ -12,6 +12,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.badlogic.gdx.Application;
@@ -58,7 +59,7 @@ public class TripBuilderTests {
 	Flight LAX2PHX_11_1 = null;
 
 
-	@Before
+	@BeforeClass
 	public void setUp() {
 		// mock the application and preferences
 		Application app = mock(Application.class);
