@@ -15,14 +15,14 @@ public class Flight {
 	private final DateTime arrivalTime;
 
 	private final Price priceFirstClass;
-	private final int seatsFirstClass;
+	private final int seatsBookedFirstClass;
 
 	private final Price priceEconomy;
-	private final int seatsEconomy;
+	private final int seatsBookedEconomy;
 
 	public Flight(Airplane aAirplane, String aDuration, String aFlightNum, Airport aDepatureAirport,
-			DateTime aDepartureTime, Airport anArrivalAirport, DateTime anArrivalTime,
-			Price aPriceFirstClass, int seatsBookedFirstClass, Price aPriceEconomy, int seatsBookedEconomy) {
+			DateTime aDepartureTime, Airport anArrivalAirport, DateTime anArrivalTime, Price aPriceFirstClass,
+			int seatsBookedFirstClass, Price aPriceEconomy, int seatsBookedEconomy) {
 		airplane = aAirplane;
 		duration = aDuration;
 		flightNum = aFlightNum;
@@ -34,10 +34,10 @@ public class Flight {
 		arrivalTime = anArrivalTime;
 
 		priceFirstClass = aPriceFirstClass;
-		seatsFirstClass = seatsBookedFirstClass;
+		this.seatsBookedFirstClass = seatsBookedFirstClass;
 
 		priceEconomy = aPriceEconomy;
-		seatsEconomy = seatsBookedEconomy;
+		this.seatsBookedEconomy = seatsBookedEconomy;
 	}
 
 	/*
@@ -58,8 +58,8 @@ public class Flight {
 		result = prime * result + ((flightNum == null) ? 0 : flightNum.hashCode());
 		result = prime * result + ((priceEconomy == null) ? 0 : priceEconomy.hashCode());
 		result = prime * result + ((priceFirstClass == null) ? 0 : priceFirstClass.hashCode());
-		result = prime * result + seatsEconomy;
-		result = prime * result + seatsFirstClass;
+		result = prime * result + seatsBookedEconomy;
+		result = prime * result + seatsBookedFirstClass;
 		return result;
 	}
 
@@ -143,10 +143,10 @@ public class Flight {
 		} else if (!priceFirstClass.equals(other.priceFirstClass)) {
 			return false;
 		}
-		if (seatsEconomy != other.seatsEconomy) {
+		if (seatsBookedEconomy != other.seatsBookedEconomy) {
 			return false;
 		}
-		if (seatsFirstClass != other.seatsFirstClass) {
+		if (seatsBookedFirstClass != other.seatsBookedFirstClass) {
 			return false;
 		}
 		return true;
@@ -162,17 +162,17 @@ public class Flight {
 					&& (flightNum.equals(aOther.flightNum)) && (departureAirport.equals(aOther.departureAirport))
 					&& (departureTime.equals(aOther.departureTime)) && (arrivalAirport.equals(aOther.arrivalAirport))
 					&& (arrivalTime.equals(aOther.arrivalTime)) && (priceFirstClass.equals(aOther.priceFirstClass))
-					&& (seatsFirstClass == aOther.seatsFirstClass) && (priceEconomy.equals(aOther.priceEconomy))
-					&& (seatsEconomy == aOther.seatsEconomy);
+					&& (seatsBookedFirstClass == aOther.seatsBookedFirstClass)
+					&& (priceEconomy.equals(aOther.priceEconomy)) && (seatsBookedEconomy == aOther.seatsBookedEconomy);
 		}
 	}
 
 	public int getFirstClassSeats() {
-		return seatsFirstClass;
+		return seatsBookedFirstClass;
 	}
 
 	public int getEconomySeats() {
-		return seatsEconomy;
+		return seatsBookedEconomy;
 	}
 
 	public Price getFirstClassPrice() {
@@ -215,11 +215,11 @@ public class Flight {
 	}
 
 	public boolean checkEconomyAvailable(int numSeats) {
-		return airplane.getEconomySeatCount() >= seatsEconomy + numSeats;
+		return airplane.getEconomySeatCount() >= seatsBookedEconomy + numSeats;
 	}
-	
-	public boolean checkFirstClassAvailable(int numSeats){
-		return airplane.getFirstClassSeatCount() >= seatsFirstClass + numSeats;
+
+	public boolean checkFirstClassAvailable(int numSeats) {
+		return airplane.getFirstClassSeatCount() >= seatsBookedFirstClass + numSeats;
 	}
-	
+
 }

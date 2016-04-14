@@ -14,7 +14,6 @@ public class Price {
 	public Price(String aPriceVal) {
 		Float value;
 		// strip off the dollar sign
-		// TODO: make more extensible
 		aPriceVal = aPriceVal.substring(1);
 		try {
 			value = NumberFormat.getNumberInstance(Locale.US).parse(aPriceVal).floatValue();

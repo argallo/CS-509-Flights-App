@@ -115,5 +115,25 @@ public class Trip {
 		repr += "=================================\n\n";
 		return repr;
 	}
-
+	
+	public boolean hasEconomySeatsAvailable(int seats){
+		boolean result = true;
+		for(Flight flight: legs){
+			if(!flight.checkEconomyAvailable(seats)){
+				result = false;
+				break;
+			}
+		}
+		return result;
+	}
+	public boolean hasFirstClassSeatsAvailable(int seats){
+		boolean result = true;
+		for(Flight flight: legs){
+			if(!flight.checkFirstClassAvailable(seats)){
+				result = false;
+				break;
+			}
+		}
+		return result;
+	}
 }

@@ -4,6 +4,7 @@ import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.csanon.Airport;
 import com.csanon.Airports;
+import com.csanon.SeatClass;
 import com.csanon.Trip;
 import com.csanon.TripBuilder;
 import com.csanon.libgdx.Components.Button;
@@ -24,10 +25,12 @@ import com.csanon.time.DateTime;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class DisplayTripsView extends BaseView {
 
 	static Trip TripTO, TripBACK;
+	static SeatClass seatClassSelection = SeatClass.ECONOMY; //TODO: MAKE DYNAMIC
 
 	private Button searchButton;
 
@@ -57,10 +60,12 @@ public class DisplayTripsView extends BaseView {
 		}
 		departureAirportDropdown.setItems(airportNames);
 		departureAirportDropdown.pack();
-		departureAirportDropdown.setSelected(SearchFlightsHomeView.departureAirport.getName() + " (" + SearchFlightsHomeView.departureAirport.getCode() + ")");
+		departureAirportDropdown.setSelected(SearchFlightsHomeView.departureAirport.getName() + " ("
+				+ SearchFlightsHomeView.departureAirport.getCode() + ")");
 		arrivalAirportDropdown.setItems(airportNames);
 
-		arrivalAirportDropdown.setSelected(SearchFlightsHomeView.arrivalAirport.getName() + " (" + SearchFlightsHomeView.arrivalAirport.getCode() + ")");
+		arrivalAirportDropdown.setSelected(SearchFlightsHomeView.arrivalAirport.getName() + " ("
+				+ SearchFlightsHomeView.arrivalAirport.getCode() + ")");
 		arrivalAirportDropdown.pack();
 		departureDateTextBox = new TextBox(10, "05/10/2016", TextBox.DATE);
 		departureDateTextBox.setText(SearchFlightsHomeView.dateTime.toDateString());
@@ -93,7 +98,6 @@ public class DisplayTripsView extends BaseView {
 
 	@Override
 	public void setSizes() {
-		// TODO Auto-generated method stub
 		background.setSize(Constants.VIRTUAL_WIDTH, Constants.VIRTUAL_HEIGHT);
 		departureDateTextBox.setSize(160, 35);
 		searchButton.setSize(250, 100);
@@ -102,7 +106,8 @@ public class DisplayTripsView extends BaseView {
 
 	@Override
 	public void setPositions() {
-		// titleLabel.setPosition(Constants.VIRTUAL_WIDTH/2 - titleLabel.getWidth()/2, 600);
+		// titleLabel.setPosition(Constants.VIRTUAL_WIDTH/2 -
+		// titleLabel.getWidth()/2, 600);
 		departureAirportDropdown.setPosition(235, 650);
 		arrivalAirportDropdown.setPosition(235, 570);
 		departureAirportLabel.setPosition(10, 650);
@@ -150,6 +155,13 @@ public class DisplayTripsView extends BaseView {
 				@Override
 				public boolean act(float delta) {
 					List<Trip> trips = (new TripBuilder()).getTrips(departAirport, arrivalAirport, depart);
+					trips = trips.stream().filter(trip -> {
+						if (seatClassSelection == SeatClass.ECONOMY) {
+							return trip.hasEconomySeatsAvailable(1);
+						} else {
+							return trip.hasFirstClassSeatsAvailable(1);
+						}
+					}).collect(Collectors.toList());
 					tripsPanel.updateTrips(trips);
 					return true;
 				}
@@ -176,7 +188,8 @@ public class DisplayTripsView extends BaseView {
 		confirmBtn.setVisible(true);
 	}
 
-	// TODO: check to see if round trips selected before setting book button to true
+	// TODO: check to see if round trips selected before setting book button to
+	// true
 	public void setSelectedTripBack(Trip selectedTrip) {
 		this.selectedTripBack = selectedTrip;
 		confirmBtn.setVisible(true);
