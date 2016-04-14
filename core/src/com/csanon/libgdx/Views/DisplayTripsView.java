@@ -1,8 +1,5 @@
 package com.csanon.libgdx.Views;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.csanon.Airport;
@@ -26,9 +23,11 @@ import com.csanon.libgdx.Utils.Tint;
 import com.csanon.libgdx.Utils.ViewID;
 import com.csanon.time.DateTime;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class DisplayTripsView extends BaseView {
 
-	static Trip TripTO, TripBACK;
 	static SeatClass seatClassSelection = SeatClass.ECONOMY; //TODO: MAKE DYNAMIC
 
 	private Button searchButton;
@@ -59,15 +58,15 @@ public class DisplayTripsView extends BaseView {
 		}
 		departureAirportDropdown.setItems(airportNames);
 		departureAirportDropdown.pack();
-		departureAirportDropdown.setSelected(SearchFlightsHomeView.departureAirport.getName() + " ("
-				+ SearchFlightsHomeView.departureAirport.getCode() + ")");
+		departureAirportDropdown.setSelected(Constants.departureAirport.getName() + " ("
+				+ Constants.departureAirport.getCode() + ")");
 		arrivalAirportDropdown.setItems(airportNames);
 
-		arrivalAirportDropdown.setSelected(SearchFlightsHomeView.arrivalAirport.getName() + " ("
-				+ SearchFlightsHomeView.arrivalAirport.getCode() + ")");
+		arrivalAirportDropdown.setSelected(Constants.arrivalAirport.getName() + " ("
+				+ Constants.arrivalAirport.getCode() + ")");
 		arrivalAirportDropdown.pack();
 		departureDateTextBox = new TextBox(10, "05/10/2016", TextBox.DATE);
-		departureDateTextBox.setText(SearchFlightsHomeView.dateTime.toDateString());
+		departureDateTextBox.setText(Constants.dateTime.toDateString());
 
 		TintedImage icon = new TintedImage(Pic.Search_Icon);
 		icon.setSize(90, 90);
@@ -86,8 +85,8 @@ public class DisplayTripsView extends BaseView {
 		confirmBtn.setButtonAction(new ButtonAction() {
 			@Override
 			public void buttonPressed() {
-				TripTO = selectedTripTo;
-				TripBACK = selectedTripBack;
+                Constants.TripTO = selectedTripTo;
+                Constants.TripBACK = selectedTripBack;
 				ViewManager.getInstance().transitionViewTo(ViewID.BOOKING, TransitionType.SLIDE_R_TRANSITION);
 			}
 		});
@@ -151,13 +150,13 @@ public class DisplayTripsView extends BaseView {
 
 			// Run the search delayed so we can see the loading message
 			addAction(Actions.sequence(Actions.delay(2f), new Action() {
-				@Override
-				public boolean act(float delta) {
-					List<Trip> trips = (new TripBuilder()).getTrips(departAirport, arrivalAirport, depart);
-					tripsPanel.updateTrips(trips, seatClassSelection);
-					return true;
-				}
-			}));
+                @Override
+                public boolean act(float delta) {
+                    List<Trip> trips = (new TripBuilder()).getTrips(departAirport, arrivalAirport, depart);
+                    tripsPanel.updateTrips(trips, seatClassSelection);
+                    return true;
+                }
+            }));
 
 		}
 

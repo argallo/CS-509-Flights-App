@@ -1,7 +1,5 @@
 package com.csanon.libgdx.Views;
 
-import java.util.function.Consumer;
-
 import com.csanon.SeatClass;
 import com.csanon.Trip;
 import com.csanon.libgdx.Components.AbsPopup;
@@ -19,6 +17,8 @@ import com.csanon.libgdx.Utils.ViewID;
 import com.csanon.server.FlightServer;
 import com.csanon.server.ServerFactory;
 
+import java.util.function.Consumer;
+
 /**
  * Created by Gallo on 4/10/2016.
  */
@@ -35,9 +35,9 @@ public class BookingView extends BaseView {
 	@Override
 	public void init() {
 		server = ServerFactory.getServer();
-		tripTo = DisplayTripsView.TripTO;
+		tripTo = Constants.TripTO;
 		seatClass = SeatClass.ECONOMY;// TODO changes
-		tripBack = DisplayTripsView.TripBACK;
+		tripBack = Constants.TripBACK;
 		popup = new BookingPopup(this);
 		background = new TintedImage(Pic.Pixel, Tint.BACKGROUND_COLOR);
 		confirmBtn = new Button(Pic.Pixel, Tint.GRAY, "Confirm", Assets.getInstance().getXSmallFont());

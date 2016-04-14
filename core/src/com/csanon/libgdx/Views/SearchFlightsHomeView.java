@@ -26,10 +26,6 @@ import java.util.List;
  */
 public class SearchFlightsHomeView  extends BaseView{
 
-
-    static Airport departureAirport, arrivalAirport;
-    static DateTime dateTime;
-
     private Button searchButton;
     private TitleLabel titleLabel;
     private TextLabel departureAirportLabel, arrivalAirportLabel, dateLabel;
@@ -130,9 +126,9 @@ public class SearchFlightsHomeView  extends BaseView{
     }
 
     public void setGlobals(Airport depart, Airport arrive, DateTime date){
-        departureAirport = depart;
-        arrivalAirport = arrive;
-        dateTime = date;
+        Constants.departureAirport = depart;
+        Constants.arrivalAirport = arrive;
+        Constants.dateTime = date;
     }
 
     public Airport getAirport(String airportString){

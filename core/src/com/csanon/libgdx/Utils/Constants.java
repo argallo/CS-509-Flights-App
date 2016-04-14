@@ -17,7 +17,7 @@ public class Constants {
     public static final int VIRTUAL_WIDTH = 1280;
     public static final int VIRTUAL_HEIGHT = 720;
 
-    public static Airport departureAirport, arriavalAirport;
+    public static Airport departureAirport, arrivalAirport;
     public static DateTime dateTime;
     public static Trip TripTO, TripBACK;
 
