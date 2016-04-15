@@ -26,8 +26,9 @@ public class SplashView extends BaseView {
 	private int counter = 0;
 	private boolean messagesFinished = false;
 	private boolean loadingFinished = false;
-	private static String[] messages = { "Assembling Airplanes", "Hiring Geoff, The Runway Engineer", "Clearing Runways", "Constructing Airports",
-			"Communicating Objectives", "Building The Internet", "Redirecting Cats", "Contacting Server" };
+	private static String[] messages = { "Assembling Airplanes", "Hiring Geoff, The Runway Engineer",
+			"Clearing Runways", "Constructing Airports", "Communicating Objectives", "Building The Internet",
+			"Redirecting Cats", "Contacting Server" };
 
 	@Override
 	public void init() {
@@ -64,11 +65,7 @@ public class SplashView extends BaseView {
 					messagesFinished = true;
 					completeSplashView();
 				}
-				String prefix = "";
-				for(int i = 0; i < counter/messages.length; i++){
-					prefix += "Re";
-				}
-				loadingMessage.setText(prefix + messages[counter % messages.length]);
+				loadingMessage.setText(messages[counter % messages.length]);
 				counter++;
 			}
 		}, 1500, 1500);
@@ -106,8 +103,8 @@ public class SplashView extends BaseView {
 	 */
 	public void completeSplashView() {
 		if (messagesFinished && loadingFinished) {
-			//timer.cancel();
-			//ViewManager.getInstance().transitionViewTo(ViewID.SEARCH_MAIN, TransitionType.DEFAULT_TRANSITION);
+			timer.cancel();
+			ViewManager.getInstance().transitionViewTo(ViewID.SEARCH_MAIN, TransitionType.DEFAULT_TRANSITION);
 		}
 	}
 
