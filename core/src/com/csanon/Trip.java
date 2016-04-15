@@ -45,7 +45,7 @@ public class Trip {
 
 	public int getTotalTime() {
 		DateTime arrivalTime = legs.get(legs.size() - 1).getArrivalTime();
-		DateTime departureTime = legs.get(1).getDepartureTime();
+		DateTime departureTime = legs.get(0).getDepartureTime();
 		Duration duration = departureTime.getDifference(arrivalTime);
 		return (int) duration.toMinutes();
 
