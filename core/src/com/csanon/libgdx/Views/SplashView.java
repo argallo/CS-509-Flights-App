@@ -26,9 +26,9 @@ public class SplashView extends BaseView {
 	private int counter = 0;
 	private boolean messagesFinished = false;
 	private boolean loadingFinished = false;
-	private static String[] messages = { "Opening Vista", "Assembling Airplanes", "Hiring Geoff, The Runway Engineer",
+	private static String[] messages = { "Booting Windows Vista", "Assembling Airplanes", "Hiring Geoff, The Runway Engineer",
 			"Clearing Runways", "Constructing Airports", "   NA","NA   ","   NA","NA   ","!! BATMAN !!", "Communicating Objectives", "Building The Internet", "est time remaining: 1 min",
-			"Redirecting Cats", "Contacting Server", "Vista requires an update", "est time remaining: 1 min", "est time remaining: 5 min", "est time remaining: 10 min", "est time remaining: 10 hours", "est time remaining: the heat death of the universe", "est time remaining: your first born child's lifespan", "Kind of agressive", "You get to decide how long you really want it to take" };
+			"Redirecting Cats", "Contacting Server", "Vista requires an update", "est time remaining: 5 min", "est time remaining: 10 min", "est time remaining: 10 hours" };
 
 	@Override
 	public void init() {
