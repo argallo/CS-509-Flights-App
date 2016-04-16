@@ -24,7 +24,6 @@ public class SplashView extends BaseView {
 	private static Timer timer = new Timer();
 	private static TextLabel loadingMessage = new TextLabel("Loading...");
 	private int counter = 0;
-	private boolean messagesFinished = false;
 	private boolean loadingFinished = false;
 	private static String[] messages = { "Booting Windows Vista", "Assembling Airplanes", "Hiring Geoff, The Runway Engineer",
 			"Clearing Runways", "Constructing Airports", "   NA","NA   ","   NA","NA   ","!! BATMAN !!", "Communicating Objectives", "Building The Internet", "est time remaining: 1 min",
@@ -62,7 +61,6 @@ public class SplashView extends BaseView {
 			@Override
 			public void run() {
 				if (counter == messages.length) {
-					messagesFinished = true;
 					completeSplashView();
 				}
 				loadingMessage.setText(messages[counter % messages.length]);
@@ -102,7 +100,7 @@ public class SplashView extends BaseView {
 	 * Make the transition to the next view
 	 */
 	public void completeSplashView() {
-		if (messagesFinished && loadingFinished) {
+		if (loadingFinished) {
 			timer.cancel();
 			ViewManager.getInstance().transitionViewTo(ViewID.SEARCH_MAIN, TransitionType.DEFAULT_TRANSITION);
 		}
