@@ -40,7 +40,7 @@ public class FlightTest {
 				new Price((float)18.79), 85);
 		assertTrue(flight.equals(flightActual));
 		//not sure how to test hashcode();
-		assertEquals("BOS -> LGA\n\t05/09/16 20:05 -04:00 -> 05/09/16 20:30 -04:00\n",flight.toString());
+		assertEquals("BOS -> LGA\n\t05/09/2016 20:05 -04:00 -> 05/09/2016 20:30 -04:00\n",flight.toString());
 		assertTrue(flight.checkEconomyAvailable(2));
 		assertFalse(flight.checkEconomyAvailable(100));
 		assertTrue(flight.checkFirstClassAvailable(2));
