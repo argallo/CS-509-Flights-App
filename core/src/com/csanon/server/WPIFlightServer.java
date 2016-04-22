@@ -128,7 +128,7 @@ public class WPIFlightServer implements FlightServer {
 
 			XmlReader reader = new XmlReader();
 			Element resultNode = reader.parse(result);
-
+			
 			offset = Integer.parseInt(resultNode.get("gmtOffset"));
 		}
 
