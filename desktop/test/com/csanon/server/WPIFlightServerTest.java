@@ -1,5 +1,6 @@
 package com.csanon.server;
 
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
@@ -88,6 +89,18 @@ public class WPIFlightServerTest {
 		boolean result = server.unlockServer();
 		assertTrue(result);
 	}
+	@Test
+	public void testGetOffsetFromLatLong() throws Exception{
+		FlightServer server = ServerFactory.getServer();
+		int result=server.getOffsetFromLatLong(39.9042, 116.4074);
+		assertEquals(result,8*60*60);
+		int result2=server.getOffsetFromLatLong(18.2206,-63.0686);
+		assertEquals(result2,-4*60*60);
+	}
+	
+	
+	
+	
 
 	@Test
 	public void testResetServer() {
