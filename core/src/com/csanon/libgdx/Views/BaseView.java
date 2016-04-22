@@ -1,6 +1,5 @@
 package com.csanon.libgdx.Views;
 
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.csanon.libgdx.Utils.Constants;
 import com.csanon.libgdx.Utils.Tint;
@@ -10,11 +9,11 @@ import com.csanon.libgdx.Utils.Tint;
  */
 public abstract class BaseView extends Group {
 
-    private Rectangle rectangle;
+    //private Rectangle rectangle;
 
     public BaseView() {
         Tint.resetTints();
-        rectangle = new Rectangle(0,0, Constants.VIRTUAL_WIDTH, Constants.VIRTUAL_HEIGHT);
+        //rectangle = new Rectangle(0,0, Constants.VIRTUAL_WIDTH, Constants.VIRTUAL_HEIGHT);
         init();
         setSize(Constants.VIRTUAL_WIDTH, Constants.VIRTUAL_HEIGHT);
         setSizes();

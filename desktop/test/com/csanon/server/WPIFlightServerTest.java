@@ -1,6 +1,7 @@
 package com.csanon.server;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -20,7 +21,6 @@ import com.csanon.Airport;
 import com.csanon.Airports;
 import com.csanon.EconomyTrip;
 import com.csanon.Flight;
-import com.csanon.TripBuilder;
 import com.csanon.time.DateTime;
 
 public class WPIFlightServerTest {

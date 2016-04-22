@@ -1,6 +1,5 @@
 package com.csanon.libgdx.ScreenManaging;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.csanon.libgdx.AppStage;
 import com.csanon.libgdx.Utils.ViewID;
 
@@ -9,7 +8,7 @@ import com.csanon.libgdx.Utils.ViewID;
  */
 public class ViewManager {
 
-	private Camera camera;
+	//private Camera camera;
 	private AppStage stage;
 	private ViewBuilderFactory viewBuilder = new ViewBuilderFactory();
 	private TransitionManager transitionManager = new TransitionManager();

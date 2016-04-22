@@ -12,6 +12,7 @@ import com.csanon.Airplane;
 import com.csanon.Airport;
 import com.csanon.Flight;
 import com.csanon.ITrip;
+import com.csanon.SeatClass;
 import com.csanon.factrories.AirplaneFactory;
 import com.csanon.factrories.AirportFactory;
 import com.csanon.factrories.FlightFactory;
@@ -184,11 +185,30 @@ public class WPIFlightServer implements FlightServer {
 		if (!lock.isLocked()) {
 			throw new Exception();
 		} else {
-
+			boolean available = true;
+			SeatClass seatClass = trip.getSeatType();
 			// For each of the flights in the trip, confirm that the specified
 			// class
 			// of seat is still available
-			return trip.hasSeatsAvailable(1);
+			for (Flight flight : trip.getLegs()) {
+
+				Flight serverFlight = getFlightFromServer(flight);
+
+				boolean result = false;
+				if (seatClass == SeatClass.ECONOMY) {
+					result = serverFlight.checkEconomyAvailable(1);
+				} else {
+					result = serverFlight.checkFirstClassAvailable(1);
+				}
+
+				// if the flight is unavailable set available to false and break
+				if (!result) {
+					available = false;
+					break;
+				}
+			}
+
+			return available;
 		}
 	}
 
