@@ -1,9 +1,5 @@
 package com.csanon.libgdx.Components;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.stream.Collectors;
-
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -18,6 +14,10 @@ import com.csanon.libgdx.Utils.Pic;
 import com.csanon.libgdx.Utils.Tint;
 import com.csanon.libgdx.Views.DisplayTripsView;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+
 public class TripsPanel extends Group {
 
 	private ScrollPane scrollPane;
@@ -31,7 +31,7 @@ public class TripsPanel extends Group {
 	public TripsPanel(DisplayTripsView displayTripsView) {
 		this.displayTripsView = displayTripsView;
 		tripButtons = new ArrayList<>();
-		setSize(800, 500);
+		setSize(600, 500);
 		table = new Table();
 		table.setTouchable(Touchable.childrenOnly);
 		scrollPane = new ScrollPane(table);
@@ -77,9 +77,9 @@ public class TripsPanel extends Group {
 
 					info += "Flight number:" + flight.getFlightNum() + " ";
 					info += "Duration: " + flight.getDuration() + "\n";
-					info += "From: " + flight.getArrivalAirport().getName() + " ";
+					info += "From: " + flight.getDepartureAirport().getName() + "\n";
 					info += "Depart: " + flight.getDepartureTime() + "\n";
-					info += "To: " + flight.getDepartureAirport().getName() + " ";
+					info += "To: " + flight.getArrivalAirport().getName() + "\n";
 					info += "Arrive: " + flight.getArrivalTime() + " ";
 					info += "\nEconomy: " + flight.getEconomyPrice() + " ";
 					info += "First Class: " + flight.getFirstClassPrice() + "\n";
@@ -112,6 +112,8 @@ public class TripsPanel extends Group {
 				// scrollSize += infoLabel.getHeight();
 			}
 		}
+        setWidth(table.getWidth());
+        scrollPane.setWidth(table.getWidth());
 		scrollPane.invalidate();
 	}
 

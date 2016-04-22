@@ -18,8 +18,21 @@ public class Constants {
     public static final int VIRTUAL_HEIGHT = 720;
 
     public static Airport departureAirport, arrivalAirport;
-    public static DateTime dateTime;
+    public static DateTime dateTime, returnDateTime;
     public static Trip TripTO, TripBACK;
+    public static boolean isRoundTrip = false;
 
+
+    public static void setGlobals(Airport depart, Airport arrive, DateTime date, DateTime returnDate, boolean isRoundTrip){
+        Constants.departureAirport = depart;
+        Constants.arrivalAirport = arrive;
+        Constants.dateTime = date;
+        Constants.returnDateTime = returnDate;
+        Constants.isRoundTrip = isRoundTrip;
+    }
+
+    public static void setGlobals(Airport depart, Airport arrive, DateTime date){
+        setGlobals(depart, arrive, date, null, false);
+    }
 
 }
