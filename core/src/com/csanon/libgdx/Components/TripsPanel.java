@@ -50,12 +50,9 @@ public class TripsPanel extends Group {
 	private void update() {
 		table.clear();
 		List<ITrip> trips = originalList.stream().filter(trip -> {
-			if (seatClassSelection == SeatClass.ECONOMY) {
-				return trip.hasSeatsAvailable(1);
-			} else {
-				return trip.hasSeatsAvailable(1);
-			}
+			return seatClassSelection == trip.getSeatType();
 		}).collect(Collectors.toList());
+		
 		// If there are no results
 		if (trips.size() == 0) {
 			// display no results message
