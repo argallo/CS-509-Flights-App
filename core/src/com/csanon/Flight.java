@@ -209,8 +209,11 @@ public class Flight {
 
 	public String toString() {
 		String repr = "";
-		repr += departureAirport.getCode() + " -> " + arrivalAirport.getCode() + "\n";
+		repr += departureAirport.getCode() + " -> " + arrivalAirport.getCode() + " - model " + airplane.getModel() + "\n";
+		repr += "\t" + duration + "min - " + flightNum + "\n";
 		repr += "\t" + departureTime.toString() + " -> " + arrivalTime.toString() + "\n";
+		repr += "\tFIRS : " + seatsBookedFirstClass + " at " + priceFirstClass + "\n";
+		repr += "\tECON : " + seatsBookedEconomy + " at " + priceEconomy + "\n";
 		return repr;
 	}
 

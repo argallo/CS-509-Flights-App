@@ -9,10 +9,10 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.viewport.StretchViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.csanon.libgdx.AppStage;
+import com.csanon.libgdx.ScreenManaging.ViewManager;
 import com.csanon.libgdx.Utils.Assets;
 import com.csanon.libgdx.Utils.Constants;
 import com.csanon.libgdx.Utils.ViewID;
-import com.csanon.libgdx.ScreenManaging.ViewManager;
 
 public class App extends ApplicationAdapter {
     private static final ViewID INITIAL_SCREEN = ViewID.SPLASH;

@@ -2,7 +2,7 @@ package com.csanon.libgdx.Utils;
 
 import com.badlogic.gdx.Gdx;
 import com.csanon.Airport;
-import com.csanon.Trip;
+import com.csanon.ITrip;
 import com.csanon.time.DateTime;
 
 /**
@@ -19,7 +19,7 @@ public class Constants {
 
     public static Airport departureAirport, arrivalAirport;
     public static DateTime dateTime;
-    public static Trip TripTO, TripBACK;
+    public static ITrip TripTO, TripBACK;
 
 
 }

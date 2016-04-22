@@ -19,8 +19,9 @@ import com.csanon.factrories.FlightFactoryTest;
 import com.csanon.server.WPIFlightServerTest;
 
 @RunWith(Suite.class)
-@SuiteClasses({ AirplaneFactoryTest.class, AirportFactoryTest.class, FlightFactoryTest.class, AirplanesTest.class, AirportsTest.class, FlightTest.class, PriceTest.class,
-		SystemTests.class, TripBuilderTests.class, TripTest.class, WPIFlightServerTest.class })
+@SuiteClasses({ AirplaneFactoryTest.class, AirportFactoryTest.class, FlightFactoryTest.class, AirplanesTest.class,
+		AirportsTest.class, FlightTest.class, PriceTest.class, SystemTests.class, TripBuilderTests.class,
+		TripTest.class, WPIFlightServerTest.class })
 public class AllTests {
 	private static final String SECONDFILENAME = "/OffsetLatLong.pref";
 

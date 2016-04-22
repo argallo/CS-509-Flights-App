@@ -1,7 +1,9 @@
 package com.csanon.libgdx.Views;
 
+import java.util.function.Consumer;
+
+import com.csanon.ITrip;
 import com.csanon.SeatClass;
-import com.csanon.Trip;
 import com.csanon.libgdx.Components.AbsPopup;
 import com.csanon.libgdx.Components.BookingPopup;
 import com.csanon.libgdx.Components.Button;
@@ -17,8 +19,6 @@ import com.csanon.libgdx.Utils.ViewID;
 import com.csanon.server.FlightServer;
 import com.csanon.server.ServerFactory;
 
-import java.util.function.Consumer;
-
 /**
  * Created by Gallo on 4/10/2016.
  */
@@ -27,8 +27,8 @@ public class BookingView extends BaseView {
 	private TintedImage background;
 	private Button confirmBtn;
 	private FlightServer server;
-	private Trip tripTo;
-	private Trip tripBack;
+	private ITrip tripTo;
+	private ITrip tripBack;
 	private SeatClass seatClass;
 	private BookingPopup popup;
 
@@ -58,7 +58,7 @@ public class BookingView extends BaseView {
 			popup.activatePopup("Error: No Server Lock :)");
 		} else {
 			try {
-				boolean available = server.checkTripAvailable(tripTo, seatClass);
+				boolean available = server.checkTripAvailable(tripTo);
 				if (!available) {
 					popup.activatePopup("Sorry This Trip is UNAVAILABLE");
 					// System.out.println("TRIP UNAVAILABLE");
@@ -93,7 +93,7 @@ public class BookingView extends BaseView {
 		switch (outcome) {
 		case CONFIRM:
 			try {
-				server.bookTrip(tripTo, seatClass);
+				server.bookTrip(tripTo);
 				server.unlockServer();
 				popup.activatePopup("Success! Trip has been Booked");
 

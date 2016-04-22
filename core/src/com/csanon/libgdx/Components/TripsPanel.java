@@ -11,8 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 import com.csanon.Flight;
+import com.csanon.ITrip;
 import com.csanon.SeatClass;
-import com.csanon.Trip;
 import com.csanon.libgdx.Utils.Assets;
 import com.csanon.libgdx.Utils.Pic;
 import com.csanon.libgdx.Utils.Tint;
@@ -25,7 +25,7 @@ public class TripsPanel extends Group {
 	private ArrayList<Button> tripButtons;
 	// private float scrollSize = 0;
 	private Table table;
-	private List<Trip> originalList;
+	private List<ITrip> originalList;
 	private SeatClass seatClassSelection;
 
 	public TripsPanel(DisplayTripsView displayTripsView) {
@@ -40,7 +40,7 @@ public class TripsPanel extends Group {
 		setTouchable(Touchable.childrenOnly);
 	}
 
-	public void updateTrips(List<Trip> trips, SeatClass seatClass) {
+	public void updateTrips(List<ITrip> trips, SeatClass seatClass) {
 		originalList = trips;
 		seatClassSelection = seatClass;
 		update();
@@ -49,11 +49,11 @@ public class TripsPanel extends Group {
 
 	private void update() {
 		table.clear();
-		List<Trip> trips = originalList.stream().filter(trip -> {
+		List<ITrip> trips = originalList.stream().filter(trip -> {
 			if (seatClassSelection == SeatClass.ECONOMY) {
-				return trip.hasEconomySeatsAvailable(1);
+				return trip.hasSeatsAvailable(1);
 			} else {
-				return trip.hasFirstClassSeatsAvailable(1);
+				return trip.hasSeatsAvailable(1);
 			}
 		}).collect(Collectors.toList());
 		// If there are no results

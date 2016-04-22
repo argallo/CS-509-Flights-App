@@ -11,8 +11,8 @@ import com.badlogic.gdx.utils.XmlReader.Element;
 import com.csanon.Airplane;
 import com.csanon.Airport;
 import com.csanon.Flight;
+import com.csanon.ITrip;
 import com.csanon.SeatClass;
-import com.csanon.Trip;
 import com.csanon.factrories.AirplaneFactory;
 import com.csanon.factrories.AirportFactory;
 import com.csanon.factrories.FlightFactory;
@@ -181,8 +181,7 @@ public class WPIFlightServer implements FlightServer {
 	}
 
 	@Override
-	public boolean checkTripAvailable(Trip trip, SeatClass seatClass) throws Exception {
-		boolean available = true;
+	public boolean checkTripAvailable(ITrip trip) throws Exception {
 		if (!lock.isLocked()) {
 			throw new Exception();
 		} else {
@@ -190,25 +189,7 @@ public class WPIFlightServer implements FlightServer {
 			// For each of the flights in the trip, confirm that the specified
 			// class
 			// of seat is still available
-			for (Flight flight : trip.getLegs()) {
-
-				Flight serverFlight = getFlightFromServer(flight);
-
-				boolean result = false;
-				if (seatClass == SeatClass.ECONOMY) {
-					result = serverFlight.checkEconomyAvailable(1);
-				} else {
-					result = serverFlight.checkFirstClassAvailable(1);
-				}
-
-				// if the flight is unavailable set available to false and break
-				if (!result) {
-					available = false;
-					break;
-				}
-			}
-
-			return available;
+			return trip.hasSeatsAvailable(1);
 		}
 	}
 
@@ -227,7 +208,7 @@ public class WPIFlightServer implements FlightServer {
 	}
 
 	@Override
-	public void bookTrip(Trip trip, SeatClass seatClass) throws Exception {
+	public void bookTrip(ITrip trip) throws Exception {
 
 		if (!lock.isLocked()) {
 			throw new Exception();
@@ -239,7 +220,7 @@ public class WPIFlightServer implements FlightServer {
 			// for each flight in the trip, book the flight with the associated
 			// seating
 			String flightsXML = trip.getLegs().stream()
-					.map(flight -> "<Flight number=\"" + flight.getFlightNum() + "\" seating=\"" + seatClass + "\"/>")
+					.map(flight -> "<Flight number=\"" + flight.getFlightNum() + "\" seating=\"" + trip.getSeatType() + "\"/>")
 					.collect(Collectors.joining());
 			flightsXML = "<Flights>" + flightsXML + "</Flights>";
 
