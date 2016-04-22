@@ -1,6 +1,7 @@
 package com.csanon;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -223,6 +224,8 @@ public class SystemTests {
 	 */
 	@Test
 	public void ServerTimeout() throws InterruptedException {
+		List<Boolean> success = new LinkedList<Boolean>();
+		success.add(false);
 		TripBuilder tripBuilder = new TripBuilder();
 		FlightServer flightServer = ServerFactory.getServer();
 
@@ -238,12 +241,15 @@ public class SystemTests {
 		assertEquals(new HashSet<ITrip>(expectedTrips), new HashSet<ITrip>(actualTrips));
 
 		Consumer<String> callback = message -> {
+			success.set(0, true);
 		};
 
 		boolean booked = flightServer.lockServer(callback);
 		assertEquals(true, booked);
 
 		flightServer.wait(TIMEOUT + 1);
+		
+		assertTrue(success.get(0));
 
 		try {
 			flightServer.bookTrip(bookedTrip);

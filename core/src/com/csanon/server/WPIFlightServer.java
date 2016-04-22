@@ -12,7 +12,6 @@ import com.csanon.Airplane;
 import com.csanon.Airport;
 import com.csanon.Flight;
 import com.csanon.ITrip;
-import com.csanon.SeatClass;
 import com.csanon.factrories.AirplaneFactory;
 import com.csanon.factrories.AirportFactory;
 import com.csanon.factrories.FlightFactory;
@@ -243,6 +242,20 @@ public class WPIFlightServer implements FlightServer {
 
 			}
 		}
+	}
+
+	@Override
+	public void resetServer() {
+		HttpRequest request = Unirest.get(config.getURL()).queryString("team", config.getTeamNum())
+				.queryString("action", "resetDB");
+		
+		try {
+			request.asString();
+		} catch (UnirestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }
