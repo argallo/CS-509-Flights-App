@@ -1,11 +1,14 @@
 package com.csanon.libgdx.Views;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csanon.Airport;
 import com.csanon.Airports;
+import com.csanon.ITrip;
 import com.csanon.SeatClass;
-import com.csanon.Trip;
 import com.csanon.TripBuilder;
 import com.csanon.libgdx.Components.Button;
 import com.csanon.libgdx.Components.ButtonAction;
@@ -39,8 +42,8 @@ public class DisplayTripsView extends BaseView {
 	private TextBox departureDateTextBox, returnTextBox;
 	private TripsPanel tripsPanel, returnTripsPanel;
 	private Button confirmBtn;
-	private Trip selectedTripTo;
-	private Trip selectedTripBack;
+	private ITrip selectedTripTo;
+	private ITrip selectedTripBack;
     private CheckBox checkBox;
 
 
@@ -168,7 +171,7 @@ public class DisplayTripsView extends BaseView {
 		departureDateTextBox.setPosition(1060, 670);
 		searchButton.setPosition(860, 605);
 		tripsPanel.setPosition(10, 10);
-        returnTripsPanel.setPosition(Constants.VIRTUAL_WIDTH/2, 10);
+        returnTripsPanel.setPosition(Constants.VIRTUAL_WIDTH / 2, 10);
 		confirmBtn.setPosition(1050, 605);
 
         roundTripLabel.setPosition(10, 560);
@@ -226,8 +229,8 @@ public class DisplayTripsView extends BaseView {
                 addAction(Actions.sequence(Actions.delay(2f), new Action() {
                     @Override
                     public boolean act(float delta) {
-                        List<Trip> trips = (new TripBuilder()).getTrips(departAirport, arrivalAirport, depart);
-                        List<Trip> returnTrips = (new TripBuilder()).getTrips(arrivalAirport, departAirport, returnDT);
+                        List<ITrip> trips = (new TripBuilder()).getTrips(departAirport, arrivalAirport, depart);
+                        List<ITrip> returnTrips = (new TripBuilder()).getTrips(arrivalAirport, departAirport, returnDT);
                         tripsPanel.updateTrips(trips, seatClassSelection);
                         returnTripsPanel.updateTrips(returnTrips, seatClassSelection);
                         return true;
@@ -252,7 +255,7 @@ public class DisplayTripsView extends BaseView {
                 addAction(Actions.sequence(Actions.delay(2f), new Action() {
                     @Override
                     public boolean act(float delta) {
-                        List<Trip> trips = (new TripBuilder()).getTrips(departAirport, arrivalAirport, depart);
+                        List<ITrip> trips = (new TripBuilder()).getTrips(departAirport, arrivalAirport, depart);
                         tripsPanel.updateTrips(trips, seatClassSelection);
                         return true;
                     }
