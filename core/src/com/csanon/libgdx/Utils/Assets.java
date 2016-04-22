@@ -16,7 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
  */
 public class Assets extends AssetManager {
 
-    private TextureAtlas textureAtlas;
+   // private TextureAtlas textureAtlas;
 
     //Font vars
     private BitmapFont xsmallFont;

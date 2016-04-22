@@ -1,10 +1,7 @@
 package com.csanon.libgdx.Views;
 
 import com.badlogic.gdx.scenes.scene2d.Action;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
-import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.csanon.Airport;
 import com.csanon.Airports;
 import com.csanon.SeatClass;
@@ -281,14 +278,14 @@ public class DisplayTripsView extends BaseView {
 		return Airports.getAirport(airportString);
 	}
 
-	public void setSelectedTripTo(Trip selectedTrip) {
+	public void setSelectedTripTo(ITrip selectedTrip) {
 		this.selectedTripTo = selectedTrip;
 		confirmBtn.setVisible(true);
 	}
 
 	// TODO: check to see if round trips selected before setting book button to
 	// true
-	public void setSelectedTripBack(Trip selectedTrip) {
+	public void setSelectedTripBack(ITrip selectedTrip) {
 		this.selectedTripBack = selectedTrip;
 		confirmBtn.setVisible(true);
 	}

@@ -3,6 +3,9 @@ package com.csanon.libgdx.Views;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
+import java.util.LinkedList;
+import java.util.List;
+
 import com.csanon.Airport;
 import com.csanon.Airports;
 import com.csanon.libgdx.Components.Button;
@@ -20,9 +23,6 @@ import com.csanon.libgdx.Utils.Pic;
 import com.csanon.libgdx.Utils.Tint;
 import com.csanon.libgdx.Utils.ViewID;
 import com.csanon.time.DateTime;
-
-import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by Gallo on 3/29/2016.

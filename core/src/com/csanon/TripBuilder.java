@@ -88,17 +88,32 @@ public class TripBuilder {
 	 *            the local time date in which the plane must leave
 	 * @return a list of Trip bound by the instance settings
 	 */
-	public List<Trip> getTrips(Airport aDeparture, Airport aDestination, DateTime aDepartTime) {
+	public List<ITrip> getTrips(Airport aDeparture, Airport aDestination, DateTime aDepartTime) {
 		// Convert the departtime to the same local time with the departure
 		// offset
 		aDepartTime = aDepartTime.plusSeconds(-aDeparture.getOffset()).withNewOffset(aDeparture.getOffset());
 		Map<Airport, Map<String, List<Flight>>> dataset = collectData(maxHopCount, aDeparture, aDestination,
 				aDepartTime);
 
-		List<Trip> validtrips = new LinkedList<Trip>(
-				searchForTrips(maxHopCount, aDeparture, aDestination, aDepartTime, dataset));
+		Collection<ITrip> validtrips = searchForTrips(maxHopCount, aDeparture, aDestination, aDepartTime,
+				dataset);
 
-		return validtrips;
+		List<ITrip> seperatedTrips = new LinkedList<ITrip>();
+		validtrips.forEach(aTrip -> {
+			try {
+				seperatedTrips.add(new FirstClassTrip(aTrip));
+			} catch (Exception e) {
+
+			}
+
+			try {
+				seperatedTrips.add(new EconomyTrip(aTrip));
+			} catch (Exception e) {
+
+			}
+		});
+
+		return seperatedTrips;
 	}
 
 	/**
@@ -116,18 +131,21 @@ public class TripBuilder {
 	 *            a list of all flights by date and by airport
 	 * @return a collection of valid trips
 	 */
-	private Collection<Trip> searchForTrips(int aHopCount, Airport aDeparture, Airport aDestination,
+	private Collection<ITrip> searchForTrips(int aHopCount, Airport aDeparture, Airport aDestination,
 			DateTime aDepartTime, Map<Airport, Map<String, List<Flight>>> aDataSet) {
-		List<Trip> validTrips = new LinkedList<Trip>();
+
+		List<ITrip> validTrips = new LinkedList<ITrip>();
+
 		// find the lower and upper limits times for the given datetime
 		DateTime lowerLimit = aDepartTime.withNewOffset(aDeparture.getOffset()).getUTC()
 				.plusSeconds(-aDeparture.getOffset()).withNewOffset(aDeparture.getOffset()).getMidnight().getUTC();
 		DateTime upperLimit = lowerLimit.getNextDay().getUTC();
+
 		// get the possible days where the given depart time may actually lie
 		Collection<DateTime> dateTimes = findPossibleDates(aDepartTime);
 
 		// the map that will be used to store possible trips by a trip
-		Map<Airport, Collection<Trip>> tripsbyAirport = new HashMap<Airport, Collection<Trip>>();
+		Map<Airport, Collection<ITrip>> tripsbyAirport = new HashMap<Airport, Collection<ITrip>>();
 		// loop through each possible time when the trip may start
 		if (aHopCount > 0) {
 			dateTimes.forEach(time -> {
@@ -145,23 +163,20 @@ public class TripBuilder {
 
 							// Check whether the flight is going to the
 							// destination
-							if (flight.getArrivalAirport().equals(aDestination)) { // if
-																					// so
-																					// then
-																					// we
-																					// can
-																					// add
-																					// it
-																					// to
-																					// valid
-																					// trips
-								validTrips.add(new Trip(flight));
+							if (flight.getArrivalAirport().equals(aDestination)) {
+								// if so then we can add it to valid trips
+								try {
+									validTrips.add(new GeneralTrip(flight));
+								} catch (Exception e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+								}
 							} else { // try to find trips with one less hop that
 										// will terminate at the destination
 								// add an empty set with the arrival airport as
 								// key if it doesn't exist
 								if (!tripsbyAirport.containsKey(flight.getArrivalAirport())) {
-									tripsbyAirport.put(flight.getArrivalAirport(), new HashSet<Trip>());
+									tripsbyAirport.put(flight.getArrivalAirport(), new HashSet<ITrip>());
 								}
 								// get possible dates when the flight may depart
 								// from based on layover bounds
@@ -244,7 +259,14 @@ public class TripBuilder {
 		}
 
 		if (!aDataSet.get(aDeparture).containsKey(aTime.toServerDateString())) {
-			aDataSet.get(aDeparture).put(aTime.toServerDateString(), server.getFlightsDeparting(aDeparture, aTime));
+			List<Flight> flights = server.getFlightsDeparting(aDeparture, aTime);
+			List<Flight> filteredflights = new LinkedList<Flight>();
+			flights.forEach(flight -> {
+				if (flight.checkEconomyAvailable(1) && flight.checkFirstClassAvailable(1)) {
+					filteredflights.add(flight);
+				}
+			});
+			aDataSet.get(aDeparture).put(aTime.toServerDateString(), filteredflights);
 			return true;
 		}
 		return false;
@@ -319,19 +341,20 @@ public class TripBuilder {
 
 			// loop through possible datetimes and
 			dateTimes.forEach(time -> {
-				addFlightsToMap(aDeparture, time, aDataSet);
+				if (addFlightsToMap(aDeparture, time, aDataSet)) {
 
-				aDataSet.get(aDeparture).get(time.toServerDateString()).forEach(flight -> {
-					if (!flight.getArrivalAirport().equals(aDestination)) {
-						// Collect data for each of the layover bounds
-						DateTime minLayoverTime = flight.getArrivalTime().plusSeconds(minLayover);
-						DateTime maxLayoverTime = flight.getArrivalTime().plusSeconds(maxLayover);
-						collectData(aMaxHopCount - 1, flight.getArrivalAirport(), aDestination, minLayoverTime,
-								aDataSet);
-						collectData(aMaxHopCount - 1, flight.getArrivalAirport(), aDestination, maxLayoverTime,
-								aDataSet);
-					}
-				});
+					aDataSet.get(aDeparture).get(time.toServerDateString()).forEach(flight -> {
+						if (!flight.getArrivalAirport().equals(aDestination)) {
+							// Collect data for each of the layover bounds
+							DateTime minLayoverTime = flight.getArrivalTime().plusSeconds(minLayover);
+							DateTime maxLayoverTime = flight.getArrivalTime().plusSeconds(maxLayover);
+							collectData(aMaxHopCount - 1, flight.getArrivalAirport(), aDestination, minLayoverTime,
+									aDataSet);
+							collectData(aMaxHopCount - 1, flight.getArrivalAirport(), aDestination, maxLayoverTime,
+									aDataSet);
+						}
+					});
+				}
 			});
 
 		}

@@ -10,6 +10,10 @@ public class Price {
 	public Price(float aPriceVal) {
 		priceVal = new Float(aPriceVal);
 	}
+	
+	public Price(double aPriceVal) {
+		priceVal = new Float(aPriceVal);
+	}
 
 	public Price(String aPriceVal) {
 		Float value;
@@ -21,6 +25,10 @@ public class Price {
 			value = 0.0f;
 		}
 		priceVal = value;
+	}
+	
+	public Price add(Price aPrice) {
+		return new Price(aPrice.priceVal + priceVal);
 	}
 
 	@Override
