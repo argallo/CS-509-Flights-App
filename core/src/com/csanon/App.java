@@ -2,7 +2,6 @@ package com.csanon;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.FPSLogger;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.TimeUtils;
@@ -19,7 +18,7 @@ public class App extends ApplicationAdapter {
     private AppStage stage;
     private SpriteBatch batch;
     private Viewport viewport;
-    private FPSLogger fpsLogger;
+   //private FPSLogger fpsLogger;
     long startTime;
 
     @Override
@@ -36,7 +35,7 @@ public class App extends ApplicationAdapter {
         //sets the input to actors that are found in the stage
         Gdx.input.setInputProcessor(stage);
 
-        fpsLogger = new FPSLogger();
+       // fpsLogger = new FPSLogger();
     }
 
     /**

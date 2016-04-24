@@ -1,16 +1,17 @@
 package com.csanon;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
@@ -42,6 +43,80 @@ public class SystemTests {
 	private final static List<ITrip> tripsEWR2MDW_5_14_16_SortPriceReverse = new LinkedList<ITrip>();
 	private final static List<ITrip> tripsEWR2MDW_5_14_16_SortTime = new LinkedList<ITrip>();
 	private final static List<ITrip> tripsEWR2MDW_5_14_16_SortTimeReverse = new LinkedList<ITrip>();
+	
+	private final static String newTripEWR2MDWXML =  "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" 
+			 + "<Flights>" 
+			 + "<Flight Airplane=\"717\" FlightTime=\"120\" Number=\"20107\">" 
+			 + "      <Departure>" 
+			 + "         <Code>EWR</Code>" 
+			 + "         <Time>2016 May 15 00:54 GMT</Time>" 
+			 + "      </Departure>" 
+			 + "      <Arrival>" 
+			 + "         <Code>TPA</Code>" 
+			 + "         <Time>2016 May 15 02:54 GMT</Time>" 
+			 + "      </Arrival>" 
+			 + "      <Seating>" 
+			 + "         <FirstClass Price=\"$380.26\">6</FirstClass>" 
+			 + "         <Coach Price=\"$111.29\">58</Coach>" 
+			 + "      </Seating>" 
+			 + "   </Flight>" 
+			 + "   <Flight Airplane=\"777\" FlightTime=\"448\" Number=\"31550\">" 
+			 + "      <Departure>" 
+			 + "         <Code>TPA</Code>" 
+			 + "         <Time>2016 May 15 05:21 GMT</Time>" 
+			 + "      </Departure>" 
+			 + "      <Arrival>" 
+			 + "         <Code>SJC</Code>" 
+			 + "         <Time>2016 May 15 12:49 GMT</Time>" 
+			 + "      </Arrival>" 
+			 + "      <Seating>" 
+			 + "         <FirstClass Price=\"$430.01\">6</FirstClass>" 
+			 + "         <Coach Price=\"$84.93\">319</Coach>" 
+			 + "      </Seating>" 
+			 + "   </Flight>" 
+			 + "      <Flight Airplane=\"A380\" FlightTime=\"316\" Number=\"29044\">" 
+			 + "      <Departure>" 
+			 + "         <Code>SJC</Code>" 
+			 + "         <Time>2016 May 15 16:03 GMT</Time>" 
+			 + "      </Departure>" 
+			 + "      <Arrival>" 
+			 + "         <Code>MDW</Code>" 
+			 + "         <Time>2016 May 15 21:19 GMT</Time>" 
+			 + "      </Arrival>" 
+			 + "      <Seating>" 
+			 + "         <FirstClass Price=\"$187.02\">94</FirstClass>" 
+			 + "         <Coach Price=\"$56.06\">373</Coach>" 
+			 + "      </Seating>" 
+			 + "   </Flight>" 
+			 + "   <Flight Airplane=\"777\" FlightTime=\"39\" Number=\"31551\">" 
+			 + "      <Departure>" 
+			 + "         <Code>TPA</Code>" 
+			 + "         <Time>2016 May 15 05:55 GMT</Time>" 
+			 + "      </Departure>" 
+			 + "      <Arrival>" 
+			 + "         <Code>MIA</Code>" 
+			 + "         <Time>2016 May 15 06:34 GMT</Time>" 
+			 + "      </Arrival>" 
+			 + "      <Seating>" 
+			 + "         <FirstClass Price=\"$37.32\">29</FirstClass>" 
+			 + "         <Coach Price=\"$7.37\">31</Coach>" 
+			 + "      </Seating>" 
+			 + "   </Flight>" 
+			 + "   <Flight Airplane=\"747\" FlightTime=\"157\" Number=\"16358\">" 
+			 + "      <Departure>" 
+			 + "         <Code>MIA</Code>" 
+			 + "         <Time>2016 May 15 10:06 GMT</Time>" 
+			 + "      </Departure>" 
+			 + "      <Arrival>" 
+			 + "         <Code>MDW</Code>" 
+			 + "         <Time>2016 May 15 12:43 GMT</Time>" 
+			 + "      </Arrival>" 
+			 + "      <Seating>" 
+			 + "         <FirstClass Price=\"$95.80\">54</FirstClass>" 
+			 + "         <Coach Price=\"$29.70\">302</Coach>" 
+			 + "      </Seating>" 
+			 + "   </Flight>" 
+			 + "</Flights>";
 
 	@BeforeClass
 	public static void setUpBeforeClass() throws Exception {
@@ -104,10 +179,10 @@ public class SystemTests {
 				getFlight(flightsEWR2MDW_5_14_16, "28395", "SFO"),
 				getFlight(flightsEWR2MDW_5_14_16, "22053", "MCO"));
 		
-		ITrip trip_E_0546_045196 = new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20111", "EWR"),
+		ITrip trip_E_1086_045196 = new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20111", "EWR"),
 				getFlight(flightsEWR2MDW_5_14_16, "28396", "SFO"),
 				getFlight(flightsEWR2MDW_5_14_16, "30963", "STL"));
-		ITrip trip_F_0546_204823 = new FirstClassTrip(getFlight(flightsEWR2MDW_5_14_16, "20111", "EWR"),
+		ITrip trip_F_1086_204823 = new FirstClassTrip(getFlight(flightsEWR2MDW_5_14_16, "20111", "EWR"),
 				getFlight(flightsEWR2MDW_5_14_16, "28396", "SFO"),
 				getFlight(flightsEWR2MDW_5_14_16, "30963", "STL"));
 		
@@ -159,14 +234,17 @@ public class SystemTests {
 		ITrip trip_F_0731_107175 = new FirstClassTrip(getFlight(flightsEWR2MDW_5_14_16, "20084", "EWR"),
 				getFlight(flightsEWR2MDW_5_14_16, "30905", "STL"),
 				getFlight(flightsEWR2MDW_5_14_16, "8082", "DEN"));
-		
-		ITrip trip_E_1007_015031 = new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20085", "EWR"),
-				getFlight(flightsEWR2MDW_5_14_16, "7432", "DFW"),
+
+		//Only one
+		ITrip trip_E_1007_024931 = new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20085", "EWR"),
+				getFlight(flightsEWR2MDW_5_14_16, "7423", "DFW"),
 				getFlight(flightsEWR2MDW_5_14_16, "9988", "RSW"));
 		ITrip trip_F_1007_091721 = new FirstClassTrip(getFlight(flightsEWR2MDW_5_14_16, "20085", "EWR"),
-				getFlight(flightsEWR2MDW_5_14_16, "7432", "DFW"),
+				getFlight(flightsEWR2MDW_5_14_16, "7423", "DFW"),
 				getFlight(flightsEWR2MDW_5_14_16, "9988", "RSW"));
 		
+		
+		//Only one
 		ITrip trip_E_0819_009806 = new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20085", "EWR"),
 				getFlight(flightsEWR2MDW_5_14_16, "7420", "DFW"),
 				getFlight(flightsEWR2MDW_5_14_16, "16954", "MSP"));
@@ -221,10 +299,10 @@ public class SystemTests {
 				getFlight(flightsEWR2MDW_5_14_16, "6794", "CMH"),
 				getFlight(flightsEWR2MDW_5_14_16, "9988", "RSW"));
 		
-		ITrip trip_E_1505_042208 = new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20095", "EWR"),
+		ITrip trip_E_0905_042208 = new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20095", "EWR"),
 				getFlight(flightsEWR2MDW_5_14_16, "20740", "OAK"),
 				getFlight(flightsEWR2MDW_5_14_16, "7452", "DFW"));
-		ITrip trip_F_1505_253675 = new FirstClassTrip(getFlight(flightsEWR2MDW_5_14_16, "20095", "EWR"),
+		ITrip trip_F_0905_253675 = new FirstClassTrip(getFlight(flightsEWR2MDW_5_14_16, "20095", "EWR"),
 				getFlight(flightsEWR2MDW_5_14_16, "20740", "OAK"),
 				getFlight(flightsEWR2MDW_5_14_16, "7452", "DFW"));
 		
@@ -253,7 +331,7 @@ public class SystemTests {
 				getFlight(flightsEWR2MDW_5_14_16, "19483", "LGA"),
 				getFlight(flightsEWR2MDW_5_14_16, "23325", "PHX"));
 
-		ITrip trip_E_1000_022575 = new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20101", "EWR"),
+		ITrip trip_E_0987_022575 = new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20101", "EWR"),
 				getFlight(flightsEWR2MDW_5_14_16, "16961", "MSP"),
 				getFlight(flightsEWR2MDW_5_14_16, "28389", "SFO"));
 		
@@ -273,8 +351,8 @@ public class SystemTests {
 		tripsEWR2MDW_5_14_16_All.add(trip_F_1617_434938);
 		tripsEWR2MDW_5_14_16_All.add(trip_E_1402_047817);
 		tripsEWR2MDW_5_14_16_All.add(trip_F_1402_198293);
-		tripsEWR2MDW_5_14_16_All.add(trip_E_0546_045196);
-		tripsEWR2MDW_5_14_16_All.add(trip_F_0546_204823);
+		tripsEWR2MDW_5_14_16_All.add(trip_E_1086_045196);
+		tripsEWR2MDW_5_14_16_All.add(trip_F_1086_204823);
 		tripsEWR2MDW_5_14_16_All.add(trip_E_0769_006980);
 		tripsEWR2MDW_5_14_16_All.add(trip_F_0769_028141);
 		tripsEWR2MDW_5_14_16_All.add(trip_E_0675_012197);
@@ -289,7 +367,7 @@ public class SystemTests {
 		tripsEWR2MDW_5_14_16_All.add(trip_F_0337_040917);
 		tripsEWR2MDW_5_14_16_All.add(trip_E_0731_012324);
 		tripsEWR2MDW_5_14_16_All.add(trip_F_0731_107175);
-		tripsEWR2MDW_5_14_16_All.add(trip_E_1007_015031);
+		tripsEWR2MDW_5_14_16_All.add(trip_E_1007_024931);
 		tripsEWR2MDW_5_14_16_All.add(trip_F_1007_091721);
 		tripsEWR2MDW_5_14_16_All.add(trip_E_0819_009806);
 		tripsEWR2MDW_5_14_16_All.add(trip_F_0819_037260);
@@ -307,8 +385,8 @@ public class SystemTests {
 		tripsEWR2MDW_5_14_16_All.add(trip_F_0502_047245);
 		tripsEWR2MDW_5_14_16_All.add(trip_E_0708_014511);
 		tripsEWR2MDW_5_14_16_All.add(trip_F_0708_064598);
-		tripsEWR2MDW_5_14_16_All.add(trip_E_1505_042208);
-		tripsEWR2MDW_5_14_16_All.add(trip_F_1505_253675);
+		tripsEWR2MDW_5_14_16_All.add(trip_E_0905_042208);
+		tripsEWR2MDW_5_14_16_All.add(trip_F_0905_253675);
 		tripsEWR2MDW_5_14_16_All.add(trip_E_0697_013688);
 		tripsEWR2MDW_5_14_16_All.add(trip_F_0697_120046);
 		tripsEWR2MDW_5_14_16_All.add(trip_E_0729_010784);
@@ -316,7 +394,7 @@ public class SystemTests {
 		tripsEWR2MDW_5_14_16_All.add(trip_E_1000_039678);
 		tripsEWR2MDW_5_14_16_All.add(trip_E_0855_026495);
 		tripsEWR2MDW_5_14_16_All.add(trip_F_0855_120753);
-		tripsEWR2MDW_5_14_16_All.add(trip_E_1000_022575);
+		tripsEWR2MDW_5_14_16_All.add(trip_E_0987_022575);
 		
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0106_004028);
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0709_014836);
@@ -325,7 +403,7 @@ public class SystemTests {
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0765_010478);
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_1617_067419);
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_1402_047817);
-		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0546_045196);
+		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_1086_045196);
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0769_006980);
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0675_012197);
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0860_013415);
@@ -333,7 +411,7 @@ public class SystemTests {
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0937_015027);
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0337_005378 );
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0731_012324);
-		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_1007_015031);
+		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_1007_024931);
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0819_009806);
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0930_013222);
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0735_014165);
@@ -342,12 +420,12 @@ public class SystemTests {
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0565_016100);
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0502_010880);
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0708_014511);
-		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_1505_042208);
+		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0905_042208);
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0697_013688);
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0729_010784);
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_1000_039678);
 		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0855_026495);
-		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_1000_022575);
+		tripsEWR2MDW_5_14_16_FilterEcon.add(trip_E_0987_022575);
 		
 		tripsEWR2MDW_5_14_16_FilterFirst.add(trip_F_0106_007746);
 		tripsEWR2MDW_5_14_16_FilterFirst.add(trip_F_0709_051338);
@@ -356,7 +434,7 @@ public class SystemTests {
 		tripsEWR2MDW_5_14_16_FilterFirst.add(trip_F_0765_089160);
 		tripsEWR2MDW_5_14_16_FilterFirst.add(trip_F_1617_434938);
 		tripsEWR2MDW_5_14_16_FilterFirst.add(trip_F_1402_198293);
-		tripsEWR2MDW_5_14_16_FilterFirst.add(trip_F_0546_204823);
+		tripsEWR2MDW_5_14_16_FilterFirst.add(trip_F_1086_204823);
 		tripsEWR2MDW_5_14_16_FilterFirst.add(trip_F_0769_028141);
 		tripsEWR2MDW_5_14_16_FilterFirst.add(trip_F_0675_043475);
 		tripsEWR2MDW_5_14_16_FilterFirst.add(trip_F_0860_071411);
@@ -373,7 +451,7 @@ public class SystemTests {
 		tripsEWR2MDW_5_14_16_FilterFirst.add(trip_F_0565_069131);
 		tripsEWR2MDW_5_14_16_FilterFirst.add(trip_F_0502_047245);
 		tripsEWR2MDW_5_14_16_FilterFirst.add(trip_F_0708_064598);
-		tripsEWR2MDW_5_14_16_FilterFirst.add(trip_F_1505_253675);
+		tripsEWR2MDW_5_14_16_FilterFirst.add(trip_F_0905_253675);
 		tripsEWR2MDW_5_14_16_FilterFirst.add(trip_F_0697_120046);
 		tripsEWR2MDW_5_14_16_FilterFirst.add(trip_F_0729_106202);
 		tripsEWR2MDW_5_14_16_FilterFirst.add(trip_F_0855_120753);
@@ -396,11 +474,11 @@ public class SystemTests {
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_0708_014511);
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_0709_014836);
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_0937_015027);
-		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_1007_015031);
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_0730_015919);
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_0565_016100);
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_0683_020388);
-		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_1000_022575);
+		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_0987_022575);
+		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_1007_024931);
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_1225_025228);
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_0855_026495);
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_1176_027767);
@@ -408,9 +486,9 @@ public class SystemTests {
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_F_0819_037260);
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_1000_039678);
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_F_0337_040917 );
-		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_1505_042208);
+		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_0905_042208);
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_F_0675_043475);
-		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_0546_045196);
+		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_1086_045196);
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_F_0502_047245);
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_E_1402_047817);
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_F_0368_050496);
@@ -433,13 +511,13 @@ public class SystemTests {
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_F_0735_130566);
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_F_1176_196684);
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_F_1402_198293);
-		tripsEWR2MDW_5_14_16_SortPrice.add(trip_F_0546_204823);
-		tripsEWR2MDW_5_14_16_SortPrice.add(trip_F_1505_253675);
+		tripsEWR2MDW_5_14_16_SortPrice.add(trip_F_1086_204823);
+		tripsEWR2MDW_5_14_16_SortPrice.add(trip_F_0905_253675);
 		tripsEWR2MDW_5_14_16_SortPrice.add(trip_F_1617_434938);
 		
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_F_1617_434938);
-		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_F_1505_253675);
-		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_F_0546_204823);
+		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_F_0905_253675);
+		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_F_1086_204823);
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_F_1402_198293);
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_F_1176_196684);
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_F_0735_130566);
@@ -462,9 +540,9 @@ public class SystemTests {
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_F_0368_050496);
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_1402_047817);
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_F_0502_047245);
-		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_0546_045196);
+		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_1086_045196);
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_F_0675_043475);
-		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_1505_042208);
+		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_0905_042208);
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_F_0337_040917 );
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_1000_039678);
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_F_0819_037260);
@@ -472,11 +550,11 @@ public class SystemTests {
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_1176_027767);
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_0855_026495);
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_1225_025228);
-		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_1000_022575);
+		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_1007_024931);
+		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_0987_022575);
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_0683_020388);
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_0565_016100);
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_0730_015919);
-		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_1007_015031);
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_0937_015027);
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_0709_014836);
 		tripsEWR2MDW_5_14_16_SortPriceReverse.add(trip_E_0708_014511);
@@ -504,8 +582,6 @@ public class SystemTests {
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_F_0368_050496);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_0502_010880);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_F_0502_047245);
-		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_0546_045196);
-		tripsEWR2MDW_5_14_16_SortTime.add(trip_F_0546_204823);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_0565_016100);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_F_0565_069131);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_0675_012197);
@@ -536,43 +612,47 @@ public class SystemTests {
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_F_0855_120753);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_0860_013415);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_F_0860_071411);
+		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_0905_042208);
+		tripsEWR2MDW_5_14_16_SortTime.add(trip_F_0905_253675);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_0930_013222);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_F_0930_060754);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_0937_015027);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_F_0937_111179);
-		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_1000_022575);
+		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_0987_022575);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_1000_039678);
-		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_1007_015031);
+		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_1007_024931);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_F_1007_091721);
+		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_1086_045196);
+		tripsEWR2MDW_5_14_16_SortTime.add(trip_F_1086_204823);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_1176_027767);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_F_1176_196684);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_1225_025228);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_F_1225_099729);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_1402_047817);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_F_1402_198293);
-		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_1505_042208);
-		tripsEWR2MDW_5_14_16_SortTime.add(trip_F_1505_253675);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_E_1617_067419);
 		tripsEWR2MDW_5_14_16_SortTime.add(trip_F_1617_434938);
 		
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_1617_067419);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_1617_434938);
-		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_1505_042208);
-		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_1505_253675);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_1402_047817);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_1402_198293);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_1225_025228);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_1225_099729);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_1176_027767);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_1176_196684);
-		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_1007_015031);
+		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_1086_045196);
+		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_1086_204823);
+		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_1007_024931);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_1007_091721);
-		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_1000_022575);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_1000_039678);
+		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_0987_022575);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_0937_015027);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_0937_111179);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_0930_013222);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_0930_060754);
+		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_0905_042208);
+		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_0905_253675);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_0860_013415);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_0860_071411);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_0855_026495);
@@ -603,14 +683,12 @@ public class SystemTests {
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_0675_043475);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_0565_016100);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_0565_069131);
-		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_0546_045196);
-		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_0546_204823);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_0502_010880);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_0502_047245);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_0368_005531);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_0368_050496);
-		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_0337_005378 );
-		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_0337_040917 );
+		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_0337_005378);
+		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_0337_040917);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_0106_004028);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_0106_007746);
 		
@@ -623,10 +701,10 @@ public class SystemTests {
 		assertEquals(1, reducedFlights.size());
 		return reducedFlights.get(0);
 	}
-
+	
 	@Before
 	public void setUp() throws Exception {
-		// TODO ServerFactory.getServer().resetServer()
+		ServerFactory.getServer().resetServer();
 	}
 
 	/**
@@ -642,31 +720,64 @@ public class SystemTests {
 		TripBuilder tripBuilder = new TripBuilder();
 		FlightServer flightServer = ServerFactory.getServer();
 
-		Airport departureAirport = Airports.getAirport("BOS");
-		Airport arrivalAirport = Airports.getAirport("EWR");
+		Airport departureAirport = Airports.getAirport("EWR");
+		Airport arrivalAirport = Airports.getAirport("MDW");
 		DateTime departureTime = DateTime.of(2016, 5, 14, 0);
 		List<ITrip> actualTrips = tripBuilder.getTrips(departureAirport, arrivalAirport, departureTime);
 		List<ITrip> expectedTrips = new LinkedList<ITrip>(tripsEWR2MDW_5_14_16_All);
 
-		ITrip bookedTrip = null;
+		ITrip bookedTrip = new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20107", "EWR"),
+				getFlight(flightsEWR2MDW_5_14_16, "31550", "TPA"),
+				getFlight(flightsEWR2MDW_5_14_16, "29044", "SJC"));
 
 		// verify that we get the expected trips
-		assertEquals(new HashSet<ITrip>(expectedTrips), new HashSet<ITrip>(actualTrips));
+		assertEquals(SortUtil.sortByTravelTime(expectedTrips), SortUtil.sortByTravelTime(actualTrips));
 
 		Consumer<String> callback = message -> {
 			fail("Server Timed out when it shouldn't have");
 		};
 
-		boolean booked = flightServer.lockServer(callback);
-		assertEquals(true, booked);
+		boolean locked = flightServer.lockServer(callback);
+		assertEquals(true, locked);
+		
 		flightServer.bookTrip(bookedTrip);
 
 		flightServer.unlockServer();
 
-		ITrip newBookedTrip = null;
-
 		List<ITrip> changedTrips = tripBuilder.getTrips(departureAirport, arrivalAirport, departureTime);
-		assertEquals(true, changedTrips.contains(newBookedTrip));
+		
+		List<ITrip> prevTrips = new LinkedList<ITrip>();
+		prevTrips.add(new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20107", "EWR"),
+				getFlight(flightsEWR2MDW_5_14_16, "31551", "TPA"),
+				getFlight(flightsEWR2MDW_5_14_16, "16358", "MIA")));
+		prevTrips.add(new FirstClassTrip(getFlight(flightsEWR2MDW_5_14_16, "20107", "EWR"),
+				getFlight(flightsEWR2MDW_5_14_16, "31551", "TPA"),
+				getFlight(flightsEWR2MDW_5_14_16, "16358", "MIA")));
+		prevTrips.add(new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20107", "EWR"),
+				getFlight(flightsEWR2MDW_5_14_16, "31550", "TPA"),
+				getFlight(flightsEWR2MDW_5_14_16, "29044", "SJC")));
+		prevTrips.add(new FirstClassTrip(getFlight(flightsEWR2MDW_5_14_16, "20107", "EWR"),
+				getFlight(flightsEWR2MDW_5_14_16, "31550", "TPA"),
+				getFlight(flightsEWR2MDW_5_14_16, "29044", "SJC")));
+		
+		List<Flight> newFlights = FlightFactory.getInstance().parseFlightsFromXML(newTripEWR2MDWXML);
+		List<ITrip> newTrips = new LinkedList<ITrip>();
+		newTrips.add(new EconomyTrip(getFlight(newFlights, "20107", "EWR"),
+				getFlight(newFlights, "31551", "TPA"),
+				getFlight(newFlights, "16358", "MIA")));
+		newTrips.add(new FirstClassTrip(getFlight(newFlights, "20107", "EWR"),
+				getFlight(newFlights, "31551", "TPA"),
+				getFlight(newFlights, "16358", "MIA")));
+		newTrips.add(new EconomyTrip(getFlight(newFlights, "20107", "EWR"),
+				getFlight(newFlights, "31550", "TPA"),
+				getFlight(newFlights, "29044", "SJC")));
+		newTrips.add(new FirstClassTrip(getFlight(newFlights, "20107", "EWR"),
+				getFlight(newFlights, "31550", "TPA"),
+				getFlight(newFlights, "29044", "SJC")));
+		
+		expectedTrips.removeAll(prevTrips);
+		expectedTrips.addAll(newTrips);
+		assertEquals(SortUtil.sortByTravelTime(expectedTrips), SortUtil.sortByTravelTime(changedTrips));
 	}
 
 	/**
@@ -683,8 +794,8 @@ public class SystemTests {
 		TripBuilder tripBuilder = new TripBuilder();
 		FlightServer flightServer = ServerFactory.getServer();
 
-		Airport departureAirport = Airports.getAirport("PHX");
-		Airport arrivalAirport = Airports.getAirport("EWR");
+		Airport departureAirport = Airports.getAirport("EWR");
+		Airport arrivalAirport = Airports.getAirport("MDW");
 		DateTime departureTime = DateTime.of(2016, 5, 14, 0);
 		DateTime returnTime = DateTime.of(2016, 5, 20, 0);
 		List<ITrip> actualDepartureTrips = tripBuilder.getTrips(departureAirport, arrivalAirport, departureTime);
@@ -692,22 +803,24 @@ public class SystemTests {
 		List<ITrip> expectedDepartureTrips = new LinkedList<ITrip>(tripsEWR2MDW_5_14_16_All);
 		List<ITrip> expectedReturnTrips = new LinkedList<ITrip>(flightsMDW2EWR_5_20_16_All);
 
-		ITrip bookedDepartureTrip = null;
-		ITrip bookedreturnTrip = null;
+		ITrip bookedDepartureTrip = new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20107", "EWR"),
+				getFlight(flightsEWR2MDW_5_14_16, "31550", "TPA"),
+				getFlight(flightsEWR2MDW_5_14_16, "29044", "SJC"));
+		//TODO: ITrip bookedreturnTrip = null;
 
 		// verify that we get the expected trips
-		assertEquals(new HashSet<ITrip>(expectedDepartureTrips), new HashSet<ITrip>(actualDepartureTrips));
-		assertEquals(new HashSet<ITrip>(expectedReturnTrips), new HashSet<ITrip>(actualreturnTrips));
+		assertEquals(SortUtil.sortByTravelTime(expectedDepartureTrips), SortUtil.sortByTravelTime(actualDepartureTrips));
+		//TODO: assertEquals(SortUtil.sortByTravelTime(expectedReturnTrips), SortUtil.sortByTravelTime(actualreturnTrips));
 
 		Consumer<String> callback = message -> {
 			fail("Server Timed out when it shouldn't have");
 		};
 
-		boolean booked = flightServer.lockServer(callback);
-		assertEquals(true, booked);
+		boolean locked = flightServer.lockServer(callback);
+		assertEquals(true, locked);
 
 		flightServer.bookTrip(bookedDepartureTrip);
-		flightServer.bookTrip(bookedreturnTrip);
+		//TODO flightServer.bookTrip(bookedreturnTrip);
 
 		flightServer.unlockServer();
 
@@ -724,32 +837,38 @@ public class SystemTests {
 	 * Goes through the normal process of booking a one way flight Search trips
 	 * going from BOS to LAX Select the cheapest option Lock the server Wait for
 	 * 2.5 minutes attempt to book the trip
-	 * 
-	 * @throws InterruptedException
+	 * @throws Exception 
 	 */
 	@Test
-	public void ServerTimeout() throws InterruptedException {
+	public void ServerTimeout() throws Exception {
+		List<Boolean> success = new LinkedList<Boolean>();
+		success.add(false);
 		TripBuilder tripBuilder = new TripBuilder();
 		FlightServer flightServer = ServerFactory.getServer();
 
-		Airport departureAirport = Airports.getAirport("PHX");
-		Airport arrivalAirport = Airports.getAirport("EWR");
+		Airport departureAirport = Airports.getAirport("EWR");
+		Airport arrivalAirport = Airports.getAirport("MDW");
 		DateTime departureTime = DateTime.of(2016, 5, 14, 0);
 		List<ITrip> actualTrips = tripBuilder.getTrips(departureAirport, arrivalAirport, departureTime);
 		List<ITrip> expectedTrips = new LinkedList<ITrip>(tripsEWR2MDW_5_14_16_All);
 
-		ITrip bookedTrip = null;
+		ITrip bookedTrip = new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20107", "EWR"),
+				getFlight(flightsEWR2MDW_5_14_16, "31550", "TPA"),
+				getFlight(flightsEWR2MDW_5_14_16, "29044", "SJC"));
 
 		// verify that we get the expected trips
-		assertEquals(new HashSet<ITrip>(expectedTrips), new HashSet<ITrip>(actualTrips));
+		assertEquals(SortUtil.sortByTravelTime(expectedTrips), SortUtil.sortByTravelTime(actualTrips));
 
 		Consumer<String> callback = message -> {
+			success.set(0, true);
 		};
 
-		boolean booked = flightServer.lockServer(callback);
-		assertEquals(true, booked);
+		boolean locked = flightServer.lockServer(callback);
+		assertEquals(true, locked);
+		
+		TimeUnit.SECONDS.sleep(TIMEOUT + 1);
 
-		flightServer.wait(TIMEOUT + 1);
+		assertTrue(success.get(0));
 
 		try {
 			flightServer.bookTrip(bookedTrip);
@@ -768,18 +887,18 @@ public class SystemTests {
 	public void SortbyPrice() {
 		TripBuilder tripBuilder = new TripBuilder();
 
-		Airport departureAirport = Airports.getAirport("PHX");
-		Airport arrivalAirport = Airports.getAirport("EWR");
+		Airport departureAirport = Airports.getAirport("EWR");
+		Airport arrivalAirport = Airports.getAirport("MDW");
 		DateTime departureTime = DateTime.of(2016, 5, 14, 0);
 		List<ITrip> actualTrips = tripBuilder.getTrips(departureAirport, arrivalAirport, departureTime);
 		List<ITrip> expectedTrips = new LinkedList<ITrip>(tripsEWR2MDW_5_14_16_All);
 
-		assertEquals(new HashSet<ITrip>(expectedTrips), new HashSet<ITrip>(actualTrips));
+		assertEquals(SortUtil.sortByTravelTime(expectedTrips), SortUtil.sortByTravelTime(actualTrips));
 
 		List<ITrip> expectedSortedASCTrips = new LinkedList<ITrip>(tripsEWR2MDW_5_14_16_SortPrice);
 		List<ITrip> expectedSortedDESCTrips = new LinkedList<ITrip>(tripsEWR2MDW_5_14_16_SortPriceReverse);
-		List<ITrip> actualASCTrips = null; // sort(actualTrips, False)
-		List<ITrip> actualDESCTrips = null; // sort(actualTrips, TRUE)
+		List<ITrip> actualASCTrips = SortUtil.sortByPrice(actualTrips);
+		List<ITrip> actualDESCTrips = SortUtil.sortByPrice(actualTrips, true);
 
 		// verify that we get the expected trips
 		assertEquals(expectedSortedASCTrips, actualASCTrips);
@@ -795,18 +914,18 @@ public class SystemTests {
 	public void SortbyTravelTime() {
 		TripBuilder tripBuilder = new TripBuilder();
 
-		Airport departureAirport = Airports.getAirport("PHX");
-		Airport arrivalAirport = Airports.getAirport("EWR");
+		Airport departureAirport = Airports.getAirport("EWR");
+		Airport arrivalAirport = Airports.getAirport("MDW");
 		DateTime departureTime = DateTime.of(2016, 5, 14, 0);
 		List<ITrip> actualTrips = tripBuilder.getTrips(departureAirport, arrivalAirport, departureTime);
 		List<ITrip> expectedTrips = new LinkedList<ITrip>(tripsEWR2MDW_5_14_16_All);
 
-		assertEquals(new HashSet<ITrip>(expectedTrips), new HashSet<ITrip>(actualTrips));
+		assertEquals(SortUtil.sortByTravelTime(expectedTrips), SortUtil.sortByTravelTime(actualTrips));
 
 		List<ITrip> expectedSortedASCTrips = new LinkedList<ITrip>(tripsEWR2MDW_5_14_16_SortTime);
 		List<ITrip> expectedSortedDESCTrips = new LinkedList<ITrip>(tripsEWR2MDW_5_14_16_SortTimeReverse);
-		List<ITrip> actualASCTrips = null; // sort(actualTrips, False)
-		List<ITrip> actualDESCTrips = null; // sort(actualTrips, TRUE)
+		List<ITrip> actualASCTrips = SortUtil.sortByTravelTime(actualTrips);
+		List<ITrip> actualDESCTrips = SortUtil.sortByTravelTime(actualTrips, true);
 
 		// verify that we get the expected trips
 		assertEquals(expectedSortedASCTrips, actualASCTrips);
@@ -834,28 +953,26 @@ public class SystemTests {
 	public void FilterBySeat() {
 		TripBuilder tripBuilder = new TripBuilder();
 
-		Airport departureAirport = Airports.getAirport("PHX");
-		Airport arrivalAirport = Airports.getAirport("EWR");
+		Airport departureAirport = Airports.getAirport("EWR");
+		Airport arrivalAirport = Airports.getAirport("MDW");
 		DateTime departureTime = DateTime.of(2016, 5, 14, 0);
 		List<ITrip> actualTrips = tripBuilder.getTrips(departureAirport, arrivalAirport, departureTime);
 		List<ITrip> expectedTrips = new LinkedList<ITrip>(tripsEWR2MDW_5_14_16_All);
 
-		assertEquals(new HashSet<ITrip>(expectedTrips), new HashSet<ITrip>(actualTrips));
+		assertEquals(SortUtil.sortByTravelTime(expectedTrips), SortUtil.sortByTravelTime(actualTrips));
 
 		List<ITrip> expectedFilteredECONTrips = new LinkedList<ITrip>(tripsEWR2MDW_5_14_16_FilterEcon);
 		List<ITrip> expectedFilteredFIRSTrips = new LinkedList<ITrip>(tripsEWR2MDW_5_14_16_FilterFirst);
-		List<ITrip> actualFilteredECONTrips = null; // filter(actualTrips,
-													// SeatClass.ECONOMY)
-		List<ITrip> actualFilteredFIRSTrips = null; // filter(actualTrips,
-													// SeatClass.FIRST)
+		List<ITrip> actualFilteredECONTrips = FilterUtil.filterByEconomy(actualTrips);
+		List<ITrip> actualFilteredFIRSTrips = FilterUtil.filterByFirstClass(actualTrips);
 
 		// verify that we get the expected trips
-		assertEquals(new HashSet<ITrip>(expectedFilteredECONTrips), new HashSet<ITrip>(actualFilteredECONTrips));
-		assertEquals(new HashSet<ITrip>(expectedFilteredFIRSTrips), new HashSet<ITrip>(actualFilteredFIRSTrips));
+		assertEquals(SortUtil.sortByTravelTime(expectedFilteredECONTrips), SortUtil.sortByTravelTime(actualFilteredECONTrips));
+		assertEquals(SortUtil.sortByTravelTime(expectedFilteredFIRSTrips), SortUtil.sortByTravelTime(actualFilteredFIRSTrips));
 
 		List<ITrip> combined = new LinkedList<ITrip>(actualFilteredECONTrips);
 		combined.addAll(actualFilteredFIRSTrips);
-		assertEquals(new HashSet<ITrip>(combined), new HashSet<ITrip>(actualFilteredFIRSTrips));
+		assertEquals(SortUtil.sortByTravelTime(expectedTrips), SortUtil.sortByTravelTime(combined));
 
 	}
 
@@ -871,13 +988,13 @@ public class SystemTests {
 		TripBuilder tripBuilder = new TripBuilder();
 		FlightServer flightServer = ServerFactory.getServer();
 
-		Airport departureAirport = Airports.getAirport("PHX");
-		Airport arrivalAirport = Airports.getAirport("EWR");
+		Airport departureAirport = Airports.getAirport("EWR");
+		Airport arrivalAirport = Airports.getAirport("MDW");
 		DateTime departureTime = DateTime.of(2016, 5, 14, 0);
 		List<ITrip> fullActualTrips = tripBuilder.getTrips(departureAirport, arrivalAirport, departureTime);
 		List<ITrip> expectedTrips = new LinkedList<ITrip>(tripsEWR2MDW_5_14_16_All);
 
-		assertEquals(new HashSet<ITrip>(expectedTrips), new HashSet<ITrip>(fullActualTrips));
+		assertEquals(SortUtil.sortByTravelTime(expectedTrips), SortUtil.sortByTravelTime(fullActualTrips));
 
 		fullActualTrips.forEach(aTrip -> {
 			Consumer<String> callback = message -> {
@@ -885,27 +1002,27 @@ public class SystemTests {
 			};
 			Flight lastFlight = aTrip.getLegs().get(aTrip.getLegs().size() - 1);
 
-			flightServer.lockServer(callback);
-			int i = 1;
-			while (lastFlight.checkEconomyAvailable(i)) {
-				i++;
-				try {
-					flightServer.bookTrip(new EconomyTrip(lastFlight));
-				} catch (Exception e) {
-					fail("Unable to book a trip which should not happen");
+			boolean locked = flightServer.lockServer(callback);
+			assertEquals(true, locked);
+			try {
+				EconomyTrip eTrip = new EconomyTrip(lastFlight);
+				while (flightServer.checkTripAvailable(eTrip)) {
+					try {
+						flightServer.bookTrip(eTrip);
+					} catch (Exception e) {
+						fail("Unable to book a trip which should not happen");
+					}
 				}
-			}
-			flightServer.unlockServer();
-
-			flightServer.lockServer(callback);
-			i = 1;
-			while (lastFlight.checkFirstClassAvailable(i)) {
-				i++;
-				try {
-					flightServer.bookTrip(new FirstClassTrip(lastFlight));
-				} catch (Exception e) {
-					fail("Unable to book a trip which should not happen");
+				FirstClassTrip fTrip = new FirstClassTrip(lastFlight);
+				while (flightServer.checkTripAvailable(fTrip)) {
+					try {
+						flightServer.bookTrip(fTrip);
+					} catch (Exception e) {
+						fail("Unable to book a trip which should not happen");
+					}
 				}
+			} catch (Exception e) {
+				fail("Unable to check a trip which should not happen");
 			}
 			flightServer.unlockServer();
 
@@ -918,7 +1035,7 @@ public class SystemTests {
 			expectedTrips.removeAll(toRemove);
 
 			List<ITrip> partialActualTrips = tripBuilder.getTrips(departureAirport, arrivalAirport, departureTime);
-			assertEquals(new HashSet<ITrip>(expectedTrips), new HashSet<ITrip>(partialActualTrips));
+			assertEquals(SortUtil.sortByTravelTime(expectedTrips), SortUtil.sortByTravelTime(partialActualTrips));
 		});
 
 		List<ITrip> emptyActualTrips = tripBuilder.getTrips(departureAirport, arrivalAirport, departureTime);

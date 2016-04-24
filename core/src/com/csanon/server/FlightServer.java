@@ -7,7 +7,6 @@ import com.csanon.Airplane;
 import com.csanon.Airport;
 import com.csanon.Flight;
 import com.csanon.ITrip;
-import com.csanon.SeatClass;
 import com.csanon.time.DateTime;
 
 public interface FlightServer {
@@ -29,4 +28,6 @@ public interface FlightServer {
 	public boolean checkTripAvailable(ITrip trip) throws Exception;
 
 	public void bookTrip(ITrip trip) throws Exception;
+	
+	public void resetServer();
 }

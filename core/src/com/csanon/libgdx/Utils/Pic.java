@@ -12,5 +12,7 @@ public class Pic {
         public static final String Black = "Splash/black.png";
         public static final String Search_Icon = "Splash/explore_icon.png";
         public static final String Blank_Popup = "Splash/blankpopup.png";
+        public static final String Check_Empty = "Splash/checkempty.png";
+        public static final String Check_Mark = "Splash/checkmark.png";
 
 }

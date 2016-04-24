@@ -31,7 +31,7 @@ public class TripsPanel extends Group {
 	public TripsPanel(DisplayTripsView displayTripsView) {
 		this.displayTripsView = displayTripsView;
 		tripButtons = new ArrayList<>();
-		setSize(800, 500);
+		setSize(600, 500);
 		table = new Table();
 		table.setTouchable(Touchable.childrenOnly);
 		scrollPane = new ScrollPane(table);
@@ -50,12 +50,9 @@ public class TripsPanel extends Group {
 	private void update() {
 		table.clear();
 		List<ITrip> trips = originalList.stream().filter(trip -> {
-			if (seatClassSelection == SeatClass.ECONOMY) {
-				return trip.hasSeatsAvailable(1);
-			} else {
-				return trip.hasSeatsAvailable(1);
-			}
+			return seatClassSelection == trip.getSeatType();
 		}).collect(Collectors.toList());
+		
 		// If there are no results
 		if (trips.size() == 0) {
 			// display no results message
@@ -114,6 +111,8 @@ public class TripsPanel extends Group {
 				// scrollSize += infoLabel.getHeight();
 			}
 		}
+        setWidth(table.getWidth());
+        scrollPane.setWidth(table.getWidth());
 		scrollPane.invalidate();
 	}
 

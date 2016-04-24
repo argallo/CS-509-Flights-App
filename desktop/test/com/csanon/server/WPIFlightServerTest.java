@@ -1,5 +1,7 @@
 package com.csanon.server;
 
+
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -18,6 +20,7 @@ import com.csanon.Airplane;
 import com.csanon.Airplanes;
 import com.csanon.Airport;
 import com.csanon.Airports;
+import com.csanon.EconomyTrip;
 import com.csanon.Flight;
 import com.csanon.time.DateTime;
 
@@ -75,7 +78,8 @@ public class WPIFlightServerTest {
 	@Test
 	public void testLockServer() {
 		FlightServer server = ServerFactory.getServer();
-		boolean result = server.lockServer(string -> {});
+		boolean result = server.lockServer(string -> {
+		});
 		assertTrue(result);
 	}
 
@@ -85,5 +89,47 @@ public class WPIFlightServerTest {
 		boolean result = server.unlockServer();
 		assertTrue(result);
 	}
+	@Test
+	public void testGetOffsetFromLatLong() throws Exception{
+		FlightServer server = ServerFactory.getServer();
+		int result=server.getOffsetFromLatLong(39.9042, 116.4074);
+		assertEquals(result,8*60*60);
+		int result2=server.getOffsetFromLatLong(18.2206,-63.0686);
+		assertEquals(result2,-4*60*60);
+	}
+	
+	
+	
+	
 
+	@Test
+	public void testResetServer() {
+		FlightServer server = ServerFactory.getServer();
+		server.resetServer();
+
+		List<Flight> results = server.getFlightsDeparting(Airports.getAirport("LAX"), DateTime.of(2016, 5, 11, -8));
+		Flight testFlight = results.get(0);
+		assertEquals(testFlight.getEconomySeats(), 24);
+		try {
+			EconomyTrip trip = new EconomyTrip(testFlight);
+			server.lockServer(null);
+			server.bookTrip(trip);
+			List<Flight> results2 = server.getFlightsDeparting(Airports.getAirport("LAX"),
+					DateTime.of(2016, 5, 11, -8));
+			Flight testFlight2 = results2.get(0);
+			assertEquals(testFlight2.getEconomySeats(), 25);
+
+			server.resetServer();
+
+			List<Flight> results3 = server.getFlightsDeparting(Airports.getAirport("LAX"),
+					DateTime.of(2016, 5, 11, -8));
+			Flight testFlight3 = results3.get(0);
+			assertEquals(testFlight3.getEconomySeats(), 24);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		server.resetServer();
+	}
 }

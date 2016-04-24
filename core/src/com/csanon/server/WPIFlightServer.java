@@ -129,7 +129,7 @@ public class WPIFlightServer implements FlightServer {
 
 			XmlReader reader = new XmlReader();
 			Element resultNode = reader.parse(result);
-
+			
 			offset = Integer.parseInt(resultNode.get("gmtOffset"));
 		}
 
@@ -185,11 +185,30 @@ public class WPIFlightServer implements FlightServer {
 		if (!lock.isLocked()) {
 			throw new Exception();
 		} else {
-
+			boolean available = true;
+			SeatClass seatClass = trip.getSeatType();
 			// For each of the flights in the trip, confirm that the specified
 			// class
 			// of seat is still available
-			return trip.hasSeatsAvailable(1);
+			for (Flight flight : trip.getLegs()) {
+
+				Flight serverFlight = getFlightFromServer(flight);
+
+				boolean result = false;
+				if (seatClass == SeatClass.ECONOMY) {
+					result = serverFlight.checkEconomyAvailable(1);
+				} else {
+					result = serverFlight.checkFirstClassAvailable(1);
+				}
+
+				// if the flight is unavailable set available to false and break
+				if (!result) {
+					available = false;
+					break;
+				}
+			}
+
+			return available;
 		}
 	}
 
@@ -215,7 +234,11 @@ public class WPIFlightServer implements FlightServer {
 		} else {
 			trip.getLegs().forEach(flight -> {
 				Flight f = getFlightFromServer(flight);
-				System.out.println(f.getFlightNum() + ", " + f.getEconomySeats());
+				if (trip.getSeatType() == SeatClass.ECONOMY) {
+					System.out.println(f.getFlightNum() + ", E" + f.getEconomySeats());
+				} else {
+					System.out.println(f.getFlightNum() + ", F" + f.getFirstClassSeats());
+				}
 			});
 			// for each flight in the trip, book the flight with the associated
 			// seating
@@ -234,7 +257,11 @@ public class WPIFlightServer implements FlightServer {
 					System.out.println("Successfully booked trip");
 					trip.getLegs().forEach(flight -> {
 						Flight f = getFlightFromServer(flight);
-						System.out.println(f.getFlightNum() + ", " + f.getEconomySeats());
+						if (trip.getSeatType() == SeatClass.ECONOMY) {
+							System.out.println(f.getFlightNum() + ", E" + f.getEconomySeats());
+						} else {
+							System.out.println(f.getFlightNum() + ", F" + f.getFirstClassSeats());
+						}
 					});
 				} else {
 					System.out.println("ERROR");
@@ -243,6 +270,20 @@ public class WPIFlightServer implements FlightServer {
 
 			}
 		}
+	}
+
+	@Override
+	public void resetServer() {
+		HttpRequest request = Unirest.get(config.getURL()).queryString("team", config.getTeamNum())
+				.queryString("action", "resetDB");
+		
+		try {
+			request.asString();
+		} catch (UnirestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 
 }
