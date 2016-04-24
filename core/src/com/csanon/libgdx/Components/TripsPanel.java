@@ -77,9 +77,9 @@ public class TripsPanel extends Group {
 
 					info += "Flight number:" + flight.getFlightNum() + " ";
 					info += "Duration: " + flight.getDuration() + "\n";
-					info += "From: " + flight.getArrivalAirport().getName() + " ";
+					info += "From: " + flight.getDepartureAirport().getName() + " ";
 					info += "Depart: " + flight.getDepartureTime() + "\n";
-					info += "To: " + flight.getDepartureAirport().getName() + " ";
+					info += "To: " + flight.getArrivalAirport().getName() + " ";
 					info += "Arrive: " + flight.getArrivalTime() + " ";
 					info += "\nEconomy: " + flight.getEconomyPrice() + " ";
 					info += "First Class: " + flight.getFirstClassPrice() + "\n";
