@@ -9,7 +9,7 @@ public class FirstClassTrip extends GeneralTrip {
 		super(flights);
 		for (Flight flight : flights) {
 			if (!flight.checkFirstClassAvailable(1)) {
-				throw new Exception ("There are no economy seats in one leg");
+				throw new Exception ("There are no first class seats in one leg");
 			}
 		}
 		seatType = SeatClass.FIRSTCLASS;
@@ -56,5 +56,17 @@ public class FirstClassTrip extends GeneralTrip {
 		} catch (Exception e) {
 			return this;
 		}
+	}
+	
+	@Override
+	public String toString() {
+		String repr = "=================================\n\tFIRST CLASS\n";
+
+		for (Flight flight : legs) {
+			repr += flight.toString() + "\n";
+		}
+		repr += "=================================\n\n";
+
+		return repr;
 	}
 }

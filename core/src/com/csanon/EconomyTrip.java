@@ -10,20 +10,20 @@ public class EconomyTrip extends GeneralTrip {
 		super(flights);
 		for (Flight flight : flights) {
 			if (!flight.checkEconomyAvailable(1)) {
-				throw new Exception ("There are no economy seats in one leg");
+				throw new Exception("There are no economy seats in one leg");
 			}
 		}
 		seatType = SeatClass.ECONOMY;
 	}
 
-	public EconomyTrip(Flight ... flights) throws Exception {
+	public EconomyTrip(Flight... flights) throws Exception {
 		this(Arrays.asList(flights));
 	}
 
 	public EconomyTrip(ITrip aTrip) throws Exception {
 		this(aTrip.getLegs());
 	}
-	
+
 	@Override
 	public Price getTotalPrice() {
 		Price totalPrice = new Price(0);
@@ -32,7 +32,7 @@ public class EconomyTrip extends GeneralTrip {
 		}
 		return totalPrice;
 	}
-	
+
 	@Override
 	public boolean hasSeatsAvailable(int anAmount) {
 		boolean returnValue = true;
@@ -41,7 +41,7 @@ public class EconomyTrip extends GeneralTrip {
 		}
 		return returnValue;
 	}
-	
+
 	@Override
 	public ITrip addLeg(Flight leg, boolean addbefore) {
 		List<Flight> nlegs = new LinkedList<Flight>();
@@ -57,5 +57,17 @@ public class EconomyTrip extends GeneralTrip {
 		} catch (Exception e) {
 			return this;
 		}
+	}
+
+	@Override
+	public String toString() {
+		String repr = "=================================\n\tECONOMY\n";
+
+		for (Flight flight : legs) {
+			repr += flight.toString() + "\n";
+		}
+		repr += "=================================\n\n";
+
+		return repr;
 	}
 }

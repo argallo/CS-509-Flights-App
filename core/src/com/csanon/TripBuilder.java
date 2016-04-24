@@ -95,8 +95,7 @@ public class TripBuilder {
 		Map<Airport, Map<String, List<Flight>>> dataset = collectData(maxHopCount, aDeparture, aDestination,
 				aDepartTime);
 
-		Collection<ITrip> validtrips = searchForTrips(maxHopCount, aDeparture, aDestination, aDepartTime,
-				dataset);
+		Collection<ITrip> validtrips = searchForTrips(maxHopCount, aDeparture, aDestination, aDepartTime, dataset);
 
 		List<ITrip> seperatedTrips = new LinkedList<ITrip>();
 		validtrips.forEach(aTrip -> {
@@ -341,7 +340,7 @@ public class TripBuilder {
 
 			// loop through possible datetimes and
 			dateTimes.forEach(time -> {
-				if (addFlightsToMap(aDeparture, time, aDataSet)) {
+				addFlightsToMap(aDeparture, time, aDataSet);
 
 					aDataSet.get(aDeparture).get(time.toServerDateString()).forEach(flight -> {
 						if (!flight.getArrivalAirport().equals(aDestination)) {
@@ -354,7 +353,6 @@ public class TripBuilder {
 									aDataSet);
 						}
 					});
-				}
 			});
 
 		}
