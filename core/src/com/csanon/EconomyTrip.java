@@ -58,7 +58,7 @@ public class EconomyTrip extends GeneralTrip {
 			return this;
 		}
 	}
-
+	
 	@Override
 	public String toString() {
 		String repr = "=================================\n\tECONOMY\n";

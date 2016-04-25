@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class FirstClassTrip extends GeneralTrip {
+	
 	public FirstClassTrip(List<Flight> flights) throws Exception {
 		super(flights);
 		for (Flight flight : flights) {
