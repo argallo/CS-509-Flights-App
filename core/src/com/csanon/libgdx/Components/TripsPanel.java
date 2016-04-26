@@ -2,7 +2,6 @@ package com.csanon.libgdx.Components;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
@@ -10,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Stack;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
+import com.csanon.FilterUtil;
 import com.csanon.Flight;
 import com.csanon.ITrip;
 import com.csanon.SeatClass;
@@ -51,10 +51,10 @@ public class TripsPanel extends Group {
 
 	private void update() {
 		table.clear();
-		List<ITrip> trips = originalList.stream().filter(trip -> {
-			return seatClassSelection == trip.getSeatType();
-		}).collect(Collectors.toList());
-		
+		System.out.println("Orgi len: " + originalList.size());
+		List<ITrip> trips = FilterUtil.filterBySeat(originalList, seatClassSelection);
+		System.out.println("Filtered list: " + trips.size());
+
 		// If there are no results
 		if (trips.size() == 0) {
 			// display no results message
@@ -68,11 +68,7 @@ public class TripsPanel extends Group {
 				info = "Trip " + (i + 1) + ": \n";
 				// each trip
 				for (int j = 0; j < trips.get(i).getLegs().size(); j++) {
-					Flight flight = trips.get(i).getLegs().get(j); // TODO: this
-																	// will be
-																	// more info
-																	// from each
-																	// leg
+					Flight flight = trips.get(i).getLegs().get(j);
 
 					info += "Flight number:" + flight.getFlightNum() + " ";
 					info += "Duration: " + flight.getDuration() + "\n";
@@ -102,7 +98,7 @@ public class TripsPanel extends Group {
 						row.setStaySelected(true);
 						// TODO: add param to tripview telling it which one it
 						// is To or Back
-						if(isRoundTrip){
+						if (isRoundTrip) {
 							displayTripsView.setSelectedTripBack(trips.get(tripindex));
 						} else {
 							displayTripsView.setSelectedTripTo(trips.get(tripindex));
@@ -117,8 +113,8 @@ public class TripsPanel extends Group {
 				// scrollSize += infoLabel.getHeight();
 			}
 		}
-        setWidth(table.getWidth());
-        scrollPane.setWidth(table.getWidth());
+		setWidth(table.getWidth());
+		scrollPane.setWidth(table.getWidth());
 		scrollPane.invalidate();
 	}
 
