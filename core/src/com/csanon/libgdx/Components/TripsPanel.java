@@ -27,9 +27,11 @@ public class TripsPanel extends Group {
 	private Table table;
 	private List<ITrip> originalList;
 	private SeatClass seatClassSelection;
+	private boolean isRoundTrip = false;
 
-	public TripsPanel(DisplayTripsView displayTripsView) {
+	public TripsPanel(DisplayTripsView displayTripsView, boolean isRoundTrip) {
 		this.displayTripsView = displayTripsView;
+		this.isRoundTrip = isRoundTrip;
 		tripButtons = new ArrayList<>();
 		setSize(600, 500);
 		table = new Table();
@@ -74,10 +76,10 @@ public class TripsPanel extends Group {
 
 					info += "Flight number:" + flight.getFlightNum() + " ";
 					info += "Duration: " + flight.getDuration() + "\n";
-					info += "From: " + flight.getDepartureAirport().getName() + " ";
+					info += "From: " + flight.getDepartureAirport().getName() + "\n";
 					info += "(" + flight.getDepartureAirport().getCode() + ") ";
 					info += "Depart: " + flight.getDepartureTime() + "\n";
-					info += "To: " + flight.getArrivalAirport().getName() + " ";
+					info += "To: " + flight.getArrivalAirport().getName() + "\n";
 					info += "(" + flight.getArrivalAirport().getCode() + ") ";
 					info += "Arrive: " + flight.getArrivalTime() + " ";
 					info += "\nEconomy: " + flight.getEconomyPrice() + " ";
@@ -100,7 +102,11 @@ public class TripsPanel extends Group {
 						row.setStaySelected(true);
 						// TODO: add param to tripview telling it which one it
 						// is To or Back
-						displayTripsView.setSelectedTripTo(trips.get(tripindex));
+						if(isRoundTrip){
+							displayTripsView.setSelectedTripBack(trips.get(tripindex));
+						} else {
+							displayTripsView.setSelectedTripTo(trips.get(tripindex));
+						}
 					}
 				});
 				Stack stack = new Stack(row, infoLabel);

@@ -3,6 +3,7 @@ package com.csanon.libgdx.Views;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.actions.Actions;
@@ -16,6 +17,7 @@ import com.csanon.TripBuilder;
 import com.csanon.libgdx.Components.Button;
 import com.csanon.libgdx.Components.ButtonAction;
 import com.csanon.libgdx.Components.DropDown;
+import com.csanon.libgdx.Components.RadioButton;
 import com.csanon.libgdx.Components.TextBox;
 import com.csanon.libgdx.Components.TextLabel;
 import com.csanon.libgdx.Components.TintedImage;
@@ -45,6 +47,8 @@ public class DisplayTripsView extends BaseView {
 	private ITrip selectedTripTo;
 	private ITrip selectedTripBack;
     private CheckBox checkBox;
+    private RadioButton price, time, economy, firstclass;
+    private TextLabel radioButtonsLabels;
 
 
 	@Override
@@ -58,6 +62,46 @@ public class DisplayTripsView extends BaseView {
 		dateLabel = new TextLabel("Departure Date:", Assets.getInstance().getSmallFont());
         roundTripLabel = new TextLabel("Round Trip?", Assets.getInstance().getSmallFont());
         returnDateLabel = new TextLabel("Return Date:", Assets.getInstance().getSmallFont());
+        radioButtonsLabels = new TextLabel("Price:     Time:          Economy:     First Class:", Assets.getInstance().getXSmallFont());
+        price = new RadioButton(Pic.Radio_BTN, Color.WHITE);
+        time = new RadioButton(Pic.Radio_BTN_Selected, Color.WHITE);
+        price.setButtonAction(new ButtonAction() {
+            @Override
+            public void buttonPressed() {
+                price.setImage(Pic.Radio_BTN_Selected);
+                time.setImage(Pic.Radio_BTN);
+                //sort by price
+            }
+        });
+        time.setButtonAction(new ButtonAction() {
+            @Override
+            public void buttonPressed() {
+                price.setImage(Pic.Radio_BTN);
+                time.setImage(Pic.Radio_BTN_Selected);
+                //sort by Time
+            }
+        });
+
+        economy = new RadioButton(Pic.Radio_BTN_Selected, Color.WHITE);
+        firstclass = new RadioButton(Pic.Radio_BTN, Color.WHITE);
+        economy.setButtonAction(new ButtonAction() {
+            @Override
+            public void buttonPressed() {
+                economy.setImage(Pic.Radio_BTN_Selected);
+                firstclass.setImage(Pic.Radio_BTN);
+                seatClassSelection = SeatClass.ECONOMY;
+                //filter by economy
+            }
+        });
+        firstclass.setButtonAction(new ButtonAction() {
+            @Override
+            public void buttonPressed() {
+                economy.setImage(Pic.Radio_BTN);
+                firstclass.setImage(Pic.Radio_BTN_Selected);
+                seatClassSelection = SeatClass.FIRSTCLASS;
+                //filter by economy
+            }
+        });
 
         //DropDowns
 		departureAirportDropdown = new DropDown();
@@ -99,8 +143,8 @@ public class DisplayTripsView extends BaseView {
 
 
         //Create Trips Panel
-		tripsPanel = new TripsPanel(this);
-		returnTripsPanel = new TripsPanel(this);
+		tripsPanel = new TripsPanel(this, false);
+		returnTripsPanel = new TripsPanel(this, true);
         if(Constants.isRoundTrip){
             returnTripsPanel.setVisible(true);
         } else {
@@ -159,6 +203,10 @@ public class DisplayTripsView extends BaseView {
 		searchButton.setSize(170, 50);
 		confirmBtn.setSize(150, 50);
         checkBox.setSize(40, 40);
+        price.setSize(25, 25);
+        time.setSize(25, 25);
+        economy.setSize(25, 25);
+        firstclass.setSize(25, 25);
 	}
 
 	@Override
@@ -173,6 +221,11 @@ public class DisplayTripsView extends BaseView {
 		tripsPanel.setPosition(10, 10);
         returnTripsPanel.setPosition(Constants.VIRTUAL_WIDTH / 2, 10);
 		confirmBtn.setPosition(1050, 605);
+        radioButtonsLabels.setPosition(700, 560);
+        price.setPosition(755,560);
+        time.setPosition(840,560);
+        economy.setPosition(985,560);
+        firstclass.setPosition(1120,560);
 
         roundTripLabel.setPosition(10, 560);
         returnDateLabel.setPosition(290, 560);
@@ -197,6 +250,11 @@ public class DisplayTripsView extends BaseView {
         addActor(returnDateLabel);
         addActor(checkBox);
         addActor(returnTextBox);
+        addActor(radioButtonsLabels);
+        addActor(price);
+        addActor(time);
+        addActor(economy);
+        addActor(firstclass);
 	}
 
 	@Override
@@ -204,10 +262,12 @@ public class DisplayTripsView extends BaseView {
 		switch (outcome) {
 		case 0:
             tripsPanel.loading();
-            if(Constants.isRoundTrip){
+            returnTripsPanel.loading();
+            confirmBtn.setVisible(false);
+            if(checkBox.isChecked()){
                 String date = departureDateTextBox.getText();
                 String returnDate = returnTextBox.getText();
-
+                returnTripsPanel.setVisible(true);
                 int year, month, day;
                 String[] dateArray = date.split("/");
                 year = Integer.parseInt(dateArray[2]);
@@ -239,7 +299,7 @@ public class DisplayTripsView extends BaseView {
 
             } else {
                 String date = departureDateTextBox.getText();
-                System.out.println(date);
+                returnTripsPanel.setVisible(false);
                 int year, month, day;
                 String[] dateArray = date.split("/");
                 year = Integer.parseInt(dateArray[2]);
@@ -257,6 +317,7 @@ public class DisplayTripsView extends BaseView {
                     public boolean act(float delta) {
                         List<ITrip> trips = (new TripBuilder()).getTrips(departAirport, arrivalAirport, depart);
                         tripsPanel.updateTrips(trips, seatClassSelection);
+
                         return true;
                     }
                 }));
@@ -283,13 +344,15 @@ public class DisplayTripsView extends BaseView {
 
 	public void setSelectedTripTo(ITrip selectedTrip) {
 		this.selectedTripTo = selectedTrip;
-		confirmBtn.setVisible(true);
+        if(!Constants.isRoundTrip ||this.selectedTripBack != null) {
+            confirmBtn.setVisible(true);
+        }
 	}
 
-	// TODO: check to see if round trips selected before setting book button to
-	// true
 	public void setSelectedTripBack(ITrip selectedTrip) {
 		this.selectedTripBack = selectedTrip;
-		confirmBtn.setVisible(true);
+        if(this.selectedTripTo != null) {
+            confirmBtn.setVisible(true);
+        }
 	}
 }
