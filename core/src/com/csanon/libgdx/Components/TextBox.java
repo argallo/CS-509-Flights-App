@@ -129,4 +129,8 @@ public class TextBox extends Group {
 		textField.setText(str);
 	}
 
+    public void setTextColor(Color tint){
+        style.fontColor = tint;
+        textField.setStyle(style);
+    }
 }
