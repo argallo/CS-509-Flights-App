@@ -9,7 +9,6 @@ import static org.mockito.Mockito.when;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -18,6 +17,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -36,16 +36,20 @@ public class SystemTests {
 
 	private final static long TIMEOUT = 2 * 60;
 	private final static List<Flight> flightsEWR2MDW_5_14_16 = new LinkedList<Flight>();
-	private final static List<Flight> flightsMDW2EWR_5_20_16 = new LinkedList<Flight>();
+	private final static List<Flight> flightsMDW2EWR_5_15_16 = new LinkedList<Flight>();
 
 	private final static List<ITrip> tripsEWR2MDW_5_14_16_All = new LinkedList<ITrip>();
-	private final static List<ITrip> flightsMDW2EWR_5_20_16_All = new LinkedList<ITrip>();
 	private final static List<ITrip> tripsEWR2MDW_5_14_16_FilterEcon = new LinkedList<ITrip>();
 	private final static List<ITrip> tripsEWR2MDW_5_14_16_FilterFirst = new LinkedList<ITrip>();
 	private final static List<ITrip> tripsEWR2MDW_5_14_16_SortPrice = new LinkedList<ITrip>();
 	private final static List<ITrip> tripsEWR2MDW_5_14_16_SortPriceReverse = new LinkedList<ITrip>();
 	private final static List<ITrip> tripsEWR2MDW_5_14_16_SortTime = new LinkedList<ITrip>();
 	private final static List<ITrip> tripsEWR2MDW_5_14_16_SortTimeReverse = new LinkedList<ITrip>();
+	
+
+	private final static List<ITrip> tripsMDW2EWR_5_15_16_All = new LinkedList<ITrip>();
+	private final static List<ITrip> tripsMDW2EWR_5_15_16_filtered = new LinkedList<ITrip>();
+	
 
 	private final static String newTripEWR2MDWXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" + "<Flights>"
 			+ "<Flight Airplane=\"717\" FlightTime=\"120\" Number=\"20107\">" + "      <Departure>"
@@ -89,6 +93,12 @@ public class SystemTests {
 		FlightFactory flightFactory = FlightFactory.getInstance();
 		List<Flight> EWR2MDW = flightFactory.parseFlightsFromXML(xml);
 		flightsEWR2MDW_5_14_16.addAll(EWR2MDW);
+		
+		encoded = Files.readAllBytes(Paths.get("FlightsMDWtoEWR.xml"));
+		xml = new String(encoded);
+		List<Flight> MDW2EWR = flightFactory.parseFlightsFromXML(xml);
+		flightsMDW2EWR_5_15_16.addAll(MDW2EWR);
+		
 
 		ITrip trip_E_0106_004028 = new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20083", "EWR"));
 		ITrip trip_F_0106_007746 = new FirstClassTrip(getFlight(flightsEWR2MDW_5_14_16, "20083", "EWR"));
@@ -591,6 +601,186 @@ public class SystemTests {
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_E_0106_004028);
 		tripsEWR2MDW_5_14_16_SortTimeReverse.add(trip_F_0106_007746);
 
+		
+		ITrip trip_4311_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4311", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "29041", "SJC"), getFlight(flightsMDW2EWR_5_15_16, "18908", "JFK"));
+		ITrip trip_4314_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4314", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "3053", "BOS"), getFlight(flightsMDW2EWR_5_15_16, "13183", "IND"));
+		ITrip trip_4315_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4315", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "13175", "IND"), getFlight(flightsMDW2EWR_5_15_16, "9375", "FLL"));
+		ITrip trip_4316_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4316", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "13822", "MCI"), getFlight(flightsMDW2EWR_5_15_16, "22712", "PHL"));
+		ITrip trip_4321_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4321", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "18259", "MSY"), getFlight(flightsMDW2EWR_5_15_16, "27807", "SAN"));
+		ITrip trip_4321_2_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4321", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "18259", "MSY"), getFlight(flightsMDW2EWR_5_15_16, "27805", "SAN"));
+		ITrip trip_4327_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4327", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "23989", "PIT"), getFlight(flightsMDW2EWR_5_15_16, "32217", "IAD"));
+		ITrip trip_4328_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4328", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "32210", "IAD"), getFlight(flightsMDW2EWR_5_15_16, "29077", "SJC"));
+		ITrip trip_4328_2_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4328", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "32203", "IAD"), getFlight(flightsMDW2EWR_5_15_16, "25269", "RDU"));
+		ITrip trip_4329_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4329", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "3706", "CLT"), getFlight(flightsMDW2EWR_5_15_16, "29077", "SJC"));
+		ITrip trip_4331_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4331", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "4979", "ORD"), getFlight(flightsMDW2EWR_5_15_16, "30345", "SEA"));
+		ITrip trip_4334_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4334", "MDW"));
+		ITrip trip_4336_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4336", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "3711", "CLT"), getFlight(flightsMDW2EWR_5_15_16, "29077", "SJC"));
+		ITrip trip_4337_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4337", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "29068", "SJC"), getFlight(flightsMDW2EWR_5_15_16, "3738", "CLT"));
+		ITrip trip_4338_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4338", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "18908", "JFK"));
+		ITrip trip_4339_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4339", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "5593", "CVG"), getFlight(flightsMDW2EWR_5_15_16, "26535", "SLC"));
+		ITrip trip_4340_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4340", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "6237", "CLE"), getFlight(flightsMDW2EWR_5_15_16, "20802", "OAK"));
+		ITrip trip_4342_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4342", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "25918", "SMF"), getFlight(flightsMDW2EWR_5_15_16, "29077", "SJC"));
+		ITrip trip_4343_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4343", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "3719", "CLT"), getFlight(flightsMDW2EWR_5_15_16, "20802", "OAK"));
+		ITrip trip_4343_2_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4343", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "3717", "CLT"), getFlight(flightsMDW2EWR_5_15_16, "19539", "LGA"));
+		ITrip trip_4344_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4344", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "20797", "OAK"), getFlight(flightsMDW2EWR_5_15_16, "17037", "MSP"));
+		ITrip trip_4345_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4345", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "1228", "ANC"), getFlight(flightsMDW2EWR_5_15_16, "3117", "BOS"));
+		ITrip trip_4346_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4346", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "17016", "MSP"));
+		ITrip trip_4347_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4347", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "29707", "SNA"), getFlight(flightsMDW2EWR_5_15_16, "18303", "MSY"));
+		ITrip trip_4347_2_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4347", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "29710", "SNA"), getFlight(flightsMDW2EWR_5_15_16, "3113", "BOS"));
+		ITrip trip_4348_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4348", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "6243", "CLE"), getFlight(flightsMDW2EWR_5_15_16, "19539", "LGA"));
+		ITrip trip_4349_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4349", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "15127", "LAX"), getFlight(flightsMDW2EWR_5_15_16, "29084", "SJC"));
+		ITrip trip_4349_2_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4349", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "15132", "LAX"), getFlight(flightsMDW2EWR_5_15_16, "3113", "BOS"));
+		ITrip trip_4351_1_E = new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4351", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "9410", "FLL"));
+
+		ITrip trip_4311_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4311", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "29041", "SJC"), getFlight(flightsMDW2EWR_5_15_16, "18908", "JFK"));
+		ITrip trip_4314_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4314", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "3053", "BOS"), getFlight(flightsMDW2EWR_5_15_16, "13183", "IND"));
+		ITrip trip_4315_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4315", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "13175", "IND"), getFlight(flightsMDW2EWR_5_15_16, "9375", "FLL"));
+		ITrip trip_4316_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4316", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "13822", "MCI"), getFlight(flightsMDW2EWR_5_15_16, "22712", "PHL"));
+		ITrip trip_4321_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4321", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "18259", "MSY"), getFlight(flightsMDW2EWR_5_15_16, "27807", "SAN"));
+		ITrip trip_4321_2_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4321", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "18259", "MSY"), getFlight(flightsMDW2EWR_5_15_16, "27805", "SAN"));
+		ITrip trip_4323_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4323", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "15753", "MEM"), getFlight(flightsMDW2EWR_5_15_16, "16386", "MIA"));
+		ITrip trip_4325_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4325", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "15753", "MEM"), getFlight(flightsMDW2EWR_5_15_16, "16386", "MIA"));
+		ITrip trip_4327_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4327", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "23989", "PIT"), getFlight(flightsMDW2EWR_5_15_16, "32217", "IAD"));
+		ITrip trip_4327_2_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4327", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "23987", "PIT"), getFlight(flightsMDW2EWR_5_15_16, "16386", "MIA"));
+		ITrip trip_4327_3_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4327", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "23991", "PIT"), getFlight(flightsMDW2EWR_5_15_16, "16386", "MIA"));
+		ITrip trip_4328_2_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4328", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "32203", "IAD"), getFlight(flightsMDW2EWR_5_15_16, "25269", "RDU"));
+		ITrip trip_4331_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4331", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "4979", "ORD"), getFlight(flightsMDW2EWR_5_15_16, "30345", "SEA"));
+		ITrip trip_4334_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4334", "MDW"));
+		ITrip trip_4337_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4337", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "29068", "SJC"), getFlight(flightsMDW2EWR_5_15_16, "3738", "CLT"));
+		ITrip trip_4338_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4338", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "18908", "JFK"));
+		ITrip trip_4339_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4339", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "5593", "CVG"), getFlight(flightsMDW2EWR_5_15_16, "26535", "SLC"));
+		ITrip trip_4340_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4340", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "6237", "CLE"), getFlight(flightsMDW2EWR_5_15_16, "20802", "OAK"));
+		ITrip trip_4343_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4343", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "3719", "CLT"), getFlight(flightsMDW2EWR_5_15_16, "20802", "OAK"));
+		ITrip trip_4343_2_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4343", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "3717", "CLT"), getFlight(flightsMDW2EWR_5_15_16, "19539", "LGA"));
+		ITrip trip_4344_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4344", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "20797", "OAK"), getFlight(flightsMDW2EWR_5_15_16, "17037", "MSP"));
+		ITrip trip_4345_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4345", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "1228", "ANC"), getFlight(flightsMDW2EWR_5_15_16, "3117", "BOS"));
+		ITrip trip_4346_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4346", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "17016", "MSP"));
+		ITrip trip_4347_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4347", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "29707", "SNA"), getFlight(flightsMDW2EWR_5_15_16, "18303", "MSY"));
+		ITrip trip_4347_2_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4347", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "29710", "SNA"), getFlight(flightsMDW2EWR_5_15_16, "3113", "BOS"));
+		ITrip trip_4348_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4348", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "6243", "CLE"), getFlight(flightsMDW2EWR_5_15_16, "19539", "LGA"));
+		ITrip trip_4349_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4349", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "15127", "LAX"), getFlight(flightsMDW2EWR_5_15_16, "29084", "SJC"));
+		ITrip trip_4349_2_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4349", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "15132", "LAX"), getFlight(flightsMDW2EWR_5_15_16, "3113", "BOS"));
+		ITrip trip_4351_1_F = new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4351", "MDW"),
+				getFlight(flightsMDW2EWR_5_15_16, "9410", "FLL"));
+		
+		tripsMDW2EWR_5_15_16_All.add(trip_4311_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4314_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4315_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4316_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4321_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4321_2_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4327_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4328_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4328_2_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4329_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4331_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4334_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4336_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4337_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4338_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4339_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4340_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4342_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4343_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4343_2_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4344_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4345_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4346_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4347_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4347_2_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4348_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4349_1_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4349_2_E);
+		tripsMDW2EWR_5_15_16_All.add(trip_4351_1_E);
+
+		tripsMDW2EWR_5_15_16_All.add(trip_4311_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4314_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4315_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4316_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4321_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4321_2_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4323_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4325_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4327_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4327_2_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4327_3_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4328_2_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4331_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4334_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4337_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4338_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4339_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4340_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4343_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4343_2_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4344_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4345_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4346_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4347_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4347_2_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4348_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4349_1_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4349_2_F);
+		tripsMDW2EWR_5_15_16_All.add(trip_4351_1_F);
+		
+
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4351_1_E);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4351_1_F);
 	}
 
 	private static Flight getFlight(List<Flight> flights, String flightNum, String departureCode) {
@@ -602,6 +792,11 @@ public class SystemTests {
 
 	@Before
 	public void setUp() throws Exception {
+		ServerFactory.getServer().resetServer();
+	}
+	
+	@After
+	public void breakDown() throws Exception {
 		ServerFactory.getServer().resetServer();
 	}
 
@@ -686,11 +881,11 @@ public class SystemTests {
 		Airport departureAirport = Airports.getAirport("EWR");
 		Airport arrivalAirport = Airports.getAirport("MDW");
 		DateTime departureTime = DateTime.of(2016, 5, 14, 0);
-		DateTime returnTime = DateTime.of(2016, 5, 20, 0);
+		DateTime returnTime = DateTime.of(2016, 5, 15, 0);
 		List<ITrip> actualDepartureTrips = tripBuilder.getTrips(departureAirport, arrivalAirport, departureTime);
-		List<ITrip> actualreturnTrips = tripBuilder.getTrips(arrivalAirport, departureAirport, departureTime);
+		List<ITrip> actualreturnTrips = tripBuilder.getTrips(arrivalAirport, departureAirport, returnTime);
 		List<ITrip> expectedDepartureTrips = new LinkedList<ITrip>(tripsEWR2MDW_5_14_16_All);
-		List<ITrip> expectedReturnTrips = new LinkedList<ITrip>(flightsMDW2EWR_5_20_16_All);
+		List<ITrip> expectedReturnTrips = new LinkedList<ITrip>(tripsMDW2EWR_5_15_16_All);
 
 		ITrip bookedDepartureTrip = new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20107", "EWR"),
 				getFlight(flightsEWR2MDW_5_14_16, "31550", "TPA"), getFlight(flightsEWR2MDW_5_14_16, "29044", "SJC"));
@@ -699,13 +894,19 @@ public class SystemTests {
 		// verify that we get the expected trips
 		assertEquals(SortUtil.sortByTravelTime(expectedDepartureTrips),
 				SortUtil.sortByTravelTime(actualDepartureTrips));
-		// TODO: assertEquals(SortUtil.sortByTravelTime(expectedReturnTrips),
-		// SortUtil.sortByTravelTime(actualreturnTrips));
+		System.out.println("exd: " + expectedDepartureTrips.size() + " acd: " + actualDepartureTrips.size() + " exr: " + expectedReturnTrips.size() + " acr: " + actualreturnTrips.size());
+		assertEquals(SortUtil.sortByTravelTime(expectedReturnTrips),
+				SortUtil.sortByTravelTime(actualreturnTrips));
 
 		Consumer<String> callback = message -> {
 			fail("Server Timed out when it shouldn't have");
 		};
 
+		//TODO: add check for filter
+		List<ITrip> actualfiltered = FilterUtil.filterByTrip(bookedDepartureTrip, actualreturnTrips);
+		assertEquals(SortUtil.sortByTravelTime(tripsMDW2EWR_5_15_16_filtered),
+				SortUtil.sortByTravelTime(actualfiltered));
+		
 		boolean locked = flightServer.lockServer(callback);
 		assertEquals(true, locked);
 

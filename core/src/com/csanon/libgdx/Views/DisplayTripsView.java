@@ -104,7 +104,7 @@ public class DisplayTripsView extends BaseView {
                     firstclass.setImage(Pic.Radio_BTN);
                 }
                 seatClassSelection = SeatClass.ECONOMY;
-                //filter by economy
+                tripsPanel.setSeatClass(seatClassSelection);
             }
         });
         firstclass.setButtonAction(new ButtonAction() {
@@ -118,7 +118,7 @@ public class DisplayTripsView extends BaseView {
                     economy.setImage(Pic.Radio_BTN);
                 }
                 seatClassSelection = SeatClass.FIRSTCLASS;
-                //filter by economy
+                tripsPanel.setSeatClass(seatClassSelection);
             }
         });
 
