@@ -63,16 +63,16 @@ public class DisplayTripsView extends BaseView {
         roundTripLabel = new TextLabel("Round Trip?", Assets.getInstance().getSmallFont());
         returnDateLabel = new TextLabel("Return Date:", Assets.getInstance().getSmallFont());
         radioButtonsLabels = new TextLabel("Price:     Time:          Economy:     First Class:", Assets.getInstance().getXSmallFont());
-        price = new RadioButton(Pic.Arrow_Up, Color.WHITE);
+        price = new RadioButton(Pic.Arrow_Down, Color.WHITE);
         time = new RadioButton(Pic.Radio_BTN, Color.WHITE);
         price.setButtonAction(new ButtonAction() {
             @Override
             public void buttonPressed() {
-                if(price.getMainImage().equals(Pic.Arrow_Down)||price.getMainImage().equals(Pic.Radio_BTN)) {
-                    price.setImage(Pic.Arrow_Up);
-                    time.setImage(Pic.Radio_BTN);
-                } else if(price.getMainImage().equals(Pic.Arrow_Up)){
+                if(price.getMainImage().equals(Pic.Arrow_Up)||price.getMainImage().equals(Pic.Radio_BTN)) {
                     price.setImage(Pic.Arrow_Down);
+                    time.setImage(Pic.Radio_BTN);
+                } else if(price.getMainImage().equals(Pic.Arrow_Down)){
+                    price.setImage(Pic.Arrow_Up);
                     time.setImage(Pic.Radio_BTN);
                 }
                 //sort by price
@@ -81,44 +81,34 @@ public class DisplayTripsView extends BaseView {
         time.setButtonAction(new ButtonAction() {
             @Override
             public void buttonPressed() {
-                if(time.getMainImage().equals(Pic.Arrow_Down)||time.getMainImage().equals(Pic.Radio_BTN)) {
-                    time.setImage(Pic.Arrow_Up);
-                    price.setImage(Pic.Radio_BTN);
-                } else if(time.getMainImage().equals(Pic.Arrow_Up)){
+                if(time.getMainImage().equals(Pic.Arrow_Up)||time.getMainImage().equals(Pic.Radio_BTN)) {
                     time.setImage(Pic.Arrow_Down);
+                    price.setImage(Pic.Radio_BTN);
+                } else if(time.getMainImage().equals(Pic.Arrow_Down)){
+                    time.setImage(Pic.Arrow_Up);
                     price.setImage(Pic.Radio_BTN);
                 }
             }
         });
 
-        economy = new RadioButton(Pic.Arrow_Up, Color.WHITE);
+        economy = new RadioButton(Pic.Radio_BTN_Selected, Color.WHITE);
         firstclass = new RadioButton(Pic.Radio_BTN, Color.WHITE);
         economy.setButtonAction(new ButtonAction() {
             @Override
             public void buttonPressed() {
-                if(economy.getMainImage().equals(Pic.Arrow_Down)||economy.getMainImage().equals(Pic.Radio_BTN)) {
-                    economy.setImage(Pic.Arrow_Up);
-                    firstclass.setImage(Pic.Radio_BTN);
-                } else if(economy.getMainImage().equals(Pic.Arrow_Up)){
-                    economy.setImage(Pic.Arrow_Down);
-                    firstclass.setImage(Pic.Radio_BTN);
-                }
+                economy.setImage(Pic.Radio_BTN_Selected);
+                firstclass.setImage(Pic.Radio_BTN);
                 seatClassSelection = SeatClass.ECONOMY;
-                tripsPanel.setSeatClass(seatClassSelection);
+                //filter by economy
             }
         });
         firstclass.setButtonAction(new ButtonAction() {
             @Override
             public void buttonPressed() {
-                if(firstclass.getMainImage().equals(Pic.Arrow_Down)||firstclass.getMainImage().equals(Pic.Radio_BTN)) {
-                    firstclass.setImage(Pic.Arrow_Up);
-                    economy.setImage(Pic.Radio_BTN);
-                } else if(firstclass.getMainImage().equals(Pic.Arrow_Up)){
-                    firstclass.setImage(Pic.Arrow_Down);
-                    economy.setImage(Pic.Radio_BTN);
-                }
+                economy.setImage(Pic.Radio_BTN);
+                firstclass.setImage(Pic.Radio_BTN_Selected);
                 seatClassSelection = SeatClass.FIRSTCLASS;
-                tripsPanel.setSeatClass(seatClassSelection);
+                //filter by economy
             }
         });
 
