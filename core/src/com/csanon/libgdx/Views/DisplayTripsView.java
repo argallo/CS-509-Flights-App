@@ -1,8 +1,5 @@
 package com.csanon.libgdx.Views;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -30,6 +27,9 @@ import com.csanon.libgdx.Utils.Pic;
 import com.csanon.libgdx.Utils.Tint;
 import com.csanon.libgdx.Utils.ViewID;
 import com.csanon.time.DateTime;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class DisplayTripsView extends BaseView {
 
