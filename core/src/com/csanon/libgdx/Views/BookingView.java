@@ -1,13 +1,16 @@
 package com.csanon.libgdx.Views;
 
+import java.util.List;
 import java.util.function.Consumer;
 
+import com.csanon.Flight;
 import com.csanon.ITrip;
 import com.csanon.SeatClass;
 import com.csanon.libgdx.Components.AbsPopup;
 import com.csanon.libgdx.Components.BookingPopup;
 import com.csanon.libgdx.Components.Button;
 import com.csanon.libgdx.Components.ButtonAction;
+import com.csanon.libgdx.Components.TextLabel;
 import com.csanon.libgdx.Components.TintedImage;
 import com.csanon.libgdx.ScreenManaging.TransitionType;
 import com.csanon.libgdx.ScreenManaging.ViewManager;
@@ -31,6 +34,8 @@ public class BookingView extends BaseView {
 	private ITrip tripBack;
 	private SeatClass seatClass;
 	private BookingPopup popup;
+	private Button backBtn;
+	private TextLabel toTripInfo, fromTripInfo;
 
 	@Override
 	public void init() {
@@ -41,13 +46,19 @@ public class BookingView extends BaseView {
 		popup = new BookingPopup(this);
 		background = new TintedImage(Pic.Pixel, Tint.BACKGROUND_COLOR);
 		confirmBtn = new Button(Pic.Pixel, Tint.GRAY, "Confirm", Assets.getInstance().getXSmallFont());
+		backBtn = new Button(Pic.Pixel, Tint.GRAY, "Cancel", Assets.getInstance().getXSmallFont());
 		confirmBtn.setButtonAction(new ButtonAction() {
 			@Override
 			public void buttonPressed() {
 				handle(CONFIRM);
 			}
 		});
-
+		backBtn.setButtonAction(new ButtonAction() {
+			@Override
+			public void buttonPressed() {
+				ViewManager.getInstance().transitionViewTo(ViewID.DISPLAY_SEARCH, TransitionType.SLIDE_L_TRANSITION);
+			}
+		});
 		// TODO make real callback
 		Consumer<String> callback = message -> {
 			popup.activatePopup(message);
@@ -68,23 +79,56 @@ public class BookingView extends BaseView {
 				// System.out.println("ERROR");
 			}
 		}
+
+		toTripInfo = new TextLabel("", Assets.getInstance().getXSmallFont());
+		fromTripInfo = new TextLabel("", Assets.getInstance().getXSmallFont());
+
+		populateInfo();
+
+
+	}
+
+	public void populateInfo(){
+		String info = "";
+		List<Flight> flights = Constants.TripTO.getLegs();
+		for(Flight flight: flights){
+			info += "Flight number:" + flight.getFlightNum() + " ";
+			info += "Duration: " + flight.getDuration() + "\n";
+			info += "From: " + flight.getDepartureAirport().getName() + "\n";
+			info += "(" + flight.getDepartureAirport().getCode() + ") ";
+			info += "Depart: " + flight.getDepartureTime() + "\n";
+			info += "To: " + flight.getArrivalAirport().getName() + "\n";
+			info += "(" + flight.getArrivalAirport().getCode() + ") ";
+			info += "Arrive: " + flight.getArrivalTime() + " ";
+			info += "\nEconomy: " + flight.getEconomyPrice() + " ";
+			info += "First Class: " + flight.getFirstClassPrice() + "\n";
+		}
+		info+= "Total Layover Time: "+Constants.TripTO.getTotalLayoverTime()+"\n";
+		info+= "Total Travel Time: "+Constants.TripTO.getTotalTravelTime()+"\n";
+		info+= "Total Price: "+Constants.TripTO.getTotalPrice();
+		toTripInfo.setText(info);
+		toTripInfo.setPosition(Constants.VIRTUAL_WIDTH/2-toTripInfo.getWidth()/2, 400);
 	}
 
 	@Override
 	public void setSizes() {
 		background.setSize(Constants.VIRTUAL_WIDTH, Constants.VIRTUAL_HEIGHT);
-		confirmBtn.setSize(200, 100);
+		confirmBtn.setSize(200, 80);
+		backBtn.setSize(200, 80);
 	}
 
 	@Override
 	public void setPositions() {
-		confirmBtn.setPosition(640, 600);
+		confirmBtn.setPosition(590, 30);
+		backBtn.setPosition(50, 30);
 	}
 
 	@Override
 	public void addActors() {
 		addActor(background);
+		addActor(toTripInfo);
 		addActor(confirmBtn);
+		addActor(backBtn);
 		addActor(popup);
 	}
 

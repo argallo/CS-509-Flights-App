@@ -66,4 +66,9 @@ public class TextLabel extends Group {
     public void setAlign(int align){
         label.setAlignment(align);
     }
+
+    @Override
+    public float getWidth() {
+        return label.getWidth();
+    }
 }
