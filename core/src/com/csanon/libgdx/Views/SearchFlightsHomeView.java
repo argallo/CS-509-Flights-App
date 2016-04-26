@@ -1,8 +1,5 @@
 package com.csanon.libgdx.Views;
 
-import java.util.LinkedList;
-import java.util.List;
-
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
@@ -23,6 +20,9 @@ import com.csanon.libgdx.Utils.Pic;
 import com.csanon.libgdx.Utils.Tint;
 import com.csanon.libgdx.Utils.ViewID;
 import com.csanon.time.DateTime;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Created by Gallo on 3/29/2016.
@@ -144,6 +144,7 @@ public class SearchFlightsHomeView  extends BaseView{
     public void handle(int outcome) {
         switch (outcome){
             case 0:
+                ViewManager.getInstance().unfocusAll();
                 if(checkBox.isChecked()){
                     if (textBox.isValid() && returnTextBox.isValid()) {
                         String date = textBox.getText();
@@ -164,15 +165,20 @@ public class SearchFlightsHomeView  extends BaseView{
                         month = Integer.parseInt(dateArray[0]);
                         DateTime returnDT = DateTime.of(year, month, day, 0);
 
-                        //get airports selected
-                        Airport departAirport = getAirport(departureAirportDropdown.getCurrentItem());
-                        Airport arrivalAirport = getAirport(arrivalAirportDropdown.getCurrentItem());
+                        if(depart.compareTo(returnDT)>0){
+                            returnTextBox.setTextColor(com.badlogic.gdx.graphics.Color.RED);
+                        } else {
 
-                        //Update Globals
-                        Constants.setGlobals(departAirport, arrivalAirport, depart, returnDT, true);
+                            //get airports selected
+                            Airport departAirport = getAirport(departureAirportDropdown.getCurrentItem());
+                            Airport arrivalAirport = getAirport(arrivalAirportDropdown.getCurrentItem());
 
-                        //Transition to next screen
-                        ViewManager.getInstance().transitionViewTo(ViewID.DISPLAY_SEARCH, TransitionType.SLIDE_R_TRANSITION);
+                            //Update Globals
+                            Constants.setGlobals(departAirport, arrivalAirport, depart, returnDT, true);
+
+                            //Transition to next screen
+                            ViewManager.getInstance().transitionViewTo(ViewID.DISPLAY_SEARCH, TransitionType.SLIDE_R_TRANSITION);
+                        }
                     }
                 } else {
                     if (textBox.isValid()) {

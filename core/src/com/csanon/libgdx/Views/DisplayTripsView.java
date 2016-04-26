@@ -237,6 +237,7 @@ public class DisplayTripsView extends BaseView {
 		tripsPanel.setPosition(10, 10);
 		returnTripsPanel.setPosition(Constants.VIRTUAL_WIDTH / 2, 10);
 		confirmBtn.setPosition(1050, 605);
+
 		radioButtonsLabels.setPosition(700, 560);
 		price.setPosition(755, 560);
 		time.setPosition(840, 560);
@@ -247,6 +248,7 @@ public class DisplayTripsView extends BaseView {
 		returnDateLabel.setPosition(290, 560);
 		checkBox.setPosition(245, 560);
 		returnTextBox.setPosition(510, 560);
+
 	}
 
 	@Override
@@ -277,6 +279,7 @@ public class DisplayTripsView extends BaseView {
 	public void handle(int outcome) {
 		switch (outcome) {
 		case 0:
+			ViewManager.getInstance().unfocusAll();
 			tripsPanel.loading();
 			returnTripsPanel.loading();
 			confirmBtn.setVisible(false);
@@ -297,21 +300,27 @@ public class DisplayTripsView extends BaseView {
 				month = Integer.parseInt(dateArray[0]);
 				DateTime returnDT = DateTime.of(year, month, day, 0);
 
-				Airport departAirport = getAirport(departureAirportDropdown.getCurrentItem());
-				Airport arrivalAirport = getAirport(arrivalAirportDropdown.getCurrentItem());
+				if (depart.compareTo(returnDT) > 0) {
+					returnTextBox.setTextColor(com.badlogic.gdx.graphics.Color.RED);
+				} else {
 
-				Constants.setGlobals(departAirport, arrivalAirport, depart, returnDT, true);
-				// Run the search delayed so we can see the loading message
-				addAction(Actions.sequence(Actions.delay(2f), new Action() {
-					@Override
-					public boolean act(float delta) {
-						List<ITrip> trips = (new TripBuilder()).getTrips(departAirport, arrivalAirport, depart);
-						List<ITrip> returnTrips = (new TripBuilder()).getTrips(arrivalAirport, departAirport, returnDT);
-						tripsPanel.updateTrips(trips, seatClassSelection);
-						returnTripsPanel.updateTrips(returnTrips, seatClassSelection);
-						return true;
-					}
-				}));
+					Airport departAirport = getAirport(departureAirportDropdown.getCurrentItem());
+					Airport arrivalAirport = getAirport(arrivalAirportDropdown.getCurrentItem());
+
+					Constants.setGlobals(departAirport, arrivalAirport, depart, returnDT, true);
+					// Run the search delayed so we can see the loading message
+					addAction(Actions.sequence(Actions.delay(2f), new Action() {
+						@Override
+						public boolean act(float delta) {
+							List<ITrip> trips = (new TripBuilder()).getTrips(departAirport, arrivalAirport, depart);
+							List<ITrip> returnTrips = (new TripBuilder()).getTrips(arrivalAirport, departAirport,
+									returnDT);
+							tripsPanel.updateTrips(trips, seatClassSelection);
+							returnTripsPanel.updateTrips(returnTrips, seatClassSelection);
+							return true;
+						}
+					}));
+				}
 
 			} else {
 				String date = departureDateTextBox.getText();
