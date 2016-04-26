@@ -779,7 +779,29 @@ public class SystemTests {
 		tripsMDW2EWR_5_15_16_All.add(trip_4351_1_F);
 		
 
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4342_1_E);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4343_1_E);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4343_2_E);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4344_1_E);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4345_1_E);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4346_1_E);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4347_1_E);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4347_2_E);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4348_1_E);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4349_1_E);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4349_2_E);
 		tripsMDW2EWR_5_15_16_filtered.add(trip_4351_1_E);
+		
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4343_1_F);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4343_2_F);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4344_1_F);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4345_1_F);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4346_1_F);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4347_1_F);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4347_2_F);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4348_1_F);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4349_1_F);
+		tripsMDW2EWR_5_15_16_filtered.add(trip_4349_2_F);
 		tripsMDW2EWR_5_15_16_filtered.add(trip_4351_1_F);
 	}
 

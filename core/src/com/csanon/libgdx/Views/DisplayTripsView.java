@@ -159,8 +159,8 @@ public class DisplayTripsView extends BaseView {
 		});
 
 		// Create Trips Panel
-		tripsPanel = new TripsPanel(this, false);
-		returnTripsPanel = new TripsPanel(this, true);
+		tripsPanel = new TripsPanel(this, false, true);
+		returnTripsPanel = new TripsPanel(this, true, false);
 		if (Constants.isRoundTrip) {
 			returnTripsPanel.setVisible(true);
 		} else {
@@ -359,13 +359,17 @@ public class DisplayTripsView extends BaseView {
 	}
 
 	public void setSelectedTripTo(ITrip selectedTrip) {
+		this.selectedTripTo = selectedTrip;
 		if (selectedTrip == null) {
 			confirmBtn.setVisible(false);
 		} else {
-			this.selectedTripTo = selectedTrip;
 			if (!Constants.isRoundTrip) {
 				confirmBtn.setVisible(true);
+			} else {
+				returnTripsPanel.unselect();
+				confirmBtn.setVisible(false);
 			}
+			returnTripsPanel.setSelectable(true);
 		}
 	}
 

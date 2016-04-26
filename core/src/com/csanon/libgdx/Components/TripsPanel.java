@@ -1,8 +1,5 @@
 package com.csanon.libgdx.Components;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -18,6 +15,9 @@ import com.csanon.libgdx.Utils.Pic;
 import com.csanon.libgdx.Utils.Tint;
 import com.csanon.libgdx.Views.DisplayTripsView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TripsPanel extends Group {
 
 	private ScrollPane scrollPane;
@@ -28,14 +28,19 @@ public class TripsPanel extends Group {
 	private List<ITrip> originalList;
 	private SeatClass seatClassSelection;
 	private boolean isRoundTrip = false;
+    private boolean selectable = true;
 
-	public TripsPanel(DisplayTripsView displayTripsView, boolean isRoundTrip) {
+	public TripsPanel(DisplayTripsView displayTripsView, boolean isRoundTrip, boolean selectable) {
 		this.displayTripsView = displayTripsView;
 		this.isRoundTrip = isRoundTrip;
 		tripButtons = new ArrayList<>();
 		setSize(600, 500);
 		table = new Table();
-		table.setTouchable(Touchable.childrenOnly);
+        if(selectable) {
+            table.setTouchable(Touchable.childrenOnly);
+        } else {
+            table.setTouchable(Touchable.disabled);
+        }
 		scrollPane = new ScrollPane(table);
 		scrollPane.setFillParent(true);
 		addActor(scrollPane);
@@ -74,14 +79,14 @@ public class TripsPanel extends Group {
 
 					info += "Flight number:" + flight.getFlightNum() + " ";
 					info += "Duration: " + flight.getDuration() + "\n";
-					info += "From: " + flight.getDepartureAirport().getName() + "\n";
-					info += "(" + flight.getDepartureAirport().getCode() + ") ";
+					info += "From: " + flight.getDepartureAirport().getName() + " ";
+					info += "(" + flight.getDepartureAirport().getCode() + ")\n";
 					info += "Depart: " + flight.getDepartureTime() + "\n";
-					info += "To: " + flight.getArrivalAirport().getName() + "\n";
-					info += "(" + flight.getArrivalAirport().getCode() + ") ";
+					info += "To: " + flight.getArrivalAirport().getName() + " ";
+					info += "(" + flight.getArrivalAirport().getCode() + ")\n";
 					info += "Arrive: " + flight.getArrivalTime() + " ";
 				}
-				info += "\nTotal Price: " + trips.get(i).getTotalPrice() + "\n";
+				info += "\nTotal Price: " + trips.get(i).getTotalPrice() + "\n\n";
 
 				TextLabel infoLabel = new TextLabel(info, Assets.getInstance().getXSmallFont(), Align.left);
 				infoLabel.setTouchable(Touchable.disabled);
@@ -131,4 +136,19 @@ public class TripsPanel extends Group {
 		update();
 	}
 
+    public void setSelectable(boolean selectable) {
+        this.selectable = selectable;
+        if(selectable) {
+            table.setTouchable(Touchable.childrenOnly);
+        } else {
+            table.setTouchable(Touchable.disabled);
+        }
+    }
+
+    public void unselect(){
+        for (Button button : tripButtons) {
+            button.setTint(Tint.GRAY);
+            button.setStaySelected(false);
+        }
+    }
 }
