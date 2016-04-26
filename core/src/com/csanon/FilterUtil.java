@@ -22,10 +22,6 @@ public class FilterUtil {
 	public static List<ITrip> filterByTrip(ITrip filtertrip, List<ITrip> returnTrips) {
 		Predicate<ITrip> filter = trip -> filtertrip.getLegs().get(filtertrip.getLegs().size() - 1).getArrivalTime()
 				.getDifference(trip.getLegs().get(0).getDepartureTime()).toMinutes() >= 60;
-		returnTrips.forEach(trip -> {
-			System.out.println(filtertrip.getLegs().get(filtertrip.getLegs().size() - 1).getArrivalTime()
-					.getDifference(trip.getLegs().get(0).getDepartureTime()).toMinutes());
-		});
 		return filterer(returnTrips, filter);
 	}
 
