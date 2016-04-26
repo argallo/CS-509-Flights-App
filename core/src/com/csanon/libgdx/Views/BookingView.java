@@ -1,8 +1,5 @@
 package com.csanon.libgdx.Views;
 
-import java.util.List;
-import java.util.function.Consumer;
-
 import com.csanon.Flight;
 import com.csanon.ITrip;
 import com.csanon.SeatClass;
@@ -21,6 +18,9 @@ import com.csanon.libgdx.Utils.Tint;
 import com.csanon.libgdx.Utils.ViewID;
 import com.csanon.server.FlightServer;
 import com.csanon.server.ServerFactory;
+
+import java.util.List;
+import java.util.function.Consumer;
 
 /**
  * Created by Gallo on 4/10/2016.
@@ -99,15 +99,34 @@ public class BookingView extends BaseView {
 			info += "Depart: " + flight.getDepartureTime() + "\n";
 			info += "To: " + flight.getArrivalAirport().getName() + "\n";
 			info += "(" + flight.getArrivalAirport().getCode() + ") ";
-			info += "Arrive: " + flight.getArrivalTime() + " ";
-			info += "\nEconomy: " + flight.getEconomyPrice() + " ";
-			info += "First Class: " + flight.getFirstClassPrice() + "\n";
+			info += "Arrive: " + flight.getArrivalTime() + "\n\n";
 		}
 		info+= "Total Layover Time: "+Constants.TripTO.getTotalLayoverTime()+"\n";
 		info+= "Total Travel Time: "+Constants.TripTO.getTotalTravelTime()+"\n";
 		info+= "Total Price: "+Constants.TripTO.getTotalPrice();
 		toTripInfo.setText(info);
-		toTripInfo.setPosition(Constants.VIRTUAL_WIDTH/2-toTripInfo.getWidth()/2, 400);
+        toTripInfo.setPosition(Constants.VIRTUAL_WIDTH / 2 - toTripInfo.getWidth() / 2, 400);
+        if(Constants.isRoundTrip){
+            String info2 = "";
+            List<Flight> flights2 = Constants.TripBACK.getLegs();
+            for(Flight flight: flights2){
+                info2 += "Flight number:" + flight.getFlightNum() + " ";
+                info2 += "Duration: " + flight.getDuration() + "\n";
+                info2 += "From: " + flight.getDepartureAirport().getName() + "\n";
+                info2 += "(" + flight.getDepartureAirport().getCode() + ") ";
+                info2 += "Depart: " + flight.getDepartureTime() + "\n";
+                info2 += "To: " + flight.getArrivalAirport().getName() + "\n";
+                info2 += "(" + flight.getArrivalAirport().getCode() + ") ";
+                info2 += "Arrive: " + flight.getArrivalTime() + "\n\n";
+            }
+            info2+= "Total Layover Time: "+Constants.TripBACK.getTotalLayoverTime()+"\n";
+            info2+= "Total Travel Time: "+Constants.TripBACK.getTotalTravelTime()+"\n";
+            info2+= "Total Price: "+Constants.TripBACK.getTotalPrice();
+            fromTripInfo.setText(info2);
+            fromTripInfo.setPosition(Constants.VIRTUAL_WIDTH / 2 + 300, 400);
+            toTripInfo.setPosition(Constants.VIRTUAL_WIDTH / 2 - 300, 400);
+        }
+
 	}
 
 	@Override
@@ -127,6 +146,7 @@ public class BookingView extends BaseView {
 	public void addActors() {
 		addActor(background);
 		addActor(toTripInfo);
+		addActor(fromTripInfo);
 		addActor(confirmBtn);
 		addActor(backBtn);
 		addActor(popup);
@@ -138,7 +158,7 @@ public class BookingView extends BaseView {
 		case CONFIRM:
 			try {
 				server.bookTrip(tripTo);
-				server.unlockServer();
+                server.unlockServer();
 				popup.activatePopup("Success! Trip has been Booked");
 
 			} catch (Exception e) {
