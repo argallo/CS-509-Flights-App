@@ -51,6 +51,8 @@ public class TripsPanel extends Group {
 
 	private void update() {
 		table.clear();
+		displayTripsView.setSelectedTripBack(null);
+		displayTripsView.setSelectedTripTo(null);
 		System.out.println("Orgi len: " + originalList.size());
 		List<ITrip> trips = FilterUtil.filterBySeat(originalList, seatClassSelection);
 		System.out.println("Filtered list: " + trips.size());
@@ -78,9 +80,8 @@ public class TripsPanel extends Group {
 					info += "To: " + flight.getArrivalAirport().getName() + "\n";
 					info += "(" + flight.getArrivalAirport().getCode() + ") ";
 					info += "Arrive: " + flight.getArrivalTime() + " ";
-					info += "\nEconomy: " + flight.getEconomyPrice() + " ";
-					info += "First Class: " + flight.getFirstClassPrice() + "\n";
 				}
+				info += "\nTotal Price: " + trips.get(i).getTotalPrice() + "\n";
 
 				TextLabel infoLabel = new TextLabel(info, Assets.getInstance().getXSmallFont(), Align.left);
 				infoLabel.setTouchable(Touchable.disabled);
