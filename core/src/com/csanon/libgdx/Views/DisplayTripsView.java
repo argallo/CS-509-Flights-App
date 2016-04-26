@@ -152,8 +152,8 @@ public class DisplayTripsView extends BaseView {
 
 
         //Create Trips Panel
-		tripsPanel = new TripsPanel(this, false);
-		returnTripsPanel = new TripsPanel(this, true);
+		tripsPanel = new TripsPanel(this, false, true);
+		returnTripsPanel = new TripsPanel(this, true, false);
         if(Constants.isRoundTrip){
             returnTripsPanel.setVisible(true);
         } else {
@@ -355,7 +355,11 @@ public class DisplayTripsView extends BaseView {
 		this.selectedTripTo = selectedTrip;
         if(!Constants.isRoundTrip) {
             confirmBtn.setVisible(true);
+        } else {
+            returnTripsPanel.unselect();
+            confirmBtn.setVisible(false);
         }
+        returnTripsPanel.setSelectable(true);
 	}
 
 	public void setSelectedTripBack(ITrip selectedTrip) {
