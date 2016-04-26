@@ -894,6 +894,7 @@ public class SystemTests {
 		// verify that we get the expected trips
 		assertEquals(SortUtil.sortByTravelTime(expectedDepartureTrips),
 				SortUtil.sortByTravelTime(actualDepartureTrips));
+		System.out.println("exd: " + expectedDepartureTrips.size() + " acd: " + actualDepartureTrips.size() + " exr: " + expectedReturnTrips.size() + " acr: " + actualreturnTrips.size());
 		assertEquals(SortUtil.sortByTravelTime(expectedReturnTrips),
 				SortUtil.sortByTravelTime(actualreturnTrips));
 
