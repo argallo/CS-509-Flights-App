@@ -16,6 +16,8 @@ public class Pic {
         public static final String Check_Mark = "Splash/checkmark.png";
         public static final String Radio_BTN = "Splash/radiobtn.png";
         public static final String Radio_BTN_Selected = "Splash/radiobtn_selected.png";
+        public static final String Arrow_Up = "Splash/arrow_up.png";
+        public static final String Arrow_Down = "Splash/arrow_down.png";
 
 
 }

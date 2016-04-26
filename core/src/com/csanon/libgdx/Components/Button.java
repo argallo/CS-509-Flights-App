@@ -15,12 +15,13 @@ import com.csanon.libgdx.Utils.ColorHelper;
 public class Button extends TintedImage {
 
 	protected Label buttonLabel;
-    Label.LabelStyle labelStyle;
-    Color backgroundColor;
-    Color pressedColor;
+    private Label.LabelStyle labelStyle;
+    private Color backgroundColor;
+    private Color pressedColor;
     ButtonAction buttonAction;
-    TintedImage icon;
+    private TintedImage icon;
     boolean staySelected = false;
+    private String mainImage;
 
     public Button(String mainImage, Color backgroundColor){
         this(mainImage, backgroundColor, "", null, null);
@@ -32,6 +33,7 @@ public class Button extends TintedImage {
 
     public Button(String mainImage, final Color backgroundColor, String buttonText, BitmapFont fontType, TintedImage icon){
         super(mainImage, backgroundColor);
+        this.mainImage = mainImage;
         pressedColor = (ColorHelper.darken(new Color(backgroundColor), 0.4f));
         if(fontType != null) {
             labelStyle = new Label.LabelStyle(fontType, Color.WHITE);
@@ -122,5 +124,15 @@ public class Button extends TintedImage {
 
     public boolean isStaySelected() {
         return staySelected;
+    }
+
+    @Override
+    public void setImage(String image) {
+        super.setImage(image);
+        this.mainImage = image;
+    }
+
+    public String getMainImage() {
+        return mainImage;
     }
 }

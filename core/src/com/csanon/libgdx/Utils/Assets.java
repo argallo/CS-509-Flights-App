@@ -100,6 +100,8 @@ public class Assets extends AssetManager {
     	load(Pic.Check_Mark, Texture.class, textureParam);
     	load(Pic.Radio_BTN, Texture.class, textureParam);
     	load(Pic.Radio_BTN_Selected, Texture.class, textureParam);
+    	load(Pic.Arrow_Up, Texture.class, textureParam);
+    	load(Pic.Arrow_Down, Texture.class, textureParam);
         finishLoading();
     }
 

@@ -63,32 +63,46 @@ public class DisplayTripsView extends BaseView {
         roundTripLabel = new TextLabel("Round Trip?", Assets.getInstance().getSmallFont());
         returnDateLabel = new TextLabel("Return Date:", Assets.getInstance().getSmallFont());
         radioButtonsLabels = new TextLabel("Price:     Time:          Economy:     First Class:", Assets.getInstance().getXSmallFont());
-        price = new RadioButton(Pic.Radio_BTN, Color.WHITE);
-        time = new RadioButton(Pic.Radio_BTN_Selected, Color.WHITE);
+        price = new RadioButton(Pic.Arrow_Up, Color.WHITE);
+        time = new RadioButton(Pic.Radio_BTN, Color.WHITE);
         price.setButtonAction(new ButtonAction() {
             @Override
             public void buttonPressed() {
-                price.setImage(Pic.Radio_BTN_Selected);
-                time.setImage(Pic.Radio_BTN);
+                if(price.getMainImage().equals(Pic.Arrow_Down)||price.getMainImage().equals(Pic.Radio_BTN)) {
+                    price.setImage(Pic.Arrow_Up);
+                    time.setImage(Pic.Radio_BTN);
+                } else if(price.getMainImage().equals(Pic.Arrow_Up)){
+                    price.setImage(Pic.Arrow_Down);
+                    time.setImage(Pic.Radio_BTN);
+                }
                 //sort by price
             }
         });
         time.setButtonAction(new ButtonAction() {
             @Override
             public void buttonPressed() {
-                price.setImage(Pic.Radio_BTN);
-                time.setImage(Pic.Radio_BTN_Selected);
-                //sort by Time
+                if(time.getMainImage().equals(Pic.Arrow_Down)||time.getMainImage().equals(Pic.Radio_BTN)) {
+                    time.setImage(Pic.Arrow_Up);
+                    price.setImage(Pic.Radio_BTN);
+                } else if(time.getMainImage().equals(Pic.Arrow_Up)){
+                    time.setImage(Pic.Arrow_Down);
+                    price.setImage(Pic.Radio_BTN);
+                }
             }
         });
 
-        economy = new RadioButton(Pic.Radio_BTN_Selected, Color.WHITE);
+        economy = new RadioButton(Pic.Arrow_Up, Color.WHITE);
         firstclass = new RadioButton(Pic.Radio_BTN, Color.WHITE);
         economy.setButtonAction(new ButtonAction() {
             @Override
             public void buttonPressed() {
-                economy.setImage(Pic.Radio_BTN_Selected);
-                firstclass.setImage(Pic.Radio_BTN);
+                if(economy.getMainImage().equals(Pic.Arrow_Down)||economy.getMainImage().equals(Pic.Radio_BTN)) {
+                    economy.setImage(Pic.Arrow_Up);
+                    firstclass.setImage(Pic.Radio_BTN);
+                } else if(economy.getMainImage().equals(Pic.Arrow_Up)){
+                    economy.setImage(Pic.Arrow_Down);
+                    firstclass.setImage(Pic.Radio_BTN);
+                }
                 seatClassSelection = SeatClass.ECONOMY;
                 //filter by economy
             }
@@ -96,8 +110,13 @@ public class DisplayTripsView extends BaseView {
         firstclass.setButtonAction(new ButtonAction() {
             @Override
             public void buttonPressed() {
-                economy.setImage(Pic.Radio_BTN);
-                firstclass.setImage(Pic.Radio_BTN_Selected);
+                if(firstclass.getMainImage().equals(Pic.Arrow_Down)||firstclass.getMainImage().equals(Pic.Radio_BTN)) {
+                    firstclass.setImage(Pic.Arrow_Up);
+                    economy.setImage(Pic.Radio_BTN);
+                } else if(firstclass.getMainImage().equals(Pic.Arrow_Up)){
+                    firstclass.setImage(Pic.Arrow_Down);
+                    economy.setImage(Pic.Radio_BTN);
+                }
                 seatClassSelection = SeatClass.FIRSTCLASS;
                 //filter by economy
             }
@@ -344,7 +363,7 @@ public class DisplayTripsView extends BaseView {
 
 	public void setSelectedTripTo(ITrip selectedTrip) {
 		this.selectedTripTo = selectedTrip;
-        if(!Constants.isRoundTrip ||this.selectedTripBack != null) {
+        if(!Constants.isRoundTrip) {
             confirmBtn.setVisible(true);
         }
 	}
