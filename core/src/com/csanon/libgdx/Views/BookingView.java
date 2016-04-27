@@ -7,7 +7,6 @@ import java.util.function.Consumer;
 
 import com.csanon.Flight;
 import com.csanon.ITrip;
-import com.csanon.SeatClass;
 import com.csanon.libgdx.Components.AbsPopup;
 import com.csanon.libgdx.Components.BookingPopup;
 import com.csanon.libgdx.Components.Button;
@@ -34,7 +33,6 @@ public class BookingView extends BaseView {
 	private FlightServer server;
 	private ITrip tripTo;
 	private ITrip tripBack;
-	private SeatClass seatClass;
 	private BookingPopup popup;
 	private Button backBtn;
 	private TextLabel toTripInfo, fromTripInfo;
@@ -43,7 +41,6 @@ public class BookingView extends BaseView {
 	public void init() {
 		server = ServerFactory.getServer();
 		tripTo = Constants.TripTO;
-		seatClass = SeatClass.ECONOMY;// TODO changes
 		tripBack = Constants.TripBACK;
 		popup = new BookingPopup(this);
 		background = new TintedImage(Pic.Pixel, Tint.BACKGROUND_COLOR);

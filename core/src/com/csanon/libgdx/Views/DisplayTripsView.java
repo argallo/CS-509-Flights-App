@@ -340,6 +340,10 @@ public class DisplayTripsView extends BaseView {
 				}
 
 			} else {
+				ViewManager.getInstance().unfocusAll();
+				tripsPanel.loading();
+				returnTripsPanel.loading();
+				confirmBtn.setVisible(false);
 				String date = departureDateTextBox.getText();
 				returnTripsPanel.setVisible(false);
 				int year, month, day;
