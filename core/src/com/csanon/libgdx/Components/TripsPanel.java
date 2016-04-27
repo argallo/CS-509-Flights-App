@@ -32,6 +32,7 @@ public class TripsPanel extends Group {
 	private boolean isRoundTrip = false;
 	private boolean sortByPrice = true;
 	private boolean sortReverse = false;
+	private ITrip filterTrip = null;
 
 	public TripsPanel(DisplayTripsView displayTripsView, boolean isRoundTrip, boolean selectable) {
 		this.displayTripsView = displayTripsView;
@@ -53,16 +54,23 @@ public class TripsPanel extends Group {
 	public void updateTrips(List<ITrip> trips, SeatClass seatClass) {
 		originalList = trips;
 		seatClassSelection = seatClass;
+		filterTrip = null;
 		update();
 
 	}
 
 	private void update() {
 		table.clear();
-		displayTripsView.setSelectedTripBack(null);
-		displayTripsView.setSelectedTripTo(null);
+		if (isRoundTrip) {
+			displayTripsView.setSelectedTripBack(null);
+		} else {
+			displayTripsView.setSelectedTripTo(null);
+		}
 		System.out.println("Orgi len: " + originalList.size());
 		List<ITrip> tempTrips = FilterUtil.filterBySeat(originalList, seatClassSelection);
+		if (filterTrip != null) {
+			tempTrips = FilterUtil.filterByTrip(filterTrip, tempTrips);
+		}
 		List<ITrip> trips;
 		if (sortByPrice) {
 			trips = SortUtil.sortByPrice(tempTrips, sortReverse);
@@ -148,7 +156,7 @@ public class TripsPanel extends Group {
 	}
 
 	public void setSelectable(boolean selectable) {
-		//this.selectable = selectable;
+		// this.selectable = selectable;
 		if (selectable) {
 			table.setTouchable(Touchable.childrenOnly);
 		} else {
@@ -173,5 +181,11 @@ public class TripsPanel extends Group {
 		sortByPrice = true;
 		sortReverse = reverse;
 		update();
+	}
+
+	public void filterByTrip(ITrip selectedTrip) {
+		filterTrip = selectedTrip;
+		update();
+
 	}
 }

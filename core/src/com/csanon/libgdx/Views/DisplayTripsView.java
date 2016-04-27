@@ -295,10 +295,7 @@ public class DisplayTripsView extends BaseView {
 	public void handle(int outcome) {
 		switch (outcome) {
 		case 0:
-			ViewManager.getInstance().unfocusAll();
-			tripsPanel.loading();
-			returnTripsPanel.loading();
-			confirmBtn.setVisible(false);
+
 			if (checkBox.isChecked()) {
 				String date = departureDateTextBox.getText();
 				String returnDate = returnTextBox.getText();
@@ -319,7 +316,10 @@ public class DisplayTripsView extends BaseView {
 				if (depart.compareTo(returnDT) > 0) {
 					returnTextBox.setTextColor(com.badlogic.gdx.graphics.Color.RED);
 				} else {
-
+					ViewManager.getInstance().unfocusAll();
+					tripsPanel.loading();
+					returnTripsPanel.loading();
+					confirmBtn.setVisible(false);
 					Airport departAirport = getAirport(departureAirportDropdown.getCurrentItem());
 					Airport arrivalAirport = getAirport(arrivalAirportDropdown.getCurrentItem());
 
@@ -331,6 +331,7 @@ public class DisplayTripsView extends BaseView {
 							List<ITrip> trips = (new TripBuilder()).getTrips(departAirport, arrivalAirport, depart);
 							List<ITrip> returnTrips = (new TripBuilder()).getTrips(arrivalAirport, departAirport,
 									returnDT);
+							System.out.println("Trips: " + trips.size() + " return trips: " + returnTrips.size());
 							tripsPanel.updateTrips(trips, seatClassSelection);
 							returnTripsPanel.updateTrips(returnTrips, seatClassSelection);
 							return true;
@@ -392,6 +393,7 @@ public class DisplayTripsView extends BaseView {
 				confirmBtn.setVisible(true);
 			} else {
 				returnTripsPanel.unselect();
+				returnTripsPanel.filterByTrip(selectedTrip);
 				confirmBtn.setVisible(false);
 			}
 			returnTripsPanel.setSelectable(true);
