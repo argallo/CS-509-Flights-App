@@ -1050,7 +1050,7 @@ public class SystemTests {
 		boolean locked = flightServer.lockServer(callback);
 		assertEquals(true, locked);
 
-		TimeUnit.SECONDS.sleep(TIMEOUT + 10);
+		TimeUnit.SECONDS.sleep(TIMEOUT + 2);
 
 		assertTrue("The callback was not called", success.get(0));
 
