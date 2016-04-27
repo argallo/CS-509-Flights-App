@@ -6,6 +6,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.junit.Before;
@@ -22,6 +24,7 @@ import com.csanon.Airport;
 import com.csanon.Airports;
 import com.csanon.EconomyTrip;
 import com.csanon.Flight;
+import com.csanon.ITrip;
 import com.csanon.time.DateTime;
 
 public class WPIFlightServerTest {
@@ -113,7 +116,7 @@ public class WPIFlightServerTest {
 		try {
 			EconomyTrip trip = new EconomyTrip(testFlight);
 			server.lockServer(null);
-			server.bookTrip(trip);
+			server.bookTrips(new LinkedList<ITrip>(Arrays.asList(trip)));
 			List<Flight> results2 = server.getFlightsDeparting(Airports.getAirport("LAX"),
 					DateTime.of(2016, 5, 11, -8));
 			Flight testFlight2 = results2.get(0);

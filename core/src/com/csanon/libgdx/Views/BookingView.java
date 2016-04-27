@@ -1,12 +1,12 @@
 package com.csanon.libgdx.Views;
 
 import java.time.Duration;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
 import com.csanon.Flight;
 import com.csanon.ITrip;
-import com.csanon.SeatClass;
 import com.csanon.libgdx.Components.AbsPopup;
 import com.csanon.libgdx.Components.BookingPopup;
 import com.csanon.libgdx.Components.Button;
@@ -33,7 +33,6 @@ public class BookingView extends BaseView {
 	private FlightServer server;
 	private ITrip tripTo;
 	private ITrip tripBack;
-	private SeatClass seatClass;
 	private BookingPopup popup;
 	private Button backBtn;
 	private TextLabel toTripInfo, fromTripInfo;
@@ -42,7 +41,6 @@ public class BookingView extends BaseView {
 	public void init() {
 		server = ServerFactory.getServer();
 		tripTo = Constants.TripTO;
-		seatClass = SeatClass.ECONOMY;// TODO changes
 		tripBack = Constants.TripBACK;
 		popup = new BookingPopup(this);
 		background = new TintedImage(Pic.Pixel, Tint.BACKGROUND_COLOR);
@@ -70,7 +68,12 @@ public class BookingView extends BaseView {
 			popup.activatePopup("Error: No Server Lock :)");
 		} else {
 			try {
-				boolean available = server.checkTripAvailable(tripTo);
+				List<ITrip> trips = new LinkedList<ITrip>();
+				trips.add(tripTo);
+				if(tripBack != null){
+					trips.add(tripBack);
+				}
+				boolean available = server.checkTripsAvailable(trips);
 				if (!available) {
 					popup.activatePopup("Sorry This Trip is UNAVAILABLE");
 					// System.out.println("TRIP UNAVAILABLE");
@@ -161,7 +164,12 @@ public class BookingView extends BaseView {
 		switch (outcome) {
 		case CONFIRM:
 			try {
-				server.bookTrip(tripTo);
+				List<ITrip> trips = new LinkedList<ITrip>();
+				trips.add(tripTo);
+				if(tripBack != null){
+					trips.add(tripBack);
+				}
+				server.bookTrips(trips);
 				server.unlockServer();
 				popup.activatePopup("Success! Trip has been Booked");
 
