@@ -25,9 +25,9 @@ public interface FlightServer {
 
 	public boolean unlockServer();
 	
-	public boolean checkTripAvailable(ITrip trip) throws Exception;
-
-	public void bookTrip(ITrip trip) throws Exception;
+	public boolean checkTripsAvailable(List<ITrip> trips) throws Exception;
 	
 	public void resetServer();
+
+	void bookTrips(List<ITrip> trips) throws Exception;
 }

@@ -1,6 +1,7 @@
 package com.csanon.libgdx.Views;
 
 import java.time.Duration;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -70,7 +71,12 @@ public class BookingView extends BaseView {
 			popup.activatePopup("Error: No Server Lock :)");
 		} else {
 			try {
-				boolean available = server.checkTripAvailable(tripTo);
+				List<ITrip> trips = new LinkedList<ITrip>();
+				trips.add(tripTo);
+				if(tripBack != null){
+					trips.add(tripBack);
+				}
+				boolean available = server.checkTripsAvailable(trips);
 				if (!available) {
 					popup.activatePopup("Sorry This Trip is UNAVAILABLE");
 					// System.out.println("TRIP UNAVAILABLE");
@@ -161,7 +167,12 @@ public class BookingView extends BaseView {
 		switch (outcome) {
 		case CONFIRM:
 			try {
-				server.bookTrip(tripTo);
+				List<ITrip> trips = new LinkedList<ITrip>();
+				trips.add(tripTo);
+				if(tripBack != null){
+					trips.add(tripBack);
+				}
+				server.bookTrips(trips);
 				server.unlockServer();
 				popup.activatePopup("Success! Trip has been Booked");
 
