@@ -1290,7 +1290,7 @@ public class SystemTests {
 	 * @throws Exception 
 	 */
 	@Test
-	public void bookFullFlightAirport() throws Exception {
+	public void bookFullFlight() throws Exception {
 		FlightServer flightServer = ServerFactory.getServer();
 		
 		ITrip bookTrip = new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20107", "EWR"),
