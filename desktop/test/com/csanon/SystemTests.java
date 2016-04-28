@@ -1300,29 +1300,15 @@ public class SystemTests {
 			fail("Server Timed out when it shouldn't have");
 		};
 		
-		while (flightServer.checkTripsAvailable(new LinkedList<ITrip>(Arrays.asList(bookTrip)))) {
-			
-			
-			boolean locked = flightServer.lockServer(callback);
-			assertEquals(true, locked);
-
-			flightServer.bookTrips(new LinkedList<ITrip>(Arrays.asList(bookTrip)));
-
-			flightServer.unlockServer();
-		}
-		
 		boolean locked = flightServer.lockServer(callback);
 		assertEquals(true, locked);
-		try {
+
+		while (flightServer.checkTripsAvailable(new LinkedList<ITrip>(Arrays.asList(bookTrip)))) {
 			flightServer.bookTrips(new LinkedList<ITrip>(Arrays.asList(bookTrip)));
-			flightServer.unlockServer();
-			fail("Able to book a trip which should not happen");
-		} catch (Exception e) {
-			flightServer.unlockServer();
 		}
+		boolean booked = flightServer.bookTrips(new LinkedList<ITrip>(Arrays.asList(bookTrip)));
+		flightServer.unlockServer();
+		assertEquals(false, booked);
 	}
 	
-	
-	
-
 }

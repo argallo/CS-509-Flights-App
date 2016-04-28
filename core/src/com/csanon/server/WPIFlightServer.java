@@ -238,7 +238,7 @@ public class WPIFlightServer implements FlightServer {
 	}
 
 	@Override
-	public void bookTrips(List<ITrip> trips) throws Exception {
+	public boolean bookTrips(List<ITrip> trips) throws Exception {
 
 		if (!lock.isLocked()) {
 			throw new Exception();
@@ -283,10 +283,12 @@ public class WPIFlightServer implements FlightServer {
 					});
 				} else {
 					System.out.println("ERROR");
+					return false;
 				}
 			} catch (UnirestException e) {
 
 			}
+			return true;
 		}
 	}
 

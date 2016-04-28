@@ -96,8 +96,9 @@ public interface FlightServer {
 	 * 
 	 * @param trips
 	 *            Trips to book
+	 * @return whether a trip was booked or not
 	 * @throws Exception
 	 *             Server not locked exception
 	 */
-	void bookTrips(List<ITrip> trips) throws Exception;
+	boolean bookTrips(List<ITrip> trips) throws Exception;
 }
