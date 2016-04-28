@@ -26,6 +26,12 @@ public class WPIFlightServer implements FlightServer {
 	private final ServerConfig config;
 	private final Lock lock;
 
+	/**
+	 * Construct the WPIFlightServer with the given configuration
+	 * 
+	 * @param config
+	 *            Server configuration settings
+	 */
 	public WPIFlightServer(ServerConfig config) {
 		this.config = config;
 		lock = new Lock(config.getLockTime());

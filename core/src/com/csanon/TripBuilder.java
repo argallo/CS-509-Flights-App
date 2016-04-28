@@ -91,11 +91,12 @@ public class TripBuilder {
 	public List<ITrip> getTrips(Airport aDeparture, Airport aDestination, DateTime aDepartTime) {
 		// Convert the departtime to the same local time with the departure
 		// offset
-		System.out.println("Dep: " + aDeparture.getCode() + " Dest: " + aDestination.getCode() + " Date: " + aDepartTime.toString());
+		System.out.println("Dep: " + aDeparture.getCode() + " Dest: " + aDestination.getCode() + " Date: "
+				+ aDepartTime.toString());
 		aDepartTime = aDepartTime.plusSeconds(-aDeparture.getOffset()).withNewOffset(aDeparture.getOffset());
 		Map<Airport, Map<String, List<Flight>>> dataset = collectData(maxHopCount, aDeparture, aDestination,
 				aDepartTime);
-		
+
 		System.out.println("Dataset size: " + dataset.size());
 
 		Collection<ITrip> validtrips = searchForTrips(maxHopCount, aDeparture, aDestination, aDepartTime, dataset);
@@ -343,7 +344,7 @@ public class TripBuilder {
 
 			// loop through possible datetimes and
 			dateTimes.forEach(time -> {
-				addFlightsToMap(aDeparture, time, aDataSet);
+				if (addFlightsToMap(aDeparture, time, aDataSet)) {
 
 					aDataSet.get(aDeparture).get(time.toServerDateString()).forEach(flight -> {
 						if (!flight.getArrivalAirport().equals(aDestination)) {
@@ -356,6 +357,7 @@ public class TripBuilder {
 									aDataSet);
 						}
 					});
+				}
 			});
 
 		}

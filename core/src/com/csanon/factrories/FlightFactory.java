@@ -13,6 +13,10 @@ import com.csanon.Flight;
 import com.csanon.Price;
 import com.csanon.time.DateTime;
 
+/**
+ * Factory for constructing Flights from xml or passed parameters
+ *
+ */
 public class FlightFactory {
 
 	private static final FlightFactory INSTANCE = new FlightFactory();
@@ -33,9 +37,16 @@ public class FlightFactory {
 				seatsEconomy);
 	}
 
+	/**
+	 * Parse the flights from xml
+	 * 
+	 * @param xml
+	 *            XML representation of a list of flights
+	 * @return Parsed list of flights
+	 */
 	public List<Flight> parseFlightsFromXML(String xml) {
 		List<Flight> flights = new LinkedList<Flight>();
-		
+
 		Element flightsNode = reader.parse(xml);
 
 		flightsNode.getChildrenByName("Flight").iterator().forEachRemaining(flightNode -> {
@@ -43,10 +54,10 @@ public class FlightFactory {
 			// get attributes
 			String airplaneName = flightNode.get("Airplane");
 			Airplane airplane = Airplanes.getAirplane(airplaneName);
-			
+
 			String duration = flightNode.get("FlightTime");
 			String flightNumber = flightNode.get("Number");
-			
+
 			// get departure info
 			Element departureNode = flightNode.getChildByName("Departure");
 			String departureCode = departureNode.get("Code");
@@ -70,7 +81,7 @@ public class FlightFactory {
 			// get economy data
 			Element coachNode = seatingNode.getChildByName("Coach");
 			int seatsEconomy = Integer.parseInt(coachNode.getText());
-			Price priceEconomy = new Price(coachNode.get("Price"));			
+			Price priceEconomy = new Price(coachNode.get("Price"));
 
 			Flight flight = makeFlight(airplane, duration, flightNumber, departureAirport, departureTime, arrivalAirport, arrivalTime, priceFirstClass, seatsFirstClass,
 					priceEconomy, seatsEconomy);
