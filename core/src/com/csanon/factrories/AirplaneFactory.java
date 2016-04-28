@@ -7,6 +7,11 @@ import com.badlogic.gdx.utils.XmlReader;
 import com.badlogic.gdx.utils.XmlReader.Element;
 import com.csanon.Airplane;
 
+/**
+ * 
+ * Factory for constructing Airplanes from xml or passed parameters
+ *
+ */
 public class AirplaneFactory {
 	private static final AirplaneFactory INSTANCE = new AirplaneFactory();
 	private final static XmlReader reader = new XmlReader();
@@ -15,6 +20,11 @@ public class AirplaneFactory {
 
 	}
 
+	/**
+	 * Get the singleton instance of the factory
+	 * 
+	 * @return INSTANCE
+	 */
 	public static AirplaneFactory getInstance() {
 		return INSTANCE;
 	}
@@ -23,6 +33,13 @@ public class AirplaneFactory {
 		return new Airplane(manufacturer, model, numFirst, numEcon);
 	}
 
+	/**
+	 * Parse the airplanes from xml
+	 * 
+	 * @param xml
+	 *            XML representation of a list of airplanes
+	 * @return Parsed list of airplanes
+	 */
 	public List<Airplane> parseAirplanesFromXML(String xml) {
 		List<Airplane> airplanes = new LinkedList<Airplane>();
 

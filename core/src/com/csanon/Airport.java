@@ -2,15 +2,19 @@ package com.csanon;
 
 import com.csanon.time.TimeZoneLookup;
 
+/**
+ * Airport class. represents the airports available
+ *
+ */
 public class Airport {
 
 	/*
 	 * Constant number for the range of latitude and longitude.
 	 */
-	public static final double MAX_LA=90.00;
-	public static final double MIN_LA=-90.00;
-	public static final double MAX_LO=180.00;
-	public static final double MIN_LO=-180.00;
+	public static final double MAX_LA = 90.00;
+	public static final double MIN_LA = -90.00;
+	public static final double MAX_LO = 180.00;
+	public static final double MIN_LO = -180.00;
 
 	/*
 	 * Attributes for the airport.
@@ -21,12 +25,11 @@ public class Airport {
 	private final double alongitude;
 	private final double alatitude;
 	private final int offset;
-	
-	
+
 	/*
 	 * Construct the default constructor without params.
 	 */
-	public Airport(){
+	public Airport() {
 		this("", "", MAX_LA, MAX_LO);
 	}
 
@@ -43,14 +46,14 @@ public class Airport {
 	 * 
 	 * @param longitude The east/west coordinate of the airport.
 	 */
-	public Airport(String name, String code, double la, double lo){
-		this.aname=name;
-		this.acode=code;
-		alongitude=lo;
-		alatitude=la;
+	public Airport(String name, String code, double la, double lo) {
+		this.aname = name;
+		this.acode = code;
+		alongitude = lo;
+		alatitude = la;
 		offset = TimeZoneLookup.getInstance().getOffsetFromLatLong(alatitude, alongitude);
 	}
-	
+
 	/*
 	 * Initialize the constructor. All input are in string format.
 	 * 
@@ -62,7 +65,7 @@ public class Airport {
 	 * 
 	 * @param longitude The east/west coordinate of the airport.
 	 */
-	public Airport(String name, String code, String la, String lo){
+	public Airport(String name, String code, String la, String lo) {
 		this(name, code, Double.parseDouble(la), Double.parseDouble(lo));
 	}
 
@@ -81,7 +84,7 @@ public class Airport {
 	public Double getLongitude() {
 		return alongitude;
 	}
-	
+
 	public int getOffset() {
 		return offset;
 	}

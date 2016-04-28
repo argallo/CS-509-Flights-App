@@ -835,9 +835,8 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a one way flight Search trips
-	 * going from BOS to LAX Select the cheapest option Lock the server Book the
-	 * trip unlock the server Search trips again confirm that the components
+	 * Goes through the normal process of booking a one way flight Search trips going from BOS to LAX Select the
+	 * cheapest option Lock the server Book the trip unlock the server Search trips again confirm that the components
 	 * flights have changed
 	 * 
 	 * @throws Exception
@@ -866,7 +865,7 @@ public class SystemTests {
 		boolean locked = flightServer.lockServer(callback);
 		assertEquals(true, locked);
 
-		flightServer.bookTrip(bookedTrip);
+		flightServer.bookTrips(new LinkedList<ITrip>(Arrays.asList(bookedTrip)));
 
 		flightServer.unlockServer();
 
@@ -899,11 +898,9 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a round trip flight Search
-	 * trips going from BOS to LAX Select the most expensive option on the way
-	 * Select the cheapest option on the way back Lock the server Book the two
-	 * trips unlock the server Search trips again confirm that the components
-	 * flights have changed
+	 * Goes through the normal process of booking a round trip flight Search trips going from BOS to LAX Select the most
+	 * expensive option on the way Select the cheapest option on the way back Lock the server Book the two trips unlock
+	 * the server Search trips again confirm that the components flights have changed
 	 * 
 	 * @throws Exception
 	 */
@@ -945,8 +942,8 @@ public class SystemTests {
 		boolean locked = flightServer.lockServer(callback);
 		assertEquals(true, locked);
 
-		flightServer.bookTrip(bookedDepartureTrip);
-		flightServer.bookTrip(bookedreturnTrip);
+		flightServer.bookTrips(new LinkedList<ITrip>(Arrays.asList(bookedDepartureTrip)));
+		flightServer.bookTrips(new LinkedList<ITrip>(Arrays.asList(bookedreturnTrip)));
 
 		flightServer.unlockServer();
 
@@ -988,7 +985,7 @@ public class SystemTests {
 				getFlight(flightsMDW2EWR_5_15_16, "15127", "LAX"), getFlight(flightsMDW2EWR_5_15_16, "29084", "SJC")));
 		prevReturnTrips.add(new EconomyTrip(getFlight(flightsMDW2EWR_5_15_16, "4349", "MDW"),
 				getFlight(flightsMDW2EWR_5_15_16, "15132", "LAX"), getFlight(flightsMDW2EWR_5_15_16, "3113", "BOS")));
-					
+
 		prevReturnTrips.add(new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4347", "MDW"),
 				getFlight(flightsMDW2EWR_5_15_16, "29710", "SNA"), getFlight(flightsMDW2EWR_5_15_16, "3113", "BOS")));
 		prevReturnTrips.add(new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4349", "MDW"),
@@ -1004,7 +1001,7 @@ public class SystemTests {
 				getFlight(flightsMDW2EWR_5_15_16, "15127", "LAX"), getFlight(flightsMDW2EWR_5_15_16, "29084", "SJC")));
 		newReturnTrips.add(new EconomyTrip(getFlight(newReturnFlights, "4349", "MDW"),
 				getFlight(newReturnFlights, "15132", "LAX"), getFlight(newReturnFlights, "3113", "BOS")));
-					
+
 		newReturnTrips.add(new FirstClassTrip(getFlight(flightsMDW2EWR_5_15_16, "4347", "MDW"),
 				getFlight(flightsMDW2EWR_5_15_16, "29710", "SNA"), getFlight(newReturnFlights, "3113", "BOS")));
 		newReturnTrips.add(new FirstClassTrip(getFlight(newReturnFlights, "4349", "MDW"),
@@ -1018,9 +1015,8 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a one way flight Search trips
-	 * going from BOS to LAX Select the cheapest option Lock the server Wait for
-	 * 2.5 minutes attempt to book the trip
+	 * Goes through the normal process of booking a one way flight Search trips going from BOS to LAX Select the
+	 * cheapest option Lock the server Wait for 2.5 minutes attempt to book the trip
 	 * 
 	 * @throws Exception
 	 */
@@ -1050,12 +1046,12 @@ public class SystemTests {
 		boolean locked = flightServer.lockServer(callback);
 		assertEquals(true, locked);
 
-		TimeUnit.SECONDS.sleep(TIMEOUT + 10);
+		TimeUnit.SECONDS.sleep(TIMEOUT + 2);
 
 		assertTrue("The callback was not called", success.get(0));
 
 		try {
-			flightServer.bookTrip(bookedTrip);
+			flightServer.bookTrips(new LinkedList<ITrip>(Arrays.asList(bookedTrip)));
 			fail("Able to book a trip which should not happen");
 		} catch (Exception e) {
 
@@ -1063,9 +1059,8 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a one way flight Search trips
-	 * going from BOS to LAX Sort trips by the price ascending Sort trips by the
-	 * price descending
+	 * Goes through the normal process of booking a one way flight Search trips going from BOS to LAX Sort trips by the
+	 * price ascending Sort trips by the price descending
 	 */
 	@Test
 	public void SortbyPrice() {
@@ -1090,9 +1085,8 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a one way flight Search trips
-	 * going from BOS to LAX Sort trips by the travel time descending Sort trips
-	 * by the travel time ascending
+	 * Goes through the normal process of booking a one way flight Search trips going from BOS to LAX Sort trips by the
+	 * travel time descending Sort trips by the travel time ascending
 	 */
 	@Test
 	public void SortbyTravelTime() {
@@ -1117,10 +1111,8 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a one way flight Search trips
-	 * going from BOS to LAX For each component flight confirm the duration
-	 * matches the actual time difference, Confirm the timezone of each airport
-	 * as well
+	 * Goes through the normal process of booking a one way flight Search trips going from BOS to LAX For each component
+	 * flight confirm the duration matches the actual time difference, Confirm the timezone of each airport as well
 	 */
 	@Test
 	public void LocalTime() {
@@ -1128,10 +1120,9 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a round trip flight Search
-	 * trips going from BOS to LAX Filter and confirm trips for only economy
-	 * seats Filter and confirm trips for only first class seats Confirm that
-	 * those two filters make up the entire list of trips
+	 * Goes through the normal process of booking a round trip flight Search trips going from BOS to LAX Filter and
+	 * confirm trips for only economy seats Filter and confirm trips for only first class seats Confirm that those two
+	 * filters make up the entire list of trips
 	 */
 	@Test
 	public void FilterBySeat() {
@@ -1163,11 +1154,9 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a round trip flight Search
-	 * trips going from BOS to LAX For each trip book the last leg of the trip
-	 * Research Confirming that the specific trip both seat options no longer
-	 * contains that trip Confirm after all possible trips there are no trips
-	 * left
+	 * Goes through the normal process of booking a round trip flight Search trips going from BOS to LAX For each trip
+	 * book the last leg of the trip Research Confirming that the specific trip both seat options no longer contains
+	 * that trip Confirm after all possible trips there are no trips left
 	 * 
 	 * @throws Exception
 	 */
@@ -1246,9 +1235,9 @@ public class SystemTests {
 
 					boolean locked = flightServer.lockServer(callback);
 					assertEquals(true, locked);
-					while (flightServer.checkTripAvailable(aTrip)) {
+					while (flightServer.checkTripsAvailable(new LinkedList<ITrip>(Arrays.asList(aTrip)))) {
 						try {
-							flightServer.bookTrip(aTrip);
+							flightServer.bookTrips(new LinkedList<ITrip>(Arrays.asList(aTrip)));
 						} catch (Exception e) {
 							e.printStackTrace();
 							fail("Unable to book a trip which should not happen");
@@ -1281,8 +1270,7 @@ public class SystemTests {
 	}
 
 	/**
-	 * Attempt to search for trips going from BOS to BOS Confirm that there are
-	 * no trips available
+	 * Attempt to search for trips going from BOS to BOS Confirm that there are no trips available
 	 */
 	@Test
 	public void SameAirport() {

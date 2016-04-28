@@ -10,6 +10,10 @@ import java.util.stream.Collectors;
 import com.csanon.server.FlightServer;
 import com.csanon.server.ServerFactory;
 
+/**
+ * Static map of airports, allowing conversion of string representation to object representation
+ *
+ */
 public class Airports {
 
 	private final static HashMap<String, Airport> airports = new HashMap<String, Airport>();

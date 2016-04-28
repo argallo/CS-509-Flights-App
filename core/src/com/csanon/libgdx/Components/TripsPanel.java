@@ -1,5 +1,9 @@
 package com.csanon.libgdx.Components;
 
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
@@ -10,13 +14,11 @@ import com.csanon.FilterUtil;
 import com.csanon.Flight;
 import com.csanon.ITrip;
 import com.csanon.SeatClass;
+import com.csanon.SortUtil;
 import com.csanon.libgdx.Utils.Assets;
 import com.csanon.libgdx.Utils.Pic;
 import com.csanon.libgdx.Utils.Tint;
 import com.csanon.libgdx.Views.DisplayTripsView;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class TripsPanel extends Group {
 
@@ -28,7 +30,9 @@ public class TripsPanel extends Group {
 	private List<ITrip> originalList;
 	private SeatClass seatClassSelection;
 	private boolean isRoundTrip = false;
-    private boolean selectable = true;
+	private boolean sortByPrice = true;
+	private boolean sortReverse = false;
+	private ITrip filterTrip = null;
 
 	public TripsPanel(DisplayTripsView displayTripsView, boolean isRoundTrip, boolean selectable) {
 		this.displayTripsView = displayTripsView;
@@ -36,11 +40,11 @@ public class TripsPanel extends Group {
 		tripButtons = new ArrayList<>();
 		setSize(600, 500);
 		table = new Table();
-        if(selectable) {
-            table.setTouchable(Touchable.childrenOnly);
-        } else {
-            table.setTouchable(Touchable.disabled);
-        }
+		if (selectable) {
+			table.setTouchable(Touchable.childrenOnly);
+		} else {
+			table.setTouchable(Touchable.disabled);
+		}
 		scrollPane = new ScrollPane(table);
 		scrollPane.setFillParent(true);
 		addActor(scrollPane);
@@ -50,16 +54,29 @@ public class TripsPanel extends Group {
 	public void updateTrips(List<ITrip> trips, SeatClass seatClass) {
 		originalList = trips;
 		seatClassSelection = seatClass;
+		filterTrip = null;
 		update();
 
 	}
 
 	private void update() {
 		table.clear();
-		displayTripsView.setSelectedTripBack(null);
-		displayTripsView.setSelectedTripTo(null);
+		if (isRoundTrip) {
+			displayTripsView.setSelectedTripBack(null);
+		} else {
+			displayTripsView.setSelectedTripTo(null);
+		}
 		System.out.println("Orgi len: " + originalList.size());
-		List<ITrip> trips = FilterUtil.filterBySeat(originalList, seatClassSelection);
+		List<ITrip> tempTrips = FilterUtil.filterBySeat(originalList, seatClassSelection);
+		if (filterTrip != null) {
+			tempTrips = FilterUtil.filterByTrip(filterTrip, tempTrips);
+		}
+		List<ITrip> trips;
+		if (sortByPrice) {
+			trips = SortUtil.sortByPrice(tempTrips, sortReverse);
+		} else {
+			trips = SortUtil.sortByTravelTime(tempTrips, sortReverse);
+		}
 		System.out.println("Filtered list: " + trips.size());
 
 		// If there are no results
@@ -84,9 +101,11 @@ public class TripsPanel extends Group {
 					info += "Depart: " + flight.getDepartureTime() + "\n";
 					info += "To: " + flight.getArrivalAirport().getName() + " ";
 					info += "(" + flight.getArrivalAirport().getCode() + ")\n";
-					info += "Arrive: " + flight.getArrivalTime() + " ";
+					info += "Arrive: " + flight.getArrivalTime() + "\n\n";
 				}
-				info += "\nTotal Price: " + trips.get(i).getTotalPrice();
+				info += "\nTotal Price: " + trips.get(i).getTotalPrice() + "\n";
+				Duration duration = trips.get(i).getTotalTravelTime();
+				info += "Total Time: " + String.format("%d:%02d", duration.toHours(), duration.minusHours(duration.toHours()).toMinutes());
 
 				TextLabel infoLabel = new TextLabel(info, Assets.getInstance().getXSmallFont(), Align.left);
 				infoLabel.setTouchable(Touchable.disabled);
@@ -136,19 +155,37 @@ public class TripsPanel extends Group {
 		update();
 	}
 
-    public void setSelectable(boolean selectable) {
-        this.selectable = selectable;
-        if(selectable) {
-            table.setTouchable(Touchable.childrenOnly);
-        } else {
-            table.setTouchable(Touchable.disabled);
-        }
-    }
+	public void setSelectable(boolean selectable) {
+		// this.selectable = selectable;
+		if (selectable) {
+			table.setTouchable(Touchable.childrenOnly);
+		} else {
+			table.setTouchable(Touchable.disabled);
+		}
+	}
 
-    public void unselect(){
-        for (Button button : tripButtons) {
-            button.setTint(Tint.GRAY);
-            button.setStaySelected(false);
-        }
-    }
+	public void unselect() {
+		for (Button button : tripButtons) {
+			button.setTint(Tint.GRAY);
+			button.setStaySelected(false);
+		}
+	}
+
+	public void sortByTime(boolean reverse) {
+		sortByPrice = false;
+		sortReverse = reverse;
+		update();
+	}
+
+	public void sortByPrice(boolean reverse) {
+		sortByPrice = true;
+		sortReverse = reverse;
+		update();
+	}
+
+	public void filterByTrip(ITrip selectedTrip) {
+		filterTrip = selectedTrip;
+		update();
+
+	}
 }

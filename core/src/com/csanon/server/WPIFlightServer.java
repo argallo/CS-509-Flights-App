@@ -26,6 +26,12 @@ public class WPIFlightServer implements FlightServer {
 	private final ServerConfig config;
 	private final Lock lock;
 
+	/**
+	 * Construct the WPIFlightServer with the given configuration
+	 * 
+	 * @param config
+	 *            Server configuration settings
+	 */
 	public WPIFlightServer(ServerConfig config) {
 		this.config = config;
 		lock = new Lock(config.getLockTime());
@@ -129,7 +135,7 @@ public class WPIFlightServer implements FlightServer {
 
 			XmlReader reader = new XmlReader();
 			Element resultNode = reader.parse(result);
-			
+
 			offset = Integer.parseInt(resultNode.get("gmtOffset"));
 		}
 
@@ -181,33 +187,38 @@ public class WPIFlightServer implements FlightServer {
 	}
 
 	@Override
-	public boolean checkTripAvailable(ITrip trip) throws Exception {
+	public boolean checkTripsAvailable(List<ITrip> trips) throws Exception {
 		if (!lock.isLocked()) {
 			throw new Exception();
 		} else {
 			boolean available = true;
-			SeatClass seatClass = trip.getSeatType();
-			// For each of the flights in the trip, confirm that the specified
-			// class
-			// of seat is still available
-			for (Flight flight : trip.getLegs()) {
 
-				Flight serverFlight = getFlightFromServer(flight);
+			for (ITrip trip : trips) {
+				SeatClass seatClass = trip.getSeatType();
+				// For each of the flights in the trip, confirm that the specified
+				// class
+				// of seat is still available
+				for (Flight flight : trip.getLegs()) {
 
-				boolean result = false;
-				if (seatClass == SeatClass.ECONOMY) {
-					result = serverFlight.checkEconomyAvailable(1);
-				} else {
-					result = serverFlight.checkFirstClassAvailable(1);
+					Flight serverFlight = getFlightFromServer(flight);
+
+					boolean result = false;
+					if (seatClass == SeatClass.ECONOMY) {
+						result = serverFlight.checkEconomyAvailable(1);
+					} else {
+						result = serverFlight.checkFirstClassAvailable(1);
+					}
+
+					// if the flight is unavailable set available to false and break
+					if (!result) {
+						available = false;
+						break;
+					}
 				}
-
-				// if the flight is unavailable set available to false and break
-				if (!result) {
-					available = false;
+				if (!available) {
 					break;
 				}
 			}
-
 			return available;
 		}
 	}
@@ -227,24 +238,29 @@ public class WPIFlightServer implements FlightServer {
 	}
 
 	@Override
-	public void bookTrip(ITrip trip) throws Exception {
+	public void bookTrips(List<ITrip> trips) throws Exception {
 
 		if (!lock.isLocked()) {
 			throw new Exception();
 		} else {
-			trip.getLegs().forEach(flight -> {
-				Flight f = getFlightFromServer(flight);
-				if (trip.getSeatType() == SeatClass.ECONOMY) {
-					System.out.println(f.getFlightNum() + ", E" + f.getEconomySeats());
-				} else {
-					System.out.println(f.getFlightNum() + ", F" + f.getFirstClassSeats());
-				}
+			trips.forEach(trip -> {
+				trip.getLegs().forEach(flight -> {
+
+					Flight f = getFlightFromServer(flight);
+					if (trip.getSeatType() == SeatClass.ECONOMY) {
+						System.out.println(f.getFlightNum() + ", E" + f.getEconomySeats());
+					} else {
+						System.out.println(f.getFlightNum() + ", F" + f.getFirstClassSeats());
+					}
+				});
 			});
 			// for each flight in the trip, book the flight with the associated
 			// seating
-			String flightsXML = trip.getLegs().stream()
-					.map(flight -> "<Flight number=\"" + flight.getFlightNum() + "\" seating=\"" + trip.getSeatType() + "\"/>")
-					.collect(Collectors.joining());
+			String flightsXML = trips.stream().map(trip -> {
+				return trip.getLegs().stream()
+						.map(flight -> "<Flight number=\"" + flight.getFlightNum() + "\" seating=\"" + trip.getSeatType() + "\"/>")
+						.collect(Collectors.joining());
+			}).collect(Collectors.joining());
 			flightsXML = "<Flights>" + flightsXML + "</Flights>";
 
 			HttpRequest request = Unirest.post(config.getURL()).queryString("team", config.getTeamNum())
@@ -255,13 +271,15 @@ public class WPIFlightServer implements FlightServer {
 				HttpResponse<String> test = request.asString();
 				if (test.getStatus() == 202) {
 					System.out.println("Successfully booked trip");
-					trip.getLegs().forEach(flight -> {
-						Flight f = getFlightFromServer(flight);
-						if (trip.getSeatType() == SeatClass.ECONOMY) {
-							System.out.println(f.getFlightNum() + ", E" + f.getEconomySeats());
-						} else {
-							System.out.println(f.getFlightNum() + ", F" + f.getFirstClassSeats());
-						}
+					trips.forEach(trip -> {
+						trip.getLegs().forEach(flight -> {
+							Flight f = getFlightFromServer(flight);
+							if (trip.getSeatType() == SeatClass.ECONOMY) {
+								System.out.println(f.getFlightNum() + ", E" + f.getEconomySeats());
+							} else {
+								System.out.println(f.getFlightNum() + ", F" + f.getFirstClassSeats());
+							}
+						});
 					});
 				} else {
 					System.out.println("ERROR");
@@ -276,14 +294,14 @@ public class WPIFlightServer implements FlightServer {
 	public void resetServer() {
 		HttpRequest request = Unirest.get(config.getURL()).queryString("team", config.getTeamNum())
 				.queryString("action", "resetDB");
-		
+
 		try {
 			request.asString();
 		} catch (UnirestException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 	}
 
 }
