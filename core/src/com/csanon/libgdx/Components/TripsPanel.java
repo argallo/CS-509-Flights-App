@@ -86,7 +86,7 @@ public class TripsPanel extends Group {
 					info += "(" + flight.getArrivalAirport().getCode() + ")\n";
 					info += "Arrive: " + flight.getArrivalTime() + " ";
 				}
-				info += "\nTotal Price: " + trips.get(i).getTotalPrice() + "\n\n";
+				info += "\nTotal Price: " + trips.get(i).getTotalPrice();
 
 				TextLabel infoLabel = new TextLabel(info, Assets.getInstance().getXSmallFont(), Align.left);
 				infoLabel.setTouchable(Touchable.disabled);
