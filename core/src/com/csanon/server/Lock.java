@@ -4,6 +4,10 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.function.Consumer;
 
+/**
+ * Class to handle the locking of the server
+ *
+ */
 public class Lock {
 
 	private static boolean LOCKED = false;

@@ -9,6 +9,10 @@ import com.badlogic.gdx.Preferences;
 import com.csanon.server.FlightServer;
 import com.csanon.server.ServerFactory;
 
+/**
+ * Class for time zone lookups. First checks local cache of timezone offsets before contacting external service.
+ * 
+ */
 public class TimeZoneLookup {
 
 	private static final FlightServer server = ServerFactory.getServer();
