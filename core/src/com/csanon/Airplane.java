@@ -1,19 +1,25 @@
 package com.csanon;
 
+/**
+ * Airplane class, holding information on a single model of airplane
+ *
+ */
 public class Airplane {
 	private final String Manufacturer;
 	private final String Model;
 	private final int FirstClassSeats;
 	private final int EconomySeats;
-	
+
 	public Airplane(String aManufacturer, String aModel, int aFirstClassSeats, int aEconomySeats) {
 		Manufacturer = aManufacturer;
 		Model = aModel;
 		FirstClassSeats = aFirstClassSeats;
 		EconomySeats = aEconomySeats;
 	}
-	
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#hashCode()
 	 */
 	@Override
@@ -27,7 +33,9 @@ public class Airplane {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#equals(java.lang.Object)
 	 */
 	@Override
@@ -64,19 +72,19 @@ public class Airplane {
 		}
 		return true;
 	}
-	
+
 	public String getManufacturer() {
 		return Manufacturer;
 	}
-	
+
 	public String getModel() {
 		return Model;
 	}
-	
+
 	public int getFirstClassSeatCount() {
 		return FirstClassSeats;
 	}
-	
+
 	public int getEconomySeatCount() {
 		return EconomySeats;
 	}

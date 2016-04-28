@@ -10,6 +10,10 @@ import java.util.stream.Collectors;
 import com.csanon.server.FlightServer;
 import com.csanon.server.ServerFactory;
 
+/**
+ * Static map of available airplanes. Used to map string names to airplane objects
+ *
+ */
 public class Airplanes {
 
 	private final static HashMap<String, Airplane> airplanes = new HashMap<String, Airplane>();

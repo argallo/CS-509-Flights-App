@@ -1,5 +1,9 @@
 package com.csanon;
 
+/**
+ * Enum representing the different seat classes available
+ *
+ */
 public enum SeatClass {
 	FIRSTCLASS("FirstClass"), ECONOMY("Coach");
 	
