@@ -835,7 +835,7 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a one way flight Search trips going from BOS to LAX Select the
+	 * Goes through the normal process of booking a one way flight Search trips going from EWR to MDW Select the
 	 * cheapest option Lock the server Book the trip unlock the server Search trips again confirm that the components
 	 * flights have changed
 	 * 
@@ -898,7 +898,7 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a round trip flight Search trips going from BOS to LAX Select the most
+	 * Goes through the normal process of booking a round trip flight Search trips going from EWR to MDW Select the most
 	 * expensive option on the way Select the cheapest option on the way back Lock the server Book the two trips unlock
 	 * the server Search trips again confirm that the components flights have changed
 	 * 
@@ -1015,7 +1015,7 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a one way flight Search trips going from BOS to LAX Select the
+	 * Goes through the normal process of booking a one way flight Search trips going from EWR to MDW Select the
 	 * cheapest option Lock the server Wait for 2.5 minutes attempt to book the trip
 	 * 
 	 * @throws Exception
@@ -1059,7 +1059,7 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a one way flight Search trips going from BOS to LAX Sort trips by the
+	 * Goes through the normal process of booking a one way flight Search trips going from EWR to MDW Sort trips by the
 	 * price ascending Sort trips by the price descending
 	 */
 	@Test
@@ -1085,7 +1085,7 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a one way flight Search trips going from BOS to LAX Sort trips by the
+	 * Goes through the normal process of booking a one way flight Search trips going from EWR to MDW Sort trips by the
 	 * travel time descending Sort trips by the travel time ascending
 	 */
 	@Test
@@ -1111,7 +1111,7 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a one way flight Search trips going from BOS to LAX For each component
+	 * Goes through the normal process of booking a one way flight Search trips going from EWR to MDW For each component
 	 * flight confirm the duration matches the actual time difference, Confirm the timezone of each airport as well
 	 */
 	@Test
@@ -1120,7 +1120,7 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a round trip flight Search trips going from BOS to LAX Filter and
+	 * Goes through the normal process of booking a round trip flight Search trips going from EWR to MDW Filter and
 	 * confirm trips for only economy seats Filter and confirm trips for only first class seats Confirm that those two
 	 * filters make up the entire list of trips
 	 */
@@ -1284,5 +1284,45 @@ public class SystemTests {
 		// verify that we get the expected trips
 		assertEquals(expectedTrips, actualTrips);
 	}
+	
+	/**
+	 * Confirm that the system cannot book a trip if there are no seats left
+	 * @throws Exception 
+	 */
+	@Test
+	public void bookFullFlightAirport() throws Exception {
+		FlightServer flightServer = ServerFactory.getServer();
+		
+		ITrip bookTrip = new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20107", "EWR"),
+				getFlight(flightsEWR2MDW_5_14_16, "31550", "TPA"), getFlight(flightsEWR2MDW_5_14_16, "29044", "SJC"));
+
+		Consumer<String> callback = message -> {
+			fail("Server Timed out when it shouldn't have");
+		};
+		
+		while (flightServer.checkTripsAvailable(new LinkedList<ITrip>(Arrays.asList(bookTrip)))) {
+			
+			
+			boolean locked = flightServer.lockServer(callback);
+			assertEquals(true, locked);
+
+			flightServer.bookTrips(new LinkedList<ITrip>(Arrays.asList(bookTrip)));
+
+			flightServer.unlockServer();
+		}
+		
+		boolean locked = flightServer.lockServer(callback);
+		assertEquals(true, locked);
+		try {
+			flightServer.bookTrips(new LinkedList<ITrip>(Arrays.asList(bookTrip)));
+			flightServer.unlockServer();
+			fail("Able to book a trip which should not happen");
+		} catch (Exception e) {
+			flightServer.unlockServer();
+		}
+	}
+	
+	
+	
 
 }
