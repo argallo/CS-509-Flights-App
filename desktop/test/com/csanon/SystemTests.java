@@ -835,8 +835,9 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a one way flight Search trips going from EWR to MDW Select the
-	 * cheapest option Lock the server Book the trip unlock the server Search trips again confirm that the components
+	 * Goes through the normal process of booking a one way flight Search trips
+	 * going from EWR to MDW Select the cheapest option Lock the server Book the
+	 * trip unlock the server Search trips again confirm that the components
 	 * flights have changed
 	 * 
 	 * @throws Exception
@@ -898,9 +899,11 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a round trip flight Search trips going from EWR to MDW Select the most
-	 * expensive option on the way Select the cheapest option on the way back Lock the server Book the two trips unlock
-	 * the server Search trips again confirm that the components flights have changed
+	 * Goes through the normal process of booking a round trip flight Search
+	 * trips going from EWR to MDW Select the most expensive option on the way
+	 * Select the cheapest option on the way back Lock the server Book the two
+	 * trips unlock the server Search trips again confirm that the components
+	 * flights have changed
 	 * 
 	 * @throws Exception
 	 */
@@ -1015,8 +1018,9 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a one way flight Search trips going from EWR to MDW Select the
-	 * cheapest option Lock the server Wait for 2.5 minutes attempt to book the trip
+	 * Goes through the normal process of booking a one way flight Search trips
+	 * going from EWR to MDW Select the cheapest option Lock the server Wait for
+	 * 2.5 minutes attempt to book the trip
 	 * 
 	 * @throws Exception
 	 */
@@ -1059,8 +1063,9 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a one way flight Search trips going from EWR to MDW Sort trips by the
-	 * price ascending Sort trips by the price descending
+	 * Goes through the normal process of booking a one way flight Search trips
+	 * going from EWR to MDW Sort trips by the price ascending Sort trips by the
+	 * price descending
 	 */
 	@Test
 	public void SortbyPrice() {
@@ -1085,8 +1090,9 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a one way flight Search trips going from EWR to MDW Sort trips by the
-	 * travel time descending Sort trips by the travel time ascending
+	 * Goes through the normal process of booking a one way flight Search trips
+	 * going from EWR to MDW Sort trips by the travel time descending Sort trips
+	 * by the travel time ascending
 	 */
 	@Test
 	public void SortbyTravelTime() {
@@ -1111,18 +1117,39 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a one way flight Search trips going from EWR to MDW For each component
-	 * flight confirm the duration matches the actual time difference, Confirm the timezone of each airport as well
+	 * 
+	 * For a flight from EWR to MDW, confirm that latitude and longitude are
+	 * converted to offsets correctly. Then confirm that the GMT times of the
+	 * departure and arrival times are converted correctly. Finally confirm that
+	 * the duration of the flight is calculated correctly given the different
+	 * time zone offsets.
+	 * 
 	 */
 	@Test
 	public void LocalTime() {
-		// TODO
+		FlightServer server = ServerFactory.getServer();
+		Flight flight = getFlight(server.getFlightsDeparting(Airports.getAirport("EWR"), DateTime.of(2016, 5, 14, 0)), "20083", "EWR");
+		
+		//Confirm the lat longs are converted correctly
+		Airport departureAirport = flight.getDepartureAirport();
+		Airport arrivalAirport = flight.getArrivalAirport();
+		
+		assertEquals(-4*60*60, departureAirport.getOffset());
+		assertEquals(-5*60*60, arrivalAirport.getOffset());
+		
+		//Confirm that the departure time and arrival time are converted and printed in local time
+		assertEquals("05/14/2016 04:03 -04:00", flight.getDepartureTime().toString());
+		assertEquals("05/14/2016 04:49 -05:00", flight.getArrivalTime().toString());
+		
+		//Confirm that the total time is calculated correctly
+		assertEquals("106", flight.getDuration());
 	}
 
 	/**
-	 * Goes through the normal process of booking a round trip flight Search trips going from EWR to MDW Filter and
-	 * confirm trips for only economy seats Filter and confirm trips for only first class seats Confirm that those two
-	 * filters make up the entire list of trips
+	 * Goes through the normal process of booking a round trip flight Search
+	 * trips going from EWR to MDW Filter and confirm trips for only economy
+	 * seats Filter and confirm trips for only first class seats Confirm that
+	 * those two filters make up the entire list of trips
 	 */
 	@Test
 	public void FilterBySeat() {
@@ -1154,9 +1181,11 @@ public class SystemTests {
 	}
 
 	/**
-	 * Goes through the normal process of booking a round trip flight Search trips going from BOS to LAX For each trip
-	 * book the last leg of the trip Research Confirming that the specific trip both seat options no longer contains
-	 * that trip Confirm after all possible trips there are no trips left
+	 * Goes through the normal process of booking a round trip flight Search
+	 * trips going from BOS to LAX For each trip book the last leg of the trip
+	 * Research Confirming that the specific trip both seat options no longer
+	 * contains that trip Confirm after all possible trips there are no trips
+	 * left
 	 * 
 	 * @throws Exception
 	 */
@@ -1270,7 +1299,8 @@ public class SystemTests {
 	}
 
 	/**
-	 * Attempt to search for trips going from BOS to BOS Confirm that there are no trips available
+	 * Attempt to search for trips going from BOS to BOS Confirm that there are
+	 * no trips available
 	 */
 	@Test
 	public void SameAirport() {
@@ -1284,22 +1314,23 @@ public class SystemTests {
 		// verify that we get the expected trips
 		assertEquals(expectedTrips, actualTrips);
 	}
-	
+
 	/**
 	 * Confirm that the system cannot book a trip if there are no seats left
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@Test
 	public void bookFullFlight() throws Exception {
 		FlightServer flightServer = ServerFactory.getServer();
-		
+
 		ITrip bookTrip = new EconomyTrip(getFlight(flightsEWR2MDW_5_14_16, "20107", "EWR"),
 				getFlight(flightsEWR2MDW_5_14_16, "31550", "TPA"), getFlight(flightsEWR2MDW_5_14_16, "29044", "SJC"));
 
 		Consumer<String> callback = message -> {
 			fail("Server Timed out when it shouldn't have");
 		};
-		
+
 		boolean locked = flightServer.lockServer(callback);
 		assertEquals(true, locked);
 
@@ -1310,5 +1341,5 @@ public class SystemTests {
 		flightServer.unlockServer();
 		assertEquals(false, booked);
 	}
-	
+
 }
